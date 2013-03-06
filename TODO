@@ -1,0 +1,10 @@
+imlib_list_fonts
+imlib_free_font_list
+imlib_flush_font_cache
+imlib_get_font_descent
+imlib_get_maximum_font_ascent
+imlib_get_maximum_font_descent
+imlib_free_font_list
+imlib_list_font_path
+
+imlib_polygon_get_bounds
