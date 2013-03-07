@@ -52,7 +52,7 @@ A sample of the code can be seen below.
 
 Author
 ------
-Henrique Dias <henrique.ribeiro.dias@gmail.com>
+Henrique Dias <mrhdias@gmail.com>
 
 See Also
 --------
