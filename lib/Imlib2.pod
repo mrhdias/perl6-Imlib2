@@ -1,0 +1,192 @@
+=begin pod
+
+=head1 NAME
+
+Imlib2 - Perl 6 interface to the Imlib2 image library.
+
+=head1 DESCRIPTION
+
+Perl6 binding for Imlib2, a featureful and efficient image manipulation
+library, which produces high quality, anti-aliased output. You will need
+this library installed in order to use Image-Imlib2 (preferably a recent
+version).
+
+=head1 SYNOPSIS
+
+=begin code
+
+	use Imlib2;
+	
+	my $tools = Imlib2.new();
+	# Create a new raw image.
+	my $rawimage = $tools.create_image(200, 200);
+	exit() unless $rawimage;
+	
+	# Sets the current image Imlib2 will be using with its function calls.
+	$rawimage.context_set_image();
+	
+	# Sets the color with which text, lines and rectangles are drawn when
+	# being rendered onto an image.
+	$tools.context_set_color(
+	    red   => 255,
+	    green => 127,
+	    blue  => 0,
+	    alpha => 255
+	);
+	
+	$tools.image_fill_rectangle(
+	    x      => 0,
+	    y      => 0,
+	    width  => 200,
+	    height => 200
+	);
+	
+	$tools.image_set_format("png");
+	unlink("images/test_imlib2.png") if "images/test_imlib2.png".IO ~~ :e;
+	$tools.save_image("images/test_imlib2.png");
+	
+	# Frees the image that is set as the current image in Imlib2's context. 
+	$tools.free_image();
+	
+	exit();
+
+=end code
+
+=head1 API REFRENCE
+
+The perl6 API follows closely the C implementation.
+
+=head2 C<context_set_cliprect(x => 0, y => 0, width => 100, height => 100)>
+
+Parameters:
+=item x - The top left x coordinate of the rectangle.
+=item y - The top left y coordinate of the rectangle.
+=item width - The width of the rectangle.
+=item height - The height of the rectangle.
+
+Sets the rectangle of the current context.
+
+=head2 C<context_set_dither_mask(Bool $dither_mask)>
+
+Parameters:
+=item $dither_mask - The dither mask flag (True or False).
+
+Selects if, you are rendering to a mask, or producing pixmap masks from
+images, if the mask is to be dithered or not. passing in True for
+dither_mask means the mask pixmap will be dithered, False means it will
+not be dithered.
+
+=head2 C<Bool $dither_mask = context_get_dither_mask()>
+
+Returns:
+=item $dither_mask - The current dither mask flag (True or False).
+
+Returns the current mode for dithering pixmap masks. True means
+dithering is enabled and False means it is not.
+
+=head2 C<context_set_mask_alpha_threshold(Int $mask_alpha_threshold where 0..255)>
+
+Parameters:
+=item $mask_alpha_threshold - The mask alpha threshold.
+
+Selects, if you are rendering to a mask, the alpha threshold above which
+mask bits are set. The default mask alpha threshold is 128, meaning that
+a mask bit will be set if the pixel alpha is >= 128.
+
+=head2 C<Int $mask_alpha_threshold = context_get_mask_alpha_threshold()>
+
+Returns:
+=item $mask_alpha_threshold - current mask mask alpha threshold.
+
+The current mask mask alpha threshold.
+
+=head2 C<context_set_anti_alias(Bool $anti_alias)>
+
+Parameters:
+=item $anti_alias - The anti alias flag (True or False).
+
+Toggles "anti-aliased" scaling of images. This isn't quite correct since
+it's actually super and sub pixel sampling that it turns on and off, but
+anti-aliasing is used for having "smooth" edges to lines and shapes and
+this means when images are scaled they will keep their smooth appearance.
+Passing in True turns this on and False turns it off.
+
+=head2 C<Bool $anti_alias = context_get_anti_alias()>
+
+Returns:
+=item $anti_alias - The current anti alias flag (True or False).
+
+Returns if Imlib2 currently will smoothly scale images. True means it
+will and False means it will not.
+
+=head2 C<context_set_dither(Bool $dither)>
+
+Parameters:
+=item $dither - The dithering flag (True or False).
+
+Sets the dithering flag for rendering to a drawable or when pixmaps are
+produced. This affects the color image appearance by enabling dithering.
+Dithering slows down rendering but produces considerably better results.
+this option has no effect foe rendering in 24 bit and up, but in 16 bit
+and lower it will dither, producing smooth gradients and much better
+quality images. setting dither to True enables it and False disables it.
+
+=head2 C<Bool $dither = context_get_dither()>
+
+Returns:
+=item $dither - The current dithering flag (True or False). 
+
+Returns if image data is rendered with dithering currently. True means
+yes and False means no.
+
+=head2 C<context_set_blend(Bool $blend)>
+
+Parameters:
+=item $blend - The blending flag (True or False).
+
+When rendering an image to a drawable, Imlib2 is able to blend the
+image directly onto the drawable during rendering. Setting this to True
+will enable this. If the image has no alpha channel this has no effect.
+Setting it to False will disable this.
+
+=head2 C<Bool $blend = context_get_blend()>
+
+Returns:
+=item $blend - The current blending flag (True or False).
+
+Returns if Imlib2 will blend images onto a drawable whilst rendering to
+that drawable. True means yes and False means no. 
+
+=head2 C<context_set_color_modifier(Imlib2::ColorModifier $color_modifier)>
+
+Parameters:
+=item $color_modifier - Current color modifier.
+
+Sets the current color modifier used for rendering pixmaps or images to
+a drawable or images onto other images. Color modifiers are lookup
+tables that map the values in the red, green, blue and alpha channels
+to other values in the same channel when rendering, allowing for fades,
+color correction etc. to be done whilst rendering. pass in NULL as the
+color_modifier to disable the color modifier for rendering.
+
+=head2 C<Imlib2::ColorModifier $color_modifier = context_get_color_modifier()>
+
+Returns:
+=item $color_modifier - The current color modifier.
+
+Returns the current color modifier being used.
+
+=head1 AUTHOR
+
+Henrique Dias - L<mrhdias@mail.com>
+
+=head1 SEE ALSO
+
+Imlib2 Library Documentation L<http://docs.enlightenment.org/api/imlib2/html/>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=end pod
