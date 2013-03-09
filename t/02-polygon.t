@@ -16,9 +16,10 @@ lives_ok { $polygon.polygon_add_points(10, 10); }, 'polygon_add_points';
 
 is $polygon.polygon_contains_point(10, 10), 1, 'polygon_contains_point';
 
-lives_ok { $polygon.polygon_free(); }, 'polygon_free';
 lives_ok { $tools.image_draw_polygon($polygon); }, 'image_draw_polygon';
 lives_ok { $tools.image_fill_polygon($polygon); }, 'image_fill_polygon';
+
+lives_ok { $polygon.polygon_free(); }, 'polygon_free';
 
 $tools.free_image();
 
