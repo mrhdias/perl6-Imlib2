@@ -65,17 +65,50 @@ class Imlib2::Polygon is repr('CPointer') {
 }
 
 class Imlib2 is repr('CPointer') {
-	
-	### Color Modifier ###
 
+	sub imlib_context_set_cliprect(Int, Int, Int, Int)
+		is native(LIB) { ... };
+
+	sub imlib_context_set_dither_mask(int8)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_dither_mask()
+		returns int8 is native(LIB) { ... };
+
+	sub imlib_context_set_mask_alpha_threshold(Int)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_mask_alpha_threshold()
+		returns Int is native(LIB) { ... };
+
+	sub imlib_context_set_anti_alias(int8)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_anti_alias()
+		returns int8 is native(LIB) { ... };
+
+	sub imlib_context_set_dither(int8)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_dither()
+		returns int8 is native(LIB) { ... };
+
+	sub imlib_context_set_blend(int8)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_blend()
+		returns int8 is native(LIB) { ... };
+
+	sub imlib_context_get_color_modifier()
+		returns Imlib2::ColorModifier is native(LIB) { ... };
+
+	### Color Modifier ###
+	
 	sub imlib_apply_color_modifier()
 		is native(LIB) { ... };
 
 	sub imlib_apply_color_modifier_to_rectangle(Int, Int, Int, Int)
 		is native(LIB) { ... };
-
-	sub imlib_context_get_color_modifier()
-		returns Imlib2::ColorModifier is native(LIB) { ... };
 
 	sub imlib_free_color_modifier()
 		is native(LIB) { ... };
@@ -206,9 +239,6 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_image_sharpen(Int)
 		is native(LIB) { ... };
 
-	sub imlib_context_set_blend(int8)
-		is native(LIB) { ... };
-
 	sub imlib_blend_image_onto_image(Imlib2, int8, Int, Int, Int, Int, Int, Int, Int, Int)
 		is native(LIB) { ... };
 
@@ -234,6 +264,58 @@ class Imlib2 is repr('CPointer') {
 		return self;
 	}
 
+	method context_set_cliprect(
+			Int :$x where {$x >= 0} = 0,
+			Int :$y where {$y >= 0} = 0,
+			Int :$width where {$width >= 0},
+			Int :$height where {$height >= 0}) {
+		imlib_context_set_cliprect($x, $y, $width, $height);
+	}
+
+	method context_set_dither_mask(Bool $dither_mask) {
+		imlib_context_set_dither_mask($dither_mask ?? 1 !! 0);
+	}
+	
+	method context_get_dither_mask() {
+		return imlib_context_get_dither_mask().Bool;
+	}
+
+	method context_set_mask_alpha_threshold(Int $mask_alpha_threshold where 0..255) {
+		imlib_context_set_mask_alpha_threshold($mask_alpha_threshold);
+	}
+	
+	method context_get_mask_alpha_threshold() {
+		return imlib_context_get_mask_alpha_threshold();
+	}
+	
+	method context_set_anti_alias(Bool $anti_alias) {
+		imlib_context_set_anti_alias($anti_alias ?? 1 !! 0);
+	}
+
+	method context_get_anti_alias() {
+		return imlib_context_get_anti_alias().Bool;
+	}
+
+	method context_set_dither(Bool $dither) {
+		imlib_context_set_dither($dither ?? 1 !! 0);
+	}
+
+	method context_get_dither() {
+		return imlib_context_get_dither().Bool;
+	}
+	
+	method context_set_blend(Bool $blend) {
+		imlib_context_set_blend($blend ?? 1 !! 0);
+	}
+
+	method context_get_blend() {
+		return imlib_context_get_blend().Bool;
+	}
+
+	method context_get_color_modifier() {
+		return imlib_context_get_color_modifier();
+	}
+
 	### Color Modifier ###
 
 	method apply_color_modifier() {
@@ -247,10 +329,6 @@ class Imlib2 is repr('CPointer') {
 		Int :$height where {$height >= 0}) {
 
 		imlib_apply_color_modifier_to_rectangle($x, $y, $width, $height);
-	}
-
-	method context_get_color_modifier() {
-		return imlib_context_get_color_modifier();
 	}
 
 	method free_color_modifier() {
@@ -472,10 +550,6 @@ class Imlib2 is repr('CPointer') {
 	
 	method image_set_has_alpha(Bool $alpha) {
 		imlib_image_set_has_alpha($alpha ?? 1 !! 0);
-	}
-
-	method context_set_blend(Bool $blend) {
-		imlib_context_set_blend($blend ?? 1 !! 0);
 	}
 
 	method blend_image_onto_image(
