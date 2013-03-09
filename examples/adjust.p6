@@ -19,7 +19,7 @@ given $option {
 	default { exit(); }
 }
 
-my $value = prompt("Please select a value between $text: ");
+my $value = prompt("Please select a value between $text: ").Rat;
 
 my $tools = Imlib2.new();
 # load an image
