@@ -176,6 +176,99 @@ Returns:
 
 Returns the current color modifier being used.
 
+=head2 C<context_set_operation(OperationMode $operation)>
+
+Parameters:
+=item $operation - The current operation mode. 
+
+When Imlib2 draws an image onto another or an image onto a drawable it
+is able to do more than just blend the result on using the given alpha
+channel of the image. It is also able to do saturating additive,
+subtractive and a combination of the both (called reshade) rendering.
+The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
+or OP_RESHADE. Use this function to set the rendering operation.
+
+OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
+OP_ADD does DST = DST + (SRC * A).
+OP_SUBTRACT does DST = DST - (SRC * A).
+OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
+
+=head2 C<OperationMode $operation = context_get_operation()>
+
+Returns:
+=item $operation - The current operation mode.
+
+Returns the current operation mode.
+
+=head2 C<font.context_set_font(Imlib2::Font $font)>
+
+Parameters:
+=item $font - Current font. 
+
+Sets the current font to use when rendering text. you should load the
+font first with load_font().
+
+=head2 C<Imlib2::Font $font = context_get_font()>
+
+Returns:
+=item $font - The current font.
+
+Returns the current font.
+
+=head2 C<context_set_direction(TextDirection $text_direction)>
+
+Parameters:
+=item $text_direction - Text direction.
+
+Sets the direction in which to draw text in terms of simple 90 degree
+orientations or an arbitrary angle. The direction can be one of
+TEXT_TO_RIGHT, TEXT_TO_LEFT, TEXT_TO_DOWN, TEXT_TO_UP or TEXT_TO_ANGLE.
+The default is TEXT_TO_RIGHT. If you use TEXT_TO_ANGLE, you will also
+have to set the angle with context_set_angle().
+
+=head2 C<TextDirection $text_direction = context_get_direction()>
+
+Returns:
+=item $text_direction - The current direction of the text.
+
+Returns the current direction to render text in.
+
+=head2 C<context_set_angle(Rat $angle)>
+
+Parameters:
+=item $angle - Angle of the text strings.
+
+Sets the angle at which text strings will be drawn if the text direction
+has been set to TEXT_TO_ANGLE with context_set_direction().
+
+=head2 C<Rat $angle = context_get_angle()>
+
+Returns:
+=item The current angle of the text strings.
+
+Returns the current angle used to render text at if the direction is
+TEXT_TO_ANGLE.
+
+=head2 C<context_set_color(red => 127, green => 255, blue => 127, alpha => 255)>
+
+Parameters:
+=item red - Red channel of the current color.
+=item green - Green channel of the current color.
+=item blue - Blue channel of the current color.
+=item alpha - Alpha channel of the current color.
+
+Sets the color with which text, lines and rectangles are drawn when
+being rendered onto an image. Values for red, green, blue and alpha
+are between 0 and 255 - any other values have undefined results.
+
+=head2 C<context_set_color($hex_color, $alpha)>
+
+Parameters:
+=item $hex_color - The hexadecimal color code ("#FF00FF").
+=item $alpha - Alpha channel of the current color.
+
+Alternative function for the context_set_color(Named Arguments) function.
+
 =head1 AUTHOR
 
 Henrique Dias - L<mrhdias@mail.com>
