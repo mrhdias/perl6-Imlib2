@@ -4,6 +4,19 @@ constant LIB = 'libImlib2.so';
 enum TextDirection <TEXT_TO_RIGHT TEXT_TO_LEFT TEXT_TO_DOWN TEXT_TO_UP TEXT_TO_ANGLE>;
 enum OperationMode <OP_COPY OP_ADD OP_SUBTRACT OP_RESHADE>;
 
+class Imlib2::ImlibColor is repr('CStruct') {
+	has int $.alpha;
+	has int $.red;
+	has int $.green;
+	has int $.blue;
+
+	# this is a workaround, since NativeCall doesn't yet handle sized ints right
+	method alpha() { return $!alpha; }
+	method red() { return $!red; }
+	method green() { return $!green; }
+	method blue() { return $!blue; }
+}
+
 class Imlib2::ColorModifier is repr('CPointer') {
 	sub imlib_context_set_color_modifier(Imlib2::ColorModifier)
 		is native(LIB) { ... };
@@ -67,7 +80,7 @@ class Imlib2::Polygon is repr('CPointer') {
 
 class Imlib2 is repr('CPointer') {
 
-	sub imlib_context_set_cliprect(Int, Int, Int, Int)
+	sub imlib_context_set_cliprect(int, int, int, int)
 		is native(LIB) { ... };
 
 	sub imlib_context_set_dither_mask(int8)
@@ -76,7 +89,7 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_dither_mask()
 		returns int8 is native(LIB) { ... };
 
-	sub imlib_context_set_mask_alpha_threshold(Int)
+	sub imlib_context_set_mask_alpha_threshold(int)
 		is native(LIB) { ... };
 
 	sub imlib_context_get_mask_alpha_threshold()
@@ -103,20 +116,20 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_color_modifier()
 		returns Imlib2::ColorModifier is native(LIB) { ... };
 		
-	sub imlib_context_set_operation(Int)
+	sub imlib_context_set_operation(int)
 		is native(LIB) { ... };
 
 	sub imlib_context_get_operation()
-		returns Int is native(LIB) { ... };
+		returns int is native(LIB) { ... };
 		
 	sub imlib_context_get_font()
 		returns Imlib2::Font is native(LIB) { ... };
 
-	sub imlib_context_set_direction(Int)
+	sub imlib_context_set_direction(int)
 		is native(LIB) { ... };
 		
 	sub imlib_context_get_direction()
-		returns Int is native(LIB) { ... };
+		returns int is native(LIB) { ... };
 
 	sub imlib_context_set_angle(num)
 		is native(LIB) { ... };
@@ -124,8 +137,14 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_angle()
 		returns num is native(LIB) { ... };
 
-	sub imlib_context_set_color(Int, Int, Int, Int)
+	sub imlib_context_set_color(int, int, int, int)
 		is native(LIB) { ... };
+		
+	sub imlib_context_get_color(CArray[int] $red, CArray[int] $green, CArray[int] $blue, CArray[int] $alpha)
+		is native(LIB) { ... };
+		
+	sub imlib_context_get_imlib_color()
+		returns Imlib2::ImlibColor is native(LIB) { ... };
 
 	### Color Modifier ###
 	
@@ -265,6 +284,10 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_polygon_new()
 		returns Imlib2::Polygon is native(LIB) { ... };
+
+	sub hexcode(Int $red, Int $green, Int $blue) {
+		return ("#", sprintf('%02x', $red), sprintf('%02x', $green), sprintf('%02x', $blue)).join("");
+	}
 	
 	### METHODS ###
 	
@@ -369,6 +392,33 @@ class Imlib2 is repr('CPointer') {
 		my $green = ("0x" ~ $hexstr.substr(3,2)).Int;
 		my $blue = ("0x" ~ $hexstr.substr(5,2)).Int;
 		imlib_context_set_color($red, $green, $blue, $alpha);
+	}
+
+	multi method context_get_color(%color_channels) {
+		my @red_color := CArray[int].new();
+		my @green_color := CArray[int].new();
+		my @blue_color := CArray[int].new();
+		my @alpha_color := CArray[int].new();
+		@red_color[0] = @green_color[0] = @blue_color[0] = @alpha_color[0] = 0;
+
+		imlib_context_get_color(@red_color, @green_color, @blue_color, @alpha_color);
+
+		%color_channels{'red'} = @red_color[0];
+		%color_channels{'green'} = @green_color[0];
+		%color_channels{'blue'} = @blue_color[0];
+		%color_channels{'alpha'} = @alpha_color[0];
+		%color_channels{'hexcode'} = hexcode(@red_color[0], @green_color[0], @blue_color[0]);
+	}
+	
+	multi method context_get_color() {
+		my $color_channels = imlib_context_get_imlib_color();
+
+		return {
+			red     => $color_channels.red,
+			green   => $color_channels.green,
+			blue    => $color_channels.blue,
+			alpha   => $color_channels.alpha,
+			hexcode => hexcode($color_channels.red, $color_channels.green, $color_channels.blue)};
 	}
 
 	### Color Modifier ###
