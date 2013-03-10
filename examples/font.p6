@@ -39,7 +39,9 @@ $tools.context_set_direction(TEXT_TO_ANGLE);
 
 say "Text to Angle..." if $tools.context_get_direction() == TEXT_TO_ANGLE;
 
-$tools.context_set_angle(-45.0e0);	# -45.0
+$tools.context_set_angle(-45.0);
+
+say "Text Direction Angle: " ~ $tools.context_get_angle();
 
 # Draws the null-byte terminated string text using the current font on
 # the current image at the (x, y) location (x, y denoting the top left
