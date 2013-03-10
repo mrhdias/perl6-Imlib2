@@ -1,5 +1,3 @@
-=begin pod
-
 =head1 NAME
 
 Imlib2 - Perl 6 interface to the Imlib2 image library.
@@ -308,4 +306,3 @@ Imlib2 Library Documentation L<http://docs.enlightenment.org/api/imlib2/html/>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
-=end pod
