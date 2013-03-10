@@ -269,6 +269,32 @@ Parameters:
 
 Alternative function for the context_set_color(Named Arguments) function.
 
+=head2 C<context_get_color(%color_channels)>
+
+Parameters:
+=item %color_channels - Hash passed as argument.
+
+Set the current color for rendering text, rectangles and lines.
+
+%color_channels{'red'} - Red channel of the current color.
+%color_channels{'green'} - Green channel of the current color.
+%color_channels{'blue'} - Blue channel of the current color.
+%color_channels{'alpha'} - Alpha channel of the current color.
+%color_channels{'hexcode'} - Hexadecimal code of the current color.
+
+=head2 C<%color_channels = context_get_color()>
+
+Returns:
+=item %color_channels - Hash with the channels and a hexcode of the current colors. 
+
+Returns the current color for rendering text, rectangles and lines.
+
+%color_channels{'red'} - Red channel of the current color.
+%color_channels{'green'} - Green channel of the current color.
+%color_channels{'blue'} - Blue channel of the current color.
+%color_channels{'alpha'} - Alpha channel of the current color.
+%color_channels{'hexcode'} - Hexadecimal code of the current color.
+
 =head1 AUTHOR
 
 Henrique Dias - L<mrhdias@mail.com>
