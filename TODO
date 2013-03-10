@@ -28,7 +28,7 @@ imlib_context_get_direction_____________________|x|x|x|_|
 imlib_context_set_angle_________________________|x|x|x|x|
 imlib_context_get_angle_________________________|x|x|x|x|
 imlib_context_set_color_________________________|x|x|x|x|
-imlib_context_get_color_________________________|_|_|_|_|
+imlib_context_get_color_________________________|x|x|x|x|
 imlib_context_get_imlib_color___________________|_|_|_|_|
 imlib_context_set_color_hsva____________________|_|_|_|_|
 imlib_context_get_color_hsva____________________|_|_|_|_|
