@@ -2,6 +2,7 @@ use NativeCall;
 
 constant LIB = 'libImlib2.so';
 enum TextDirection <TEXT_TO_RIGHT TEXT_TO_LEFT TEXT_TO_DOWN TEXT_TO_UP TEXT_TO_ANGLE>;
+enum OperationMode <OP_COPY OP_ADD OP_SUBTRACT OP_RESHADE>;
 
 class Imlib2::ColorModifier is repr('CPointer') {
 	sub imlib_context_set_color_modifier(Imlib2::ColorModifier)
@@ -101,6 +102,30 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_context_get_color_modifier()
 		returns Imlib2::ColorModifier is native(LIB) { ... };
+		
+	sub imlib_context_set_operation(Int)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_operation()
+		returns Int is native(LIB) { ... };
+		
+	sub imlib_context_get_font()
+		returns Imlib2::Font is native(LIB) { ... };
+
+	sub imlib_context_set_direction(Int)
+		is native(LIB) { ... };
+		
+	sub imlib_context_get_direction()
+		returns Int is native(LIB) { ... };
+
+	sub imlib_context_set_angle(num)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_angle()
+		returns num is native(LIB) { ... };
+
+	sub imlib_context_set_color(Int, Int, Int, Int)
+		is native(LIB) { ... };
 
 	### Color Modifier ###
 	
@@ -164,9 +189,6 @@ class Imlib2 is repr('CPointer') {
 		
 	sub imlib_get_font_cache_size()
 		returns Int is native(LIB) { ... };
-	
-	sub imlib_context_get_font()
-		returns Imlib2::Font is native(LIB) { ... };
 		
 	sub imlib_get_text_size(Str, Int $w is rw, Int $h is rw)
 		is native(LIB) { ... };
@@ -184,9 +206,6 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_clone_image()
 		returns Imlib2::Image is native(LIB) { ... };
-	
-	sub imlib_context_set_color(Int, Int, Int, Int)
-		is native(LIB) { ... };
 		
 	sub imlib_create_cropped_image(Int, Int, Int, Int)
 		returns Imlib2::Image is native(LIB) { ... };
@@ -246,17 +265,6 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_polygon_new()
 		returns Imlib2::Polygon is native(LIB) { ... };
-		
-	### Text Direction ###
-	
-	sub imlib_context_get_direction()
-		returns Int is native(LIB) { ... };
-	
-	sub imlib_context_set_direction(Int)
-		is native(LIB) { ... };
-	
-	sub imlib_context_set_angle(num)
-		is native(LIB) { ... };
 	
 	### METHODS ###
 	
@@ -314,6 +322,53 @@ class Imlib2 is repr('CPointer') {
 
 	method context_get_color_modifier() {
 		return imlib_context_get_color_modifier();
+	}
+	
+	method context_set_operation(OperationMode $operation) {
+		imlib_context_set_operation($operation.value);
+	}
+	
+	method context_get_operation() {
+		return OperationMode(imlib_context_get_operation());
+	}
+
+	method context_get_font() {
+		return imlib_context_get_font();
+	}
+
+	method context_set_direction(TextDirection $text_direction) {
+		imlib_context_set_direction($text_direction.value);
+	}
+	
+	method context_get_direction() {
+		return TextDirection(imlib_context_get_direction());
+	}
+	
+	method context_set_angle(Rat $angle where -360.0 .. 360.0 = 0.0) {
+		imlib_context_set_angle($angle.Num);
+	}
+	
+	method context_get_angle() {
+		return imlib_context_get_angle().Rat;
+	}
+
+	multi method context_set_color(
+		Int :$red where 0..255 = 0,
+		Int :$green where 0..255 = 0,
+		Int :$blue where 0..255 = 0,
+		Int :$alpha where 0..255 = 255) {
+
+		imlib_context_set_color($red, $green, $blue, $alpha);
+	}
+
+	multi method context_set_color(
+		Str $hexstr where /^\#<[A..Fa..f\d]>**6$/,
+		Int $alpha where 0..255 = 255) {
+
+		my $red = ("0x" ~ $hexstr.substr(1,2)).Int;
+		my $green = ("0x" ~ $hexstr.substr(3,2)).Int;
+		my $blue = ("0x" ~ $hexstr.substr(5,2)).Int;
+		imlib_context_set_color($red, $green, $blue, $alpha);
 	}
 
 	### Color Modifier ###
@@ -415,10 +470,6 @@ class Imlib2 is repr('CPointer') {
 		imlib_set_font_cache_size($bytes);
 	}
 	
-	method context_get_font() {
-		return imlib_context_get_font();
-	}
-	
 	multi method font_cache_size() {
 		return imlib_get_font_cache_size();
 	}
@@ -439,25 +490,6 @@ class Imlib2 is repr('CPointer') {
 
 	method clone_image() {
 		return imlib_clone_image();
-	}
-	
-	multi method context_set_color(
-		Int :$red where 0..255 = 0,
-		Int :$green where 0..255 = 0,
-		Int :$blue where 0..255 = 0,
-		Int :$alpha where 0..255 = 255) {
-
-		imlib_context_set_color($red, $green, $blue, $alpha);
-	}
-
-	multi method context_set_color(
-		Str $hexstr where /^\#<[A..Fa..f\d]>**6$/,
-		Int $alpha where 0..255 = 255) {
-
-		my $red = ("0x" ~ $hexstr.substr(1,2)).Int;
-		my $green = ("0x" ~ $hexstr.substr(3,2)).Int;
-		my $blue = ("0x" ~ $hexstr.substr(5,2)).Int;
-		imlib_context_set_color($red, $green, $blue, $alpha);
 	}
 	
 	method create_cropped_image(
@@ -574,19 +606,5 @@ class Imlib2 is repr('CPointer') {
 	
 	method polygon_new() {
 		return imlib_polygon_new();
-	}
-	
-	### Text Direction ###
-	
-	method context_get_direction() {
-		return imlib_context_get_direction();
-	}
-	
-	method context_set_direction(TextDirection $text_direction) {
-		imlib_context_set_direction($text_direction.value);
-	}
-	
-	method context_set_angle(num $angle = 0e0) {
-		imlib_context_set_angle($angle);
 	}
 }
