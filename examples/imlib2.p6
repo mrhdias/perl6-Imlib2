@@ -16,11 +16,36 @@ $tools.image_set_has_alpha(True);
 # Sets the color with which text, lines and rectangles are drawn when
 # being rendered onto an image.
 $tools.context_set_color(
-	red   => 255,
+	red   => 10,
 	green => 127,
-	blue  => 0,
+	blue  => 200,
 	alpha => 255
 );
+
+my %color_channels = (
+	red     => 0,
+	green   => 0,
+	blue    => 0,
+	alpha   => 0,
+	hexcode => "#000000"
+);
+$tools.context_get_color(%color_channels);
+say "Pass hash colors as argument:";
+say "-----------------------------";
+say "__Red: " ~ %color_channels{'red'};
+say "Green: " ~ %color_channels{'green'};
+say "_Blue: " ~ %color_channels{'blue'};
+say "Alpha: " ~ %color_channels{'alpha'};
+say "__Hex: " ~ %color_channels{'hexcode'};
+
+%color_channels = $tools.context_get_color();
+say "\nReturn hash colors:";
+say "-----------------------------";
+say "__Red: " ~ %color_channels{'red'};
+say "Green: " ~ %color_channels{'green'};
+say "_Blue: " ~ %color_channels{'blue'};
+say "Alpha: " ~ %color_channels{'alpha'};
+say "__Hex: " ~ %color_channels{'hexcode'};
 
 $tools.image_fill_rectangle(
 	x      => 0,
