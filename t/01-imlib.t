@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 30;
+plan 36;
 
 use Imlib2;
 
@@ -55,10 +55,18 @@ is $tools.context_get_operation(), OP_SUBTRACT, 'context_get_operation returns O
 lives_ok { $tools.context_set_operation(OP_RESHADE); }, 'context_set_operation is set to OP_RESHADE mode';
 is $tools.context_get_operation(), OP_RESHADE, 'context_get_operation returns OP_RESHADE mode';
 
+lives_ok { $tools.context_set_color("#FFFFFF", 255); }, 'context_set_color with hexadecimal color code';
+
 lives_ok {
-	$tools.context_set_color(red => 127, green => 0, blue => 255, alpha => 255);
+	$tools.context_set_color(red => 10, green => 127, blue => 200, alpha => 255);
 }, 'context_set_color with named arguments';
 
-lives_ok { $tools.context_set_color("#FFFFFF", 255); }, 'context_set_color with hexadecimal color code';
+my %color_channels;
+lives_ok { $tools.context_get_color(%color_channels); }, 'context_get_color';
+is %color_channels{'red'}, 10, 'the red channel of the current color is 10';
+is %color_channels{'green'}, 127, 'the green channel of the current color is 127';
+is %color_channels{'blue'}, 200, 'the blue channel of the current color is 200';
+is %color_channels{'alpha'}, 255, 'the alpha channel of the current color is 255';
+is %color_channels{'hexcode'}, "#0a7fc8", 'the hexacode of the current color is #0a7fc8';
 
 done;
