@@ -50,7 +50,15 @@ version).
 
 The perl6 API follows closely the C implementation.
 
-=head2 C<context_set_cliprect(x => 0, y => 0, width => 100, height => 100)>
+=head2 C<context_set_cliprect>
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_cliprect(
+		x      => 0,
+		y      => 0,
+		width  => 100,
+		height => 100);
 
 Parameters:
 =item x - The top left x coordinate of the rectangle.
