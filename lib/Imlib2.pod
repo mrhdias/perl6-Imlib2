@@ -433,7 +433,7 @@ Usage:
 		blue  => 127,
 		alpha => 255);
 
-	# Another way to setup the channel colors.
+	# Another way to setup the color channels.
 	my Str $hexcode = "#ff00ff";
 	my Int $alpha = 127;
 	$tools.context_set_color($hexcode, $alpha);
@@ -452,29 +452,54 @@ are between 0 and 255 - any other values have undefined results.
 
 =head2 C<context_get_color(%color_channels)>
 
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my %color_channels;
+	$tools.context_get_color(%color_channels);
+	say %color_channels{'red'};
+	say %color_channels{'green'};
+	say %color_channels{'blue'};
+	say %color_channels{'alpha'};
+	say %color_channels{'hexcode'};
+
+	# Another way to get the color channels.
+	%color_channels = $tools.context_get_color();
+
 Parameters:
-=item %color_channels - Hash passed as argument.
+
+	%color_channels - If a hash is passed as argument.
+	
+Returns:
+
+	%color_channels - Hash with the channels and a hexcode of the current colors if no argument is passed.
 
 Set the current color for rendering text, rectangles and lines.
 
-%color_channels{'red'} - Red channel of the current color.
-%color_channels{'green'} - Green channel of the current color.
-%color_channels{'blue'} - Blue channel of the current color.
-%color_channels{'alpha'} - Alpha channel of the current color.
-%color_channels{'hexcode'} - Hexadecimal code of the current color.
+=over 8
 
-=head2 C<%color_channels = context_get_color()>
-
-Returns:
-=item %color_channels - Hash with the channels and a hexcode of the current colors. 
-
-Returns the current color for rendering text, rectangles and lines.
+=item *
 
 %color_channels{'red'} - Red channel of the current color.
+
+=item *
+
 %color_channels{'green'} - Green channel of the current color.
+
+=item *
+
 %color_channels{'blue'} - Blue channel of the current color.
+
+=item *
+
 %color_channels{'alpha'} - Alpha channel of the current color.
+
+=item *
+
 %color_channels{'hexcode'} - Hexadecimal code of the current color.
+
+=back
 
 =head1 AUTHOR
 
