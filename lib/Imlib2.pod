@@ -476,7 +476,7 @@ Returns:
 	%color_channels - Hash with the channels and a hexcode of the
 	                  current colors if no argument is passed.
 
-Set the current color for rendering text, rectangles and lines.
+The current color for rendering text, rectangles and lines.
 
 =over 4
 
