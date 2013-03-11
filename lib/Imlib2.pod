@@ -77,7 +77,7 @@ Usage:
 	
 	use Imlib2;
 	my $tools = Imlib2.new();
-	Bool $dither_mask = True;
+	my Bool $dither_mask = True;
 	$tools.context_set_cliprect($dither_mask);
 
 Parameters:
@@ -89,18 +89,33 @@ images, if the mask is to be dithered or not. passing in True for
 dither_mask means the mask pixmap will be dithered, False means it will
 not be dithered.
 
-=head2 C<Bool $dither_mask = context_get_dither_mask()>
+=head2 C<context_get_dither_mask>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $dither_mask = $tools.context_get_dither_mask();
 
 Returns:
-=item $dither_mask - The current dither mask flag (True or False).
+
+	Bool $dither_mask - The current dither mask flag (True or False).
 
 Returns the current mode for dithering pixmap masks. True means
 dithering is enabled and False means it is not.
 
-=head2 C<context_set_mask_alpha_threshold(Int $mask_alpha_threshold where 0..255)>
+=head2 C<context_set_mask_alpha_threshold>
+
+Usage:
+	
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Int $mask_alpha_threshold = 127;
+	$tools.context_set_mask_alpha_threshold($mask_alpha_threshold);
 
 Parameters:
-=item $mask_alpha_threshold - The mask alpha threshold.
+
+	Int $mask_alpha_threshold - The mask alpha threshold (values between 0 and 255).
 
 Selects, if you are rendering to a mask, the alpha threshold above which
 mask bits are set. The default mask alpha threshold is 128, meaning that
@@ -108,10 +123,17 @@ a mask bit will be set if the pixel alpha is >= 128.
 
 =head2 C<Int $mask_alpha_threshold = context_get_mask_alpha_threshold()>
 
-Returns:
-=item $mask_alpha_threshold - current mask mask alpha threshold.
+Usage:
 
-The current mask mask alpha threshold.
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Int $mask_alpha_threshold = $tools.context_get_mask_alpha_threshold();
+
+Returns:
+
+	Int $mask_alpha_threshold - The current mask alpha threshold.
+
+The current mask alpha threshold.
 
 =head2 C<context_set_anti_alias(Bool $anti_alias)>
 
