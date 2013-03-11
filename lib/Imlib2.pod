@@ -61,10 +61,10 @@ The perl6 API follows closely the C implementation.
 		height => 100);
 
 Parameters:
-x - The top left x coordinate of the rectangle.
-y - The top left y coordinate of the rectangle.
-width - The width of the rectangle.
-height - The height of the rectangle.
+x - The top left x coordinate of the rectangle. 
+y - The top left y coordinate of the rectangle. 
+width - The width of the rectangle. 
+height - The height of the rectangle. 
 
 Sets the rectangle of the current context.
 
