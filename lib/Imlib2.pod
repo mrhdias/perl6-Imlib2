@@ -11,8 +11,6 @@ version).
 
 =head1 SYNOPSIS
 
-=begin code
-
 	use Imlib2;
 	
 	my $tools = Imlib2.new();
@@ -47,8 +45,6 @@ version).
 	$tools.free_image();
 	
 	exit();
-
-=end code
 
 =head1 API REFRENCE
 
