@@ -291,12 +291,27 @@ subtractive and a combination of the both (called reshade) rendering.
 The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
 or OP_RESHADE. Use this function to set the rendering operation.
 
-* OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
-* OP_ADD does DST = DST + (SRC * A).
-* OP_SUBTRACT does DST = DST - (SRC * A).
-* OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
+=over 4
 
-=head2 C<OperationMode $operation = context_get_operation()>
+=item *
+
+OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
+
+=item *
+
+OP_ADD does DST = DST + (SRC * A).
+
+=item *
+
+OP_SUBTRACT does DST = DST - (SRC * A).
+
+=item *
+
+OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
+
+=back
+
+=head2 C<context_get_operation>
 
 Usage:
 
@@ -310,10 +325,20 @@ Returns:
 
 Returns the current operation mode.
 
-=head2 C<font.context_set_font(Imlib2::Font $font)>
+=head2 C<font.context_set_font>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $tools.load_font("comic", 36);
+	$corefont.context_set_font();
+	$tools.free_font();
 
 Parameters:
-=item $font - Current font. 
+
+	Imlib2::Font $font - Current font. 
 
 Sets the current font to use when rendering text. you should load the
 font first with load_font().
