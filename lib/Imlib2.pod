@@ -154,18 +154,33 @@ anti-aliasing is used for having "smooth" edges to lines and shapes and
 this means when images are scaled they will keep their smooth appearance.
 Passing in True turns this on and False turns it off.
 
-=head2 C<Bool $anti_alias = context_get_anti_alias()>
+=head2 C<context_get_anti_alias>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $anti_alias = $tools.context_get_anti_alias();
 
 Returns:
-=item $anti_alias - The current anti alias flag (True or False).
+
+	Bool $anti_alias - The current anti alias flag (True or False).
 
 Returns if Imlib2 currently will smoothly scale images. True means it
 will and False means it will not.
 
 =head2 C<context_set_dither(Bool $dither)>
 
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $dither = True;
+	$tools.context_set_dither($dither);
+
 Parameters:
-=item $dither - The dithering flag (True or False).
+
+	Bool $dither - The dithering flag (True or False).
 
 Sets the dithering flag for rendering to a drawable or when pixmaps are
 produced. This affects the color image appearance by enabling dithering.
@@ -176,8 +191,15 @@ quality images. setting dither to True enables it and False disables it.
 
 =head2 C<Bool $dither = context_get_dither()>
 
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $dither = $tools.context_get_dither();
+
 Returns:
-=item $dither - The current dithering flag (True or False). 
+
+	Bool $dither - The current dithering flag (True or False). 
 
 Returns if image data is rendered with dithering currently. True means
 yes and False means no.
