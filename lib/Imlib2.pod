@@ -502,6 +502,320 @@ The current color for rendering text, rectangles and lines.
 
 =back
 
+=head2 C<context_set_color_hsva>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_color_hsva(
+		hue        => 180.0,
+		saturation => 0.50,
+		value      => 0.75,
+		alpha      => 127);
+
+Parameters:
+
+	Rat hue - Hue channel of the current color.
+	Rat saturation - Saturation channel of the current color.
+	Rat value - Value channel of the current color.
+	Int alpha - Alpha channel of the current color.
+
+Sets the color in HSVA space. Values for hue are between 0 and 360,
+values for saturation and value between 0 and 1, and values for alpha
+are between 0 and 255 - any other values have undefined results.
+
+=head2 C<context_get_color_hsva>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my %hsva_channels;
+	$tools.context_get_color_hsva(%hsva_channels);
+	say "Hue: " ~ %hsva_channels{'hue'};
+	say "Saturation: " ~ %hsva_channels{'saturation'};
+	say "Value: " ~ %hsva_channels{'value'};
+	say "Alpha: " ~ %hsva_channels{'alpha'};
+
+Parameters:
+
+	%hsva_channels - Hash (passed as argument) with the channels of
+	                 the current color.
+
+The current color for rendering text, rectangles and lines in HSVA space.
+
+=over 4
+
+=item *
+
+%hsva_channels{'hue'} - Hue channel of the current color.
+
+=item *
+
+%hsva_channels{'saturation'} - Saturation channel of the current color.
+
+=item *
+
+%hsva_channels{'value'} - Value channel of the current color.
+
+=item *
+
+%hsva_channels{'alpha'} - Alpha channel of the current color.
+
+=back
+
+=head2 C<context_set_color_hlsa>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_color_hlsa(
+		hue        => 180.0,
+		lightness  => 0.75,
+		saturation => 0.50,
+		alpha      => 127);
+
+Parameters:
+
+	Rat hue - Hue channel of the current color.
+	Rat lightness - Lightness channel of the current color.
+	Rat saturation - Saturation channel of the current color.
+	Int alpha - Alpha channel of the current color.
+
+Sets the color in HLSA space. Values for hue are between 0 and 360,
+values for lightness and saturation between 0 and 1, and values for
+alpha are between 0 and 255 - any other values have undefined results.
+
+=head2 C<context_get_color_hlsa>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my %hlsa_channels;
+	$tools.context_get_color_hlsa(%hlsa_channels);
+	say "Hue: " ~ %hlsa_channels{'hue'};
+	say "Lightness: " ~ %hlsa_channels{'lightness'};
+	say "Saturation: " ~ %hlsa_channels{'saturation'};
+	say "Alpha: " ~ %hlsa_channels{'alpha'};
+
+Parameters:
+
+	%hlsa_channels - Hash (passed as argument) with the channels of
+	                 the current color.
+
+The current color for rendering text, rectangles and lines in HLSA space.
+
+=over 4
+
+=item *
+
+%hlsa_channels{'hue'} - Hue channel of the current color.
+
+=item *
+
+%hlsa_channels{'lightness'} - Lightness channel of the current color.
+
+=item *
+
+%hlsa_channels{'saturation'} - Saturation channel of the current color.
+
+=item *
+
+%hlsa_channels{'alpha'} - Alpha channel of the current color.
+
+=back
+
+=head2 C<context_set_color_cmya>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_color_cmya(
+		cyan    => 25,
+		magenta => 125,
+		yellow  => 200,
+		alpha   => 255);
+
+Parameters:
+
+	Int cyan - Cyan channel of the current color.
+	Int magenta - Magenta channel of the current color.
+	Int yellow - Yellow channel of the current color.
+	Int alpha - Alpha channel of the current color.
+
+Sets the color in CMYA space. Values for cyan, magenta, yellow and alpha
+are between 0 and 255 - any other values have undefined results.
+
+=head2 C<context_get_color_cmya>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my %cmya_channels;
+	$tools.context_get_color_cmya(%cmya_channels);
+	say "Cyan: " ~ %cmya_channels{'cyan'};
+	say "Magenta: " ~ %cmya_channels{'magenta'};
+	say "Yellow: " ~ %cmya_channels{'yellow'};
+	say "Alpha: " ~ %cmya_channels{'alpha'};
+
+Parameters:
+
+	%cmya_channels - Hash (passed as argument) with the CMYA channels of
+	                 the current color.
+
+The current color for rendering text, rectangles and lines in CMYA space.
+
+=over 4
+
+=item *
+
+%cmya_channels{'cyan'} - Cyan channel of the current color.
+
+=item *
+
+%cmya_channels{'magenta'} - Magenta channel of the current color.
+
+=item *
+
+%cmya_channels{'yellow'} - Yellow channel of the current color.
+
+=item *
+
+%cmya_channels{'alpha'} - Alpha channel of the current color.
+
+=back
+
+=head2 C<context_set_color_range>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $color_range = $tools.create_color_range();
+	$color_range.context_set_color_range();
+	$tools.free_color_range();
+
+Parameters:
+
+	Imlib2::ColorRange $color_range - Color range.
+	
+Sets the current color range to use for rendering gradients.
+
+=head2 C<context_get_color_range>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $color_range = $tools.context_get_color_range();
+	
+Returns:
+
+	Imlib2::ColorRange $color_range - The current color range.
+
+Returns the current color range being used for gradients.
+
+=head2 C<context_set_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	$tools.free_image();
+
+Parameters:
+
+	Imlib2::Image $image - Current image.
+	
+Sets the current image Imlib2 will be using with its function calls.
+
+=head2 C<context_get_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.context_get_image();
+	
+Returns:
+
+	Imlib2::Image $image - The current image.
+
+Returns the current context image.
+
+=head2 C<set_cache_size>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $bytes = 2048 * 1024;
+	$tools.set_cache_size($bytes);
+
+Parameters:
+
+	Int $bytes - Cache size.
+
+Sets the cache size. The size is in bytes. Setting the cache size to 0
+effectively flushes the cache and keeps the cache size at 0 until set
+to another value. Whenever you set the cache size Imlib2 will flush as
+many old images and pixmap from the cache as needed until the current
+cache usage is less than or equal to the cache size.
+
+=head2 C<get_cache_size>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $bytes = $tools.get_cache_size();
+
+Returns:
+
+	Int $bytes - The current size of the image cache in bytes.
+
+Returns the current size of the image cache in bytes. The cache is a
+unified cache used for image data AND pixmaps.
+
+=head2 C<set_color_usage>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $max = 256;
+	$tools.set_color_usage($max);
+
+Parameters:
+
+	Int $max - Maximum number of colors.
+
+Sets the maximum number of colors you would like Imlib2 to allocate for
+you when rendering. The default is 256. This has no effect in depths
+greater than 8 bit.
+
+=head2 C<get_color_usage>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $max = $tools.get_color_usage();
+
+Returns:
+
+	Int $max - The current number of colors.
+
+Gets the number of colors Imlib2 currently at a maximum is allowed to
+allocate for rendering. The default is 256.
+
 =head1 AUTHOR
 
 Henrique Dias - L<mrhdias@mail.com>
