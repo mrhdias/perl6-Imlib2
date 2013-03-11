@@ -343,17 +343,31 @@ Parameters:
 Sets the current font to use when rendering text. you should load the
 font first with load_font().
 
-=head2 C<Imlib2::Font $font = context_get_font()>
+=head2 C<context_get_font>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $font = $tools.context_get_font();
 
 Returns:
-=item $font - The current font.
+
+	mlib2::Font $font - The current font.
 
 Returns the current font.
 
-=head2 C<context_set_direction(TextDirection $text_direction)>
+=head2 C<context_set_direction>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_direction(TEXT_TO_RIGHT);
 
 Parameters:
-=item $text_direction - Text direction.
+
+	TextDirection $text_direction - Text direction.
 
 Sets the direction in which to draw text in terms of simple 90 degree
 orientations or an arbitrary angle. The direction can be one of
@@ -361,48 +375,80 @@ TEXT_TO_RIGHT, TEXT_TO_LEFT, TEXT_TO_DOWN, TEXT_TO_UP or TEXT_TO_ANGLE.
 The default is TEXT_TO_RIGHT. If you use TEXT_TO_ANGLE, you will also
 have to set the angle with context_set_angle().
 
-=head2 C<TextDirection $text_direction = context_get_direction()>
+=head2 C<context_get_direction>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	say "TEXT_TO RIGHT is the current direction of the text."
+		if $tools.context_get_direction() == TEXT_TO_RIGHT;
 
 Returns:
-=item $text_direction - The current direction of the text.
+
+	TextDirection $text_direction - The current direction of the text.
 
 Returns the current direction to render text in.
 
-=head2 C<context_set_angle(Rat $angle)>
+=head2 C<context_set_angle>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Rat $angle = -45.0;
+	$tools.context_set_angle($angle);
 
 Parameters:
-=item $angle - Angle of the text strings.
+
+	Rat $angle - Angle of the text strings.
 
 Sets the angle at which text strings will be drawn if the text direction
 has been set to TEXT_TO_ANGLE with context_set_direction().
 
-=head2 C<Rat $angle = context_get_angle()>
+=head2 C<context_get_angle>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Rat $angle = $tools.context_get_angle();
 
 Returns:
-=item The current angle of the text strings.
+
+	Rat $angle - The current angle of the text strings.
 
 Returns the current angle used to render text at if the direction is
 TEXT_TO_ANGLE.
 
-=head2 C<context_set_color(red => 127, green => 255, blue => 127, alpha => 255)>
+=head2 C<context_set_color>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_color(
+		red   => 127,
+		green => 255,
+		blue  => 127,
+		alpha => 255);
+
+	# Another way to setup the channel colors.
+	my Str $hexcode = "#ff00ff";
+	my Int $alpha = 127;
+	$tools.context_set_color($hexcode, $alpha);
 
 Parameters:
-=item red - Red channel of the current color.
-=item green - Green channel of the current color.
-=item blue - Blue channel of the current color.
-=item alpha - Alpha channel of the current color.
+
+	Int red - Red channel of the current color.
+	Int green - Green channel of the current color.
+	Int blue - Blue channel of the current color.
+	Int alpha - Alpha channel of the current color.
+	Str $hex_color - The hexadecimal color code ("#FF00FF").
 
 Sets the color with which text, lines and rectangles are drawn when
 being rendered onto an image. Values for red, green, blue and alpha
 are between 0 and 255 - any other values have undefined results.
-
-=head2 C<context_set_color($hex_color, $alpha)>
-
-Parameters:
-=item $hex_color - The hexadecimal color code ("#FF00FF").
-=item $alpha - Alpha channel of the current color.
-
-Alternative function for the context_set_color(Named Arguments) function.
 
 =head2 C<context_get_color(%color_channels)>
 
