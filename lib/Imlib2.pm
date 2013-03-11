@@ -5,10 +5,10 @@ enum TextDirection <TEXT_TO_RIGHT TEXT_TO_LEFT TEXT_TO_DOWN TEXT_TO_UP TEXT_TO_A
 enum OperationMode <OP_COPY OP_ADD OP_SUBTRACT OP_RESHADE>;
 
 class Imlib2::ImlibColor is repr('CStruct') {
-	has int $.alpha;
-	has int $.red;
-	has int $.green;
-	has int $.blue;
+	has int32 $.alpha;
+	has int32 $.red;
+	has int32 $.green;
+	has int32 $.blue;
 
 	# this is a workaround, since NativeCall doesn't yet handle sized ints right
 	method alpha() { return $!alpha; }
@@ -54,10 +54,10 @@ class Imlib2::Image is repr('CPointer') {
 }
 
 class Imlib2::Polygon is repr('CPointer') {
-	sub imlib_polygon_add_point(Imlib2::Polygon, Int, Int)
+	sub imlib_polygon_add_point(Imlib2::Polygon, int32, int32)
 		is native(LIB) { ... };
 	
-	sub imlib_polygon_contains_point(Imlib2::Polygon, Int, Int)
+	sub imlib_polygon_contains_point(Imlib2::Polygon, int32, int32)
 		returns int8 is native(LIB) { ... };
 
 	sub imlib_polygon_free(Imlib2::Polygon)
@@ -80,7 +80,7 @@ class Imlib2::Polygon is repr('CPointer') {
 
 class Imlib2 is repr('CPointer') {
 
-	sub imlib_context_set_cliprect(int, int, int, int)
+	sub imlib_context_set_cliprect(int32, int32, int32, int32)
 		is native(LIB) { ... };
 
 	sub imlib_context_set_dither_mask(int8)
@@ -89,7 +89,7 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_dither_mask()
 		returns int8 is native(LIB) { ... };
 
-	sub imlib_context_set_mask_alpha_threshold(int)
+	sub imlib_context_set_mask_alpha_threshold(int32)
 		is native(LIB) { ... };
 
 	sub imlib_context_get_mask_alpha_threshold()
@@ -116,20 +116,20 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_color_modifier()
 		returns Imlib2::ColorModifier is native(LIB) { ... };
 		
-	sub imlib_context_set_operation(int)
+	sub imlib_context_set_operation(int32)
 		is native(LIB) { ... };
 
 	sub imlib_context_get_operation()
-		returns int is native(LIB) { ... };
+		returns int32 is native(LIB) { ... };
 		
 	sub imlib_context_get_font()
 		returns Imlib2::Font is native(LIB) { ... };
 
-	sub imlib_context_set_direction(int)
+	sub imlib_context_set_direction(int32)
 		is native(LIB) { ... };
 		
 	sub imlib_context_get_direction()
-		returns int is native(LIB) { ... };
+		returns int32 is native(LIB) { ... };
 
 	sub imlib_context_set_angle(num)
 		is native(LIB) { ... };
@@ -137,14 +137,54 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_context_get_angle()
 		returns num is native(LIB) { ... };
 
-	sub imlib_context_set_color(int, int, int, int)
+	sub imlib_context_set_color(int32, int32, int32, int32)
 		is native(LIB) { ... };
 		
-	sub imlib_context_get_color(CArray[int] $red, CArray[int] $green, CArray[int] $blue, CArray[int] $alpha)
+	sub imlib_context_get_color(CArray[int32] $red, CArray[int32] $green,
+			CArray[int32] $blue, CArray[int32] $alpha)
 		is native(LIB) { ... };
 		
 	sub imlib_context_get_imlib_color()
 		returns Imlib2::ImlibColor is native(LIB) { ... };
+
+	sub imlib_context_set_color_hsva(num32, num32, num32, int32)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_color_hsva(CArray[num32] $hue, CArray[num32] $saturation,
+			CArray[num32] $value, CArray[int32] $alpha)
+		is native(LIB) { ... };
+
+	sub imlib_context_set_color_hlsa(num32, num32, num32, int32)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_color_hlsa(CArray[num32] $hue, CArray[num32] $lightness,
+			CArray[num32] $saturation, CArray[int32] $alpha)
+		is native(LIB) { ... };
+
+	sub imlib_context_set_color_cmya(int32, int32, int32, int32)
+		is native(LIB) { ... };
+		
+	sub imlib_context_get_color_cmya(CArray[int32] $cyan, CArray[int32] $magenta,
+			CArray[int32] $yellow, CArray[int32] $alpha)
+		is native(LIB) { ... };
+
+	sub imlib_context_get_color_range()
+		returns Imlib2::ColorRange is native(LIB) { ... };
+		
+	sub imlib_context_get_image()
+		returns Imlib2::Image is native(LIB) { ... };
+		
+	sub imlib_set_cache_size(int32)
+		is native(LIB) { ... };
+
+	sub imlib_get_cache_size()
+		returns int32 is native(LIB) { ... };
+
+	sub imlib_set_color_usage(int32)
+		is native(LIB) { ... };
+
+	sub imlib_get_color_usage()
+		returns int32 is native(LIB) { ... };
 
 	### Color Modifier ###
 	
@@ -185,9 +225,6 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_add_color_to_color_range(Int)
 		is native(LIB) { ... };
-
-	sub imlib_context_get_color_range()
-		returns Imlib2::ColorRange is native(LIB) { ... };
 
 	sub imlib_image_fill_color_range_rectangle(Int, Int, Int, Int, num)
 		is native(LIB) { ... };		
@@ -395,10 +432,10 @@ class Imlib2 is repr('CPointer') {
 	}
 
 	multi method context_get_color(%color_channels) {
-		my @red_color := CArray[int].new();
-		my @green_color := CArray[int].new();
-		my @blue_color := CArray[int].new();
-		my @alpha_color := CArray[int].new();
+		my @red_color := CArray[int32].new();
+		my @green_color := CArray[int32].new();
+		my @blue_color := CArray[int32].new();
+		my @alpha_color := CArray[int32].new();
 		@red_color[0] = @green_color[0] = @blue_color[0] = @alpha_color[0] = 0;
 
 		imlib_context_get_color(@red_color, @green_color, @blue_color, @alpha_color);
@@ -409,7 +446,8 @@ class Imlib2 is repr('CPointer') {
 		%color_channels{'alpha'} = @alpha_color[0];
 		%color_channels{'hexcode'} = hexcode(@red_color[0], @green_color[0], @blue_color[0]);
 	}
-	
+
+	# It needs to be fixed.
 	multi method context_get_color() {
 		my $color_channels = imlib_context_get_imlib_color();
 
@@ -419,6 +457,106 @@ class Imlib2 is repr('CPointer') {
 			blue    => $color_channels.blue,
 			alpha   => $color_channels.alpha,
 			hexcode => hexcode($color_channels.red, $color_channels.green, $color_channels.blue)};
+	}
+
+	method context_set_color_hsva(
+			Rat :$hue where 0.0 .. 360.0,
+			Rat :$saturation where 0.0 .. 1.0,
+			Rat :$value where 0.0 .. 1.0,
+			Int :$alpha where 0 .. 255 = 255) {
+
+		imlib_context_set_color_hsva($hue.Num, $saturation.Num, $value.Num, $alpha);
+	}
+
+	# It needs to be fixed.
+	method context_get_color_hsva(%hsva_channels) {
+		my @hue := CArray[num32].new();
+		my @saturation := CArray[num32].new();
+		my @value := CArray[num32].new();
+		my @alpha := CArray[int32].new();
+		@hue[0] = @saturation[0] = @value[0] = 0e0;
+		@alpha[0] = 0;
+
+		imlib_context_get_color_hsva(@hue, @saturation, @value, @alpha);
+
+		%hsva_channels{'hue'} = @hue[0].Rat;
+		%hsva_channels{'saturation'} = (@saturation[0]).Rat;
+		%hsva_channels{'value'} = @value[0].Rat;
+		%hsva_channels{'alpha'} = @alpha[0];
+	}
+	
+	method context_set_color_hlsa(
+			Rat :$hue where 0.0 .. 360.0,
+			Rat :$lightness where 0.0 .. 1.0,
+			Rat :$saturation where 0.0 .. 1.0,
+			Int :$alpha where 0 .. 255 = 255) {
+
+		imlib_context_set_color_hlsa($hue.Num, $lightness.Num, $saturation.Num, $alpha);
+	}
+
+	# It needs to be fixed.
+	method context_get_color_hlsa(%hlsa_channels) {
+		my @hue := CArray[num32].new();
+		my @lightness := CArray[num32].new();
+		my @saturation := CArray[num32].new();
+		my @alpha := CArray[int32].new();
+		@hue[0] = @lightness[0] = @saturation[0] = 0e0;
+		@alpha[0] = 0;
+
+		imlib_context_get_color_hlsa(@hue, @lightness, @saturation, @alpha);
+
+		%hlsa_channels{'hue'} = @hue[0].Rat;
+		%hlsa_channels{'lightness'} = (@lightness[0]).Rat;
+		%hlsa_channels{'saturation'} = @saturation[0].Rat;
+		%hlsa_channels{'alpha'} = @alpha[0];
+	}
+
+	method context_set_color_cmya(
+		Int :$cyan where 0..255 = 0,
+		Int :$magenta where 0..255 = 0,
+		Int :$yellow where 0..255 = 0,
+		Int :$alpha where 0..255 = 255) {
+
+		imlib_context_set_color_cmya($cyan, $magenta, $yellow, $alpha);
+	}
+
+	method context_get_color_cmya(%cmya_channels) {
+		my @cyan := CArray[int32].new();
+		my @magenta := CArray[int32].new();
+		my @yellow := CArray[int32].new();
+		my @alpha := CArray[int32].new();
+		@cyan[0] = @magenta[0] = @yellow[0] = @alpha[0] = 0;
+
+		imlib_context_get_color_cmya(@cyan, @magenta, @yellow, @alpha);
+
+		%cmya_channels{'cyan'} = @cyan[0];
+		%cmya_channels{'magenta'} = @magenta[0];
+		%cmya_channels{'yellow'} = @yellow[0];
+		%cmya_channels{'alpha'} = @alpha[0];
+	}
+
+	method context_get_color_range() {
+		return imlib_context_get_color_range();
+	}
+	
+	method context_get_image() {
+		return imlib_context_get_image();
+	}
+	
+	method set_cache_size(Int $bytes where {$bytes >= 0} = 0) {
+		imlib_set_cache_size($bytes);
+	}
+	
+	method get_cache_size() {
+		return imlib_get_cache_size();
+	}
+
+	method set_color_usage(Int $max where {$max >= 0} = 256) {
+		imlib_set_color_usage($max);
+	}
+	
+	method get_color_usage() {
+		return imlib_get_color_usage();
 	}
 
 	### Color Modifier ###
@@ -476,10 +614,6 @@ class Imlib2 is repr('CPointer') {
 	
 	method add_color_to_color_range(Int $distance_away) {
 		imlib_add_color_to_color_range($distance_away);
-	}
-	
-	method context_get_color_range() {
-		return imlib_context_get_color_range();
 	}
 	
 	method image_fill_color_range_rectangle(
