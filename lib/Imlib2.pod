@@ -272,10 +272,17 @@ Returns:
 
 Returns the current color modifier being used.
 
-=head2 C<context_set_operation(OperationMode $operation)>
+=head2 C<context_set_operation>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.context_set_operation(OP_COPY);
 
 Parameters:
-=item $operation - The current operation mode. 
+
+	OperationMode $operation - The current operation mode. 
 
 When Imlib2 draws an image onto another or an image onto a drawable it
 is able to do more than just blend the result on using the given alpha
@@ -284,15 +291,22 @@ subtractive and a combination of the both (called reshade) rendering.
 The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
 or OP_RESHADE. Use this function to set the rendering operation.
 
-OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
-OP_ADD does DST = DST + (SRC * A).
-OP_SUBTRACT does DST = DST - (SRC * A).
-OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
+* OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
+* OP_ADD does DST = DST + (SRC * A).
+* OP_SUBTRACT does DST = DST - (SRC * A).
+* OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
 
 =head2 C<OperationMode $operation = context_get_operation()>
 
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	say "OP_ADD Operation mode" if $tools.context_get_operation() == OP_ADD;
+
 Returns:
-=item $operation - The current operation mode.
+
+	OperationMode $operation - The current operation mode.
 
 Returns the current operation mode.
 
