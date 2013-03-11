@@ -450,7 +450,7 @@ Sets the color with which text, lines and rectangles are drawn when
 being rendered onto an image. Values for red, green, blue and alpha
 are between 0 and 255 - any other values have undefined results.
 
-=head2 C<context_get_color(%color_channels)>
+=head2 C<context_get_color>
 
 Usage:
 
