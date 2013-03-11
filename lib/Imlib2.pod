@@ -121,7 +121,7 @@ Selects, if you are rendering to a mask, the alpha threshold above which
 mask bits are set. The default mask alpha threshold is 128, meaning that
 a mask bit will be set if the pixel alpha is >= 128.
 
-=head2 C<Int $mask_alpha_threshold = context_get_mask_alpha_threshold()>
+=head2 C<context_get_mask_alpha_threshold>
 
 Usage:
 
@@ -135,10 +135,18 @@ Returns:
 
 The current mask alpha threshold.
 
-=head2 C<context_set_anti_alias(Bool $anti_alias)>
+=head2 C<context_set_anti_alias>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $anti_alias = True;
+	$tools.context_set_anti_alias($anti_alias);
 
 Parameters:
-=item $anti_alias - The anti alias flag (True or False).
+
+	Bool $anti_alias - The anti alias flag (True or False).
 
 Toggles "anti-aliased" scaling of images. This isn't quite correct since
 it's actually super and sub pixel sampling that it turns on and off, but
