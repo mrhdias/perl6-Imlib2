@@ -169,7 +169,7 @@ Returns:
 Returns if Imlib2 currently will smoothly scale images. True means it
 will and False means it will not.
 
-=head2 C<context_set_dither(Bool $dither)>
+=head2 C<context_set_dither>
 
 Usage:
 
@@ -189,7 +189,7 @@ this option has no effect foe rendering in 24 bit and up, but in 16 bit
 and lower it will dither, producing smooth gradients and much better
 quality images. setting dither to True enables it and False disables it.
 
-=head2 C<Bool $dither = context_get_dither()>
+=head2 C<context_get_dither>
 
 Usage:
 
@@ -204,28 +204,52 @@ Returns:
 Returns if image data is rendered with dithering currently. True means
 yes and False means no.
 
-=head2 C<context_set_blend(Bool $blend)>
+=head2 C<context_set_blend>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $blend = true;
+	$tools.context_set_blend($blend);
 
 Parameters:
-=item $blend - The blending flag (True or False).
+
+	Bool $blend - The blending flag (True or False).
 
 When rendering an image to a drawable, Imlib2 is able to blend the
 image directly onto the drawable during rendering. Setting this to True
 will enable this. If the image has no alpha channel this has no effect.
 Setting it to False will disable this.
 
-=head2 C<Bool $blend = context_get_blend()>
+=head2 C<context_get_blend>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $blend = $tools.context_get_blend();
 
 Returns:
-=item $blend - The current blending flag (True or False).
+
+	Bool $blend - The current blending flag (True or False).
 
 Returns if Imlib2 will blend images onto a drawable whilst rendering to
 that drawable. True means yes and False means no. 
 
-=head2 C<context_set_color_modifier(Imlib2::ColorModifier $color_modifier)>
+=head2 C<context_set_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $color_modifier = $tools.create_color_modifier();
+	$color_modifier.context_set_color_modifier();
+	$tools.free_color_modifier();
 
 Parameters:
-=item $color_modifier - Current color modifier.
+
+	Imlib2::ColorModifier $color_modifier - Current color modifier.
 
 Sets the current color modifier used for rendering pixmaps or images to
 a drawable or images onto other images. Color modifiers are lookup
@@ -234,10 +258,17 @@ to other values in the same channel when rendering, allowing for fades,
 color correction etc. to be done whilst rendering. pass in NULL as the
 color_modifier to disable the color modifier for rendering.
 
-=head2 C<Imlib2::ColorModifier $color_modifier = context_get_color_modifier()>
+=head2 C<context_get_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $color_modifier = $tools.context_get_color_modifier();
 
 Returns:
-=item $color_modifier - The current color modifier.
+
+	Imlib2::ColorModifier $color_modifier - The current color modifier.
 
 Returns the current color modifier being used.
 
