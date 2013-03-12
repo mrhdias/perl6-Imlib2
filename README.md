@@ -56,8 +56,8 @@ Henrique Dias <mrhdias@gmail.com>
 
 See Also
 --------
-[Imlib2 Perl6 Module Documentation][1]  
-[Imlib2 Library Documentation][2]
+* [Imlib2 Perl6 Module Documentation][1]  
+* [Imlib2 Library Documentation][2]
 
 License
 -------
