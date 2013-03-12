@@ -6,7 +6,7 @@ Perl 6 interface to the Imlib2 image library.
 
 Description
 -----------
-Perl6 binding for [Imlib2][1], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.
+Perl6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.
 You will need this library installed in order to use Image-Imlib2 (preferably a recent version).
 
 Synopsis
@@ -56,7 +56,8 @@ Henrique Dias <mrhdias@gmail.com>
 
 See Also
 --------
-[Imlib2 Library Documentation][1]
+[Imlib2 Perl6 Module Documentation][1]
+[Imlib2 Library Documentation][2]
 
 License
 -------
@@ -64,4 +65,5 @@ License
 This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
 
-[1]: http://docs.enlightenment.org/api/imlib2/html/ "Imlib2 Library Documentation"
+[1]: lib/Imlib2.pod "Imlib2 Perl6 Module Documentation"
+[2]: http://docs.enlightenment.org/api/imlib2/html/ "Imlib2 Library Documentation"
