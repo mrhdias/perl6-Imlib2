@@ -1287,7 +1287,7 @@ image at creation time are undefined (they could be garbage memory).
 You are free to do whatever you like with this image. It is not cached.
 On success an image handle is returned - on failure NULL is returned.
 
-=head2 <clone_image>
+=head2 C<clone_image>
 
 Usage:
 
