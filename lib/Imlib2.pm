@@ -28,6 +28,15 @@ enum LoadError <
 	LOAD_ERROR_PERMISSION_DENIED_TO_WRITE
 	LOAD_ERROR_OUT_OF_DISK_SPACE
 	LOAD_ERROR_UNKNOWN>;
+enum FlipMode <
+	HORIZONTAL
+	VERTICAL
+	DIAGONAL>;
+enum RotationMode <
+	ROTATE_NONE
+	ROTATE_90_DEGREE
+	ROTATE_180_DEGREE
+	ROTATE_270_DEGREE>;
 
 class Imlib2::Border is repr('CStruct') {
 	has int32 $.left;
@@ -289,6 +298,48 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_image_format()
 		returns Str is native(LIB) { ... };
 
+	sub imlib_image_set_irrelevant_format(int8)
+		is native(LIB) { ... };
+	
+	sub imlib_image_set_irrelevant_border(int8)
+		is native(LIB) { ... };
+		
+	sub imlib_image_set_irrelevant_alpha(int8)
+		is native(LIB) { ... };
+
+	sub imlib_create_image(int32, int32)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_clone_image()
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_create_cropped_image(int32, int32, int32, int32)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_create_cropped_scaled_image(int32, int32, int32, int32, int32, int32)
+		returns Imlib2::Image is native(LIB) { ... };
+		
+	sub imlib_create_rotated_image(num) 	 
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_image_flip_horizontal()
+		is native(LIB) { ... };
+
+	sub imlib_image_flip_vertical()
+		is native(LIB) { ... };
+
+	sub imlib_image_flip_diagonal()
+		is native(LIB) { ... };
+
+	sub imlib_image_orientate(int32)
+		is native(LIB) { ... };
+
+	sub imlib_save_image(Str)
+		is native(LIB) { ... };
+	
+	sub imlib_save_image_with_error_return(Str $filename, CArray[int32] $error_return)
+		is native(LIB) { ... };
+
 	### Color Modifier ###
 	
 	sub imlib_apply_color_modifier()
@@ -362,21 +413,6 @@ class Imlib2 is repr('CPointer') {
 		is native(LIB) { ... };
 	
 	### Image ###
-
-	sub imlib_clone_image()
-		returns Imlib2::Image is native(LIB) { ... };
-		
-	sub imlib_create_cropped_image(Int, Int, Int, Int)
-		returns Imlib2::Image is native(LIB) { ... };
-		
-	sub imlib_create_cropped_scaled_image(Int, Int, Int, Int, Int, Int)
-		returns Imlib2::Image is native(LIB) { ... };
-	
-	sub imlib_save_image(Str)
-		is native(LIB) { ... };
-
-	sub imlib_create_image(Int, Int)
-		returns Imlib2::Image is native(LIB) { ... };
 	
 	sub imlib_image_draw_polygon(Imlib2::Polygon, int8)
 		is native(LIB) { ... };
@@ -730,6 +766,75 @@ class Imlib2 is repr('CPointer') {
 		return imlib_image_format();
 	}
 
+	method image_set_irrelevant_format(Bool $irrelevant) {
+		imlib_image_set_irrelevant_format($irrelevant ?? 1 !! 0);
+	}
+	
+	method image_set_irrelevant_border(Bool $irrelevant) {
+		imlib_image_set_irrelevant_border($irrelevant ?? 1 !! 0);
+	}
+	
+	method image_set_irrelevant_alpha(Bool $irrelevant) {
+		imlib_image_set_irrelevant_alpha($irrelevant ?? 1 !! 0);
+	}
+
+	method create_image(Int $width, Int $height) {
+		return imlib_create_image($width, $height);
+	}
+
+	method clone_image() {
+		return imlib_clone_image();
+	}
+
+	method create_cropped_image(
+		Int :$x where {$x >= 0} = 0,
+		Int :$y where {$y >= 0} = 0,
+		Int :$width where {$width >= 0},
+		Int :$height where {$height >= 0}) {
+
+		return imlib_create_cropped_image($x, $y, $width, $height);
+	}
+
+	method create_cropped_scaled_image(
+		Int :$source_x where {$source_x >= 0} = 0,
+		Int :$source_y where {$source_y >= 0} = 0,
+		Int :$source_width where {$source_width >= 0},
+		Int :$source_height where {$source_height >= 0},
+		Int :$destination_width where {$destination_width >= 0},
+		Int :$destination_height where {$destination_height >= 0}) {
+
+		return imlib_create_cropped_scaled_image(
+			$source_x, $source_y, $source_width, $source_height,
+				$destination_width, $destination_height);
+	}
+
+	method create_rotated_image(Rat $angle where -360.0 .. 360.0) {
+		return imlib_create_rotated_image(($angle * pi/180).Num);
+	}
+
+	method image_flip(FlipMode $flip) {
+		given $flip {
+			imlib_image_flip_horizontal() when HORIZONTAL;
+			imlib_image_flip_vertical() when VERTICAL;
+			imlib_image_flip_diagonal() when DIAGONAL;
+		}
+	}
+	
+	method image_orientate(RotationMode $rotation) {
+		imlib_image_orientate($rotation.value);
+	}
+
+	multi method save_image($filename) {
+		imlib_save_image($filename);
+	}
+	
+	multi method save_image(Str $filename, LoadError $error_return is rw) {
+		my @error := CArray[int32].new();
+		@error[0] = 0;
+		imlib_save_image_with_error_return($filename, @error);
+		$error_return = LoadError(@error[0]);
+	}
+	
 	### Color Modifier ###
 
 	method apply_color_modifier() {
@@ -843,40 +948,6 @@ class Imlib2 is repr('CPointer') {
 	
 	### Image ###
 
-	method clone_image() {
-		return imlib_clone_image();
-	}
-	
-	method create_cropped_image(
-		Int :$x where {$x >= 0} = 0,
-		Int :$y where {$y >= 0} = 0,
-		Int :$width where {$width >= 0},
-		Int :$height where {$height >= 0}
-		) {
-		return imlib_create_cropped_image($x, $y, $width, $height);
-	}
-	
-	method create_cropped_scaled_image(
-		Int :$source_x where {$source_x >= 0} = 0,
-		Int :$source_y where {$source_y >= 0} = 0,
-		Int :$source_width where {$source_width >= 0},
-		Int :$source_height where {$source_height >= 0},
-		Int :$destination_width where {$destination_width >= 0},
-		Int :$destination_height where {$destination_height >= 0}) {
-
-		return imlib_create_cropped_scaled_image(
-			$source_x, $source_y, $source_width, $source_height,
-				$destination_width, $destination_height);
-	}
-	
-	method save_image($filename) {
-		imlib_save_image($filename);
-	}
-	
-	method create_image(Int $width, Int $height) {
-		return imlib_create_image($width, $height);
-	}
-	
 	method image_fill_rectangle(
 		Int :$x where {$x >= 0} = 0,
 		Int :$y where {$y >= 0} = 0,
@@ -913,7 +984,7 @@ class Imlib2 is repr('CPointer') {
 	
 	method blend_image_onto_image(
 		:$source_image!,
-		Bool :$merge_alpha        = False,
+		Bool :$merge_alpha   = False,
 		:$source_x           = 0,
 		:$source_y           = 0,
 		:$source_width       = 0,
