@@ -1,10 +1,59 @@
 use NativeCall;
 
 constant LIB = 'libImlib2.so';
-enum TextDirection <TEXT_TO_RIGHT TEXT_TO_LEFT TEXT_TO_DOWN TEXT_TO_UP TEXT_TO_ANGLE>;
-enum OperationMode <OP_COPY OP_ADD OP_SUBTRACT OP_RESHADE>;
+enum TextDirection <
+	TEXT_TO_RIGHT
+	TEXT_TO_LEFT
+	TEXT_TO_DOWN
+	TEXT_TO_UP
+	TEXT_TO_ANGLE>;
+enum OperationMode <
+	OP_COPY
+	OP_ADD
+	OP_SUBTRACT
+	OP_RESHADE>;
+enum LoadError <
+	LOAD_ERROR_NONE
+	LOAD_ERROR_FILE_DOES_NOT_EXIST
+	LOAD_ERROR_FILE_IS_DIRECTORY
+	LOAD_ERROR_PERMISSION_DENIED_TO_READ
+	LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT
+	LOAD_ERROR_PATH_TOO_LONG
+	LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT
+	LOAD_ERROR_PATH_COMPONENT_NOT_DIRECTORY
+	LOAD_ERROR_PATH_POINTS_OUTSIDE_ADDRESS_SPACE
+	LOAD_ERROR_TOO_MANY_SYMBOLIC_LINKS
+	LOAD_ERROR_OUT_OF_MEMORY
+	LOAD_ERROR_OUT_OF_FILE_DESCRIPTORS
+	LOAD_ERROR_PERMISSION_DENIED_TO_WRITE
+	LOAD_ERROR_OUT_OF_DISK_SPACE
+	LOAD_ERROR_UNKNOWN>;
 
-class Imlib2::ImlibColor is repr('CStruct') {
+class Imlib2::Border is repr('CStruct') {
+	has int32 $.left;
+	has int32 $.right;
+	has int32 $.top;
+	has int32 $.bottom;
+
+	method init() {
+		$!left = 0;
+		$!right = 0;
+		$!top = 0;
+		$!bottom = 0;
+	}
+	multi method left(Int $l) { $!left = $l; }
+	multi method right(Int $r) { $!right = $r; }
+	multi method top(Int $t) { $!top = $t; }
+	multi method bottom(Int $b) { $!bottom = $b; }	
+	
+	# this is a workaround, since NativeCall doesn't yet handle sized ints right
+	multi method left() { return $!left; }
+	multi method right() { return $!right; }
+	multi method top() { return $!top; }
+	multi method bottom() { return $!bottom; }
+}
+
+class Imlib2::Color is repr('CStruct') {
 	has int32 $.alpha;
 	has int32 $.red;
 	has int32 $.green;
@@ -145,7 +194,7 @@ class Imlib2 is repr('CPointer') {
 		is native(LIB) { ... };
 		
 	sub imlib_context_get_imlib_color()
-		returns Imlib2::ImlibColor is native(LIB) { ... };
+		returns Imlib2::Color is native(LIB) { ... };
 
 	sub imlib_context_set_color_hsva(num32, num32, num32, int32)
 		is native(LIB) { ... };
@@ -185,6 +234,60 @@ class Imlib2 is repr('CPointer') {
 
 	sub imlib_get_color_usage()
 		returns int32 is native(LIB) { ... };
+
+	sub imlib_flush_loaders()
+		is native(LIB) { ... };
+
+	sub imlib_load_image(Str)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_load_image_immediately(Str)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_load_image_without_cache(Str)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_load_image_immediately_without_cache(Str)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_load_image_with_error_return(Str $filename, CArray[int32] $error_return)
+		returns Imlib2::Image is native(LIB) { ... };
+
+	sub imlib_free_image()
+		is native(LIB) { ... };
+
+	sub imlib_free_image_and_decache()
+		is native(LIB) { ... };
+
+	sub imlib_image_get_width()
+		returns int32 is native(LIB) { ... };
+
+	sub imlib_image_get_height()
+		returns int32 is native(LIB) { ... };
+
+	sub imlib_image_get_filename()
+		returns Str is native(LIB) { ... };
+
+	sub imlib_image_set_has_alpha(int8)
+		is native(LIB) { ... };
+		
+	sub imlib_image_has_alpha()
+		returns int8 is native(LIB) { ... };
+	
+	sub imlib_image_set_changes_on_disk()
+		is native(LIB) { ... };
+
+	sub imlib_image_set_border(Imlib2::Border)
+		is native(LIB) { ... };
+
+	sub imlib_image_get_border(Imlib2::Border)
+		is native(LIB) { ... };
+
+	sub imlib_image_set_format(Str)
+		is native(LIB) { ... };
+		
+	sub imlib_image_format()
+		returns Str is native(LIB) { ... };
 
 	### Color Modifier ###
 	
@@ -269,26 +372,11 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_create_cropped_scaled_image(Int, Int, Int, Int, Int, Int)
 		returns Imlib2::Image is native(LIB) { ... };
 	
-	sub imlib_free_image()
-		is native(LIB) { ... };
-	
 	sub imlib_save_image(Str)
 		is native(LIB) { ... };
-	
-	sub imlib_load_image(Str)
-		returns Imlib2::Image is native(LIB) { ... };
-	
+
 	sub imlib_create_image(Int, Int)
 		returns Imlib2::Image is native(LIB) { ... };
-	
-	sub imlib_image_get_filename()
-		returns Str is native(LIB) { ... };
-	
-	sub imlib_image_get_width()
-		returns Int is native(LIB) { ... };
-	
-	sub imlib_image_get_height()
-		returns Int is native(LIB) { ... };
 	
 	sub imlib_image_draw_polygon(Imlib2::Polygon, int8)
 		is native(LIB) { ... };
@@ -302,13 +390,7 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_image_fill_polygon(Imlib2::Polygon)
 		is native(LIB) { ... };
 	
-	sub imlib_image_set_format(Str)
-		is native(LIB) { ... };
-	
 	sub imlib_image_blur(Int)
-		is native(LIB) { ... };
-	
-	sub imlib_image_set_has_alpha(int8)
 		is native(LIB) { ... };
 		
 	sub imlib_image_sharpen(Int)
@@ -559,6 +641,95 @@ class Imlib2 is repr('CPointer') {
 		return imlib_get_color_usage();
 	}
 
+	method flush_loaders() {
+		imlib_flush_loaders();
+	}
+
+	multi method load_image(Str $filename) {
+		return imlib_load_image($filename);
+	}
+
+	multi method load_image(
+		Str :$filename,
+		Bool :$immediately = False,
+		Bool :$cache = True) {
+
+		if $immediately {
+			return $cache ??
+				imlib_load_image_immediately($filename) !!
+				imlib_load_image_immediately_without_cache($filename);
+		}
+		return $cache ??
+			imlib_load_image($filename) !!
+			imlib_load_image_without_cache($filename);
+	}
+
+	multi method load_image(Str $filename, LoadError $error_return is rw) {
+		my @error := CArray[int32].new();
+		@error[0] = 0;
+		my $image = imlib_load_image_with_error_return($filename, @error);
+		$error_return = LoadError(@error[0]);
+		return $image;
+	}
+
+	method free_image(Bool $decache = False) {
+		$decache ?? imlib_free_image_and_decache() !! imlib_free_image();
+	}
+
+	method image_get_width() {
+		return imlib_image_get_width();
+	}
+
+	method image_get_height() {
+		return imlib_image_get_height();
+	}
+	
+	method image_get_size() {
+		return {
+			width  => imlib_image_get_width(),
+			height => imlib_image_get_height()};
+	}
+
+	method image_get_filename() {
+		return imlib_image_get_filename();
+	}
+
+	method image_set_has_alpha(Bool $has_alpha) {
+		imlib_image_set_has_alpha($has_alpha ?? 1 !! 0);
+	}
+	
+	method image_has_alpha() {
+		return imlib_image_has_alpha() ?? True !! False;
+	}
+
+	method image_set_changes_on_disk() {
+		imlib_image_set_changes_on_disk();
+	}
+	
+	# It needs to be fixed.
+	method image_set_border(Imlib2::Border $border) {
+		imlib_image_set_border($border);
+	}
+
+	# It needs to be fixed.
+	method image_get_border(Imlib2::Border $border) {
+		imlib_image_get_border($border);
+	}
+	
+	method new_border() {
+		my $border = Imlib2::Border.new();
+		$border.init();
+		return $border;
+	}
+
+	method image_set_format(Str $filename) {
+		imlib_image_set_format($filename);
+	}
+	
+	method image_format() {
+		return imlib_image_format();
+	}
+
 	### Color Modifier ###
 
 	method apply_color_modifier() {
@@ -698,20 +869,12 @@ class Imlib2 is repr('CPointer') {
 				$destination_width, $destination_height);
 	}
 	
-	method free_image() {
-		imlib_free_image();
-	}
-	
 	method save_image($filename) {
 		imlib_save_image($filename);
 	}
 	
 	method create_image(Int $width, Int $height) {
 		return imlib_create_image($width, $height);
-	}
-	
-	method load_image(Str $filename) {
-		return imlib_load_image($filename);
 	}
 	
 	method image_fill_rectangle(
@@ -727,18 +890,6 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_fill_polygon($polygon);
 	}
 	
-	method image_get_filename() {
-		return imlib_image_get_filename();
-	}
-	
-	method image_get_height() {
-		return imlib_image_get_height();
-	}
-	
-	method image_get_width() {
-		return imlib_image_get_width();
-	}
-	
 	method image_draw_rectangle(
 		Int :$x where {$x >= 0} = 0,
 		Int :$y where {$y >= 0} = 0,
@@ -752,10 +903,6 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_draw_polygon($polygon, $closed ?? 1 !! 0);
 	}
 	
-	method image_set_format($filename) {
-		imlib_image_set_format($filename);
-	}
-	
 	method image_blur($radius) {
 		imlib_image_blur($radius)	
 	}
@@ -764,10 +911,6 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_sharpen($radius)	
 	}
 	
-	method image_set_has_alpha(Bool $alpha) {
-		imlib_image_set_has_alpha($alpha ?? 1 !! 0);
-	}
-
 	method blend_image_onto_image(
 		:$source_image!,
 		Bool :$merge_alpha        = False,
