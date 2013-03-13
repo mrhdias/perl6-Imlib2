@@ -728,6 +728,7 @@ Usage:
 	my $tools = Imlib2.new();
 	my $image = $tools.create_image(100, 200);
 	$image.context_set_image();
+	... some operations ...
 	$tools.free_image();
 
 Parameters:
@@ -815,6 +816,400 @@ Returns:
 
 Gets the number of colors Imlib2 currently at a maximum is allowed to
 allocate for rendering. The default is 256.
+
+=head2 C<flush_loaders>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	$tools.flush_loaders();
+
+If you want Imlib2 to forcibly flush any cached loaders it has and
+re-load them from disk (this is useful if the program just installed a
+new loader and does not want to wait till Imlib2 deems it an optimal
+time to rescan the loaders).
+
+=head2 C<load_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	... some operations ...
+	$tools.free_image();
+	
+	# load image with returned error.
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my LoadError $error;
+	my $image = $tools.load_image($file, $error_return);
+	if $error_return == LOAD_ERROR_NONE {
+		say "No error...";
+		$image.context_set_image();
+		... some operations ...
+		$tools.free_image();
+	}
+
+	# Another way to load an image.
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image(
+		filename    => $file,
+		immediately => False,
+		cache       => True);
+	$image.context_set_image();
+	... some operations ...
+	$tools.free_image();
+	
+Parameters:
+
+	Str $file - Image file.
+	LoadError $error_return - The returned error.
+
+	Str filename - Image file.
+	Bool cache - If False loads the image without looking in the cache first.
+	Bool immediately - If True loads an image from disk located at the
+	                   path specified by file. This forces the image data
+	                   to be decoded at load time too, instead of decoding
+	                   being deferred until it is needed.
+
+Returns:
+
+	Imlib2::Image $image - An image handle.
+
+Loads an image from disk located at the path specified by file. Please
+see the section L<How Image Loading Works|http://docs.enlightenment.org/api/imlib2/html/index.html#loading>
+for more detail. Returns an image handle on success or NULL on failure.
+
+=head2 C<free_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	... some operations ...
+	my Bool $decache = False;
+	$tools.free_image() if $image.context_get_image($decache);
+
+Parameters:
+
+	Bool $decache - If is set to True removes image from the cache.
+	
+Frees the image that is set as the current image in Imlib2's context.
+
+=head2 C<image_get_width>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	my Int $width = $tools.image_get_width();
+	say "Width size: $width pixels";
+	$tools.free_image();
+
+Returns:
+
+	Int $width - The width in pixels of the current image.
+
+Returns the width in pixels of the current image in Imlib2's context.
+
+=head2 C<image_get_height>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	my Int $height = $tools.image_get_height();
+	say "Height size: $height pixels";
+	$tools.free_image();
+
+Returns:
+
+	Int $height - The height in pixels of the current image.
+
+Returns the height in pixels of the current image in Imlib2's context.
+
+=head2 C<image_get_size>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	my %size = $tools.image_get_size();
+	say "Width size: " ~ %size{'width'} ~ " pixels";
+	say "Height size: " ~ %size{'height'} ~ " pixels";
+	$tools.free_image();
+
+Returns:
+
+	%size - Hash with size in pixels of the current image (width, height).
+
+Returns the size in pixels of the current image in Imlib2's context.
+
+=over 4
+
+=item *
+
+%size{'width'} - The width in pixels of the current image.
+
+=item *
+
+%size{'height'} - The height in pixels of the current image.
+
+=back
+
+=head2 C<image_get_filename>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $file = "pictures/holidays.jpeg";
+	my $image = $tools.load_image($file);
+	$image.context_set_image();
+	my Str $filename = $tools.image_get_filename();
+	say "My filename is: $filename";
+	$tools.free_image();
+
+Returns:
+
+	Str $filename - The current filename.
+
+Returns the filename for the file that is set as the current context.
+The string returned is only valid as long as no operations cause the
+filename of the image to change. Saving the file with a different name
+would cause this. It is suggested you duplicate the string if you wish
+to continue to use the string for later processing.
+
+=head2 C<image_set_has_alpha>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	my Bool $has_alpha = True;
+	$tools.image_set_has_alpha($has_alpha);
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	Bool $has_alpha - Alpha flag (True or False).
+
+Sets the alpha flag for the current image. Set has_alpha to True to
+enable the alpha channel in the current image, or False to disable it.
+
+=head2 C<image_has_alpha>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	my Bool $has_alpha = $tools.image_has_alpha();
+	say "Alpha status: $has_alpha";
+	... some operations ...
+	$tools.free_image();
+
+Returns:
+
+	Bool $has_alpha - Current alpha channel flag (True or False).
+
+Returns True if the current context image has an alpha channel, or
+False if it does not (the alpha data space is still there and
+available - just "unused").
+
+=head2 C<image_set_changes_on_disk>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.load_image("pictures/holidays.jpeg");
+	$image.context_set_image();
+	$tools.image_set_changes_on_disk();
+	... some operations ...
+	$tools.free_image();
+
+By default Imlib2 will not check the timestamp of an image on disk and
+compare it with the image in its cache - this is to minimize disk
+activity when using the cache.
+
+Call this function and it will flag the current context image as being
+liable to change on disk and Imlib2 will check the timestamp of the
+image file on disk and compare it with the cached image when it next
+needs to use this image in the cache.
+
+=head2 C<new_border>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	my Imlib2::Border $border = $tools.new_border();
+	... some operations ...
+	$tools.free_image();
+
+Returns
+
+	Imlib2::Border $border - Struct to store the values ​​of the border.
+
+Returns a new structure to store the values of the border of the
+current context image.
+
+=head2 C<image_set_border>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	my Imlib2::Border $border = $tools.new_border();
+	$border.left(2);
+	$border.right(2);
+	$border.top(4);
+	$border.bottom(4);
+	$tools.image_set_border($border);
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	Imlib2::Border $border - The border of the image.
+
+Sets the border of the current context image to the values contained in
+the Imlib2::Border structure border points to.
+
+=over 4
+
+=item *
+
+$border.left(2) - Set the value of the left side to 2.
+
+=item *
+
+$border.right(2) - Set the value of the right side to 2.
+
+=item *
+
+$border.top(4) - Set the value of the top side to 4.
+
+=item *
+
+$border.bottom(4) - Set the value of the bottom side to 4.
+
+=back
+
+=head2 C<image_get_border>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	my Imlib2::Border $border = $tools.new_border();
+	$tools.image_get_border($border);
+	say "Left: " ~ $border.left;
+	say "Right: " ~ $border.right;
+	say "Top: " ~ $border.top;
+	say "Bottom: " ~ $border.bottom;
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	Imlib2::Border $border - The border of the image.
+
+Fills the Imlib2::Border structure to which border points to with the
+values of the border of the current context image. The border is the
+area at the edge of the image that does not scale with the rest of the
+image when resized - the borders remain constant in size. This is
+useful for scaling bevels at the edge of images differently to the
+image center.
+
+=over 4
+
+=item *
+
+$border.left - Returns the value of the left side.
+
+=item *
+
+$border.right - Returns the value of the right side.
+
+=item *
+
+$border.top - Returns the value of the top side.
+
+=item *
+
+$border.bottom - Returns the value of the bottom side.
+
+=back
+
+=head2 C<image_set_format>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.load_image("pictures/holidays.jpeg");
+	$image.context_set_image();
+	my Str $format = "png";
+	$tools.image_set_format($format);
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	Str $format - Format of the image.
+
+Sets the format of the current image. This is used for when you wish
+to save an image in a different format that it was loaded in, or if the
+image currently has no file format associated with it.
+
+=head2 C<image_format>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.load_image("pictures/holidays.jpeg");
+	$image.context_set_image();
+	my Str $format = $tools.image_format();
+	... some operations ...
+	$tools.free_image();
+
+Returns:
+
+	Str $format - Current image format.
+
+Returns the current image's format.
 
 =head1 AUTHOR
 
