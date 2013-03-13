@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 48;
+plan 49;
 
 use Imlib2;
 
@@ -107,5 +107,7 @@ is $tools.get_cache_size(), 2048 * 1024, 'the cache size is set to 2048 * 1024 b
 
 lives_ok { $tools.set_color_usage(256); }, 'set_color_usage';
 is $tools.get_color_usage(), 256, 'the current number of colors is 256';
+
+lives_ok { $tools.flush_loaders(); }, 'flush_loaders';
 
 done;
