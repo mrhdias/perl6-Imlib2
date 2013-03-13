@@ -846,7 +846,7 @@ Usage:
 	use Imlib2;
 	my $tools = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my LoadError $error;
+	my LoadError $error_return;
 	my $image = $tools.load_image($file, $error_return);
 	if $error_return == LOAD_ERROR_NONE {
 		say "No error...";
@@ -1210,6 +1210,311 @@ Returns:
 	Str $format - Current image format.
 
 Returns the current image's format.
+
+=head2 C<image_set_irrelevant_format>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $irrelevant = True;
+	$tools.image_set_irrelevant_format($irrelevant);
+
+Parameters:
+
+	Bool $irrelevant - Irrelevant format flag (True or False).
+
+Sets if the format value of the current image is irrelevant for caching
+purposes - by default it is. pass irrelevant as True to make it
+irrelevant and False to make it relevant for caching.
+
+=head2 C<image_set_irrelevant_border>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $irrelevant = True;
+	$tools.image_set_irrelevant_border($irrelevant);
+
+Parameters:
+
+	Bool $irrelevant - Irrelevant border flag (True or False).
+	
+Sets if the border of the current image is irrelevant for caching
+purposes. By default it is. Set irrelevant to True to make it
+irrelevant, and False to make it relevant.
+
+=head2 C<image_set_irrelevant_alpha>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Bool $irrelevant = True;
+	$tools.image_set_irrelevant_alpha($irrelevant);
+
+Parameters:
+
+	Bool $irrelevant - Irrelevant alpha flag (True or False).
+
+Sets if the alpha channel status of the current image (i.e. if there is
+or is not one) is important for caching purposes. By default it is not.
+Set irrelevant to True to make it irrelevant and False to make it
+relevant.
+
+=head2 C<create_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my Int $width = 100;
+	my Int $height = 200;
+	my Imlib2::Image $image = $tools.create_image($width, $height);
+
+Parameters:
+
+	Int $width - The width of the image.
+	Int $height - The height of the image.
+
+Returns:
+
+	Imlib2::Image $image - A new raw image.
+
+Creates a new raw image of size width and height. The contents of this
+image at creation time are undefined (they could be garbage memory).
+You are free to do whatever you like with this image. It is not cached.
+On success an image handle is returned - on failure NULL is returned.
+
+=head2 <clone_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set_image();
+	my Imlib2::Image $cloned_image = $tools.clone_image();
+	$cloned_image.context_set_image();
+	... some operations ...
+	$tools.free_image(); # frees the cloned image
+	$loaded_image.context_set_image();
+	$tools.free_image(); # frees the loaded image
+
+Returns:
+
+	Imlib2::Image $cloned_image - A valid image, otherwise NULL.
+
+Creates an exact duplicate of the current image and returns a valid
+image handle on success, or NULL on failure.
+
+=head2 C<create_cropped_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set_image();
+	my Imlib2::Image $cropped_image = $tools.create_cropped_image(
+			x      => 0,
+			y      => 0,
+			width  => 40,
+			height => 80);
+	$cropped_image.context_set_image();
+	... some operations ...
+	$tools.free_image(); # frees the cropped image
+	$loaded_image.context_set_image();
+	$tools.free_image(); # frees the loaded image
+
+Parameters:
+
+	Int x - The top left x coordinate of the rectangle. 
+	Int y - The top left y coordinate of the rectangle. 
+	Int width - The width of the rectangle. 
+	Int height - The height of the rectangle.
+
+Returns:
+
+	Imlib2::Image $cropped_image - A valid image, otherwise NULL.
+
+Creates a duplicate of a (x, y, width, height) rectangle in the current
+image and returns a valid image handle on success, or NULL on failure.
+
+=head2 C<create_cropped_scaled_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set_image();
+	my Imlib2::Image $cropped_scaled_image = $tools.create_cropped_scaled_image(
+			source_x           => 0,
+			source_y           => 0,
+			source_width       => 100,
+			source_height      => 100,
+			destination_width  => 50,
+			destination_height => 50);
+	$cropped_scaled_image.context_set_image();
+	... some operations ...
+	$tools.free_image(); # frees the cropped scaled image
+	$loaded_image.context_set_image();
+	$tools.free_image(); # frees the loaded image
+
+Parameters:
+
+	Int x - The top left x coordinate of the source rectangle. 
+	Int y - The top left y coordinate of the source rectangle. 
+	Int width - The width of the source rectangle. 
+	Int height - The height of the source rectangle.
+	Int destination_width - The width of the destination image.
+	Int destination_height - The height of the destination image.
+
+Returns:
+
+	Imlib2::Image $cropped_scaled_image - A valid image, otherwise NULL.
+
+Works the same as create_cropped_image() but will scale the new image
+to the new destination destination_width and destination_height whilst
+cropping.
+
+=head2 C<create_rotated_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set_image();
+	my Rat $angle = -45.0;
+	my Imlib2::Image $rotated_image = $tools.create_rotated_image($angle);
+	$rotated_image.context_set_image();
+	... some operations ...
+	$tools.free_image(); # frees the rotated image
+	$loaded_image.context_set_image();
+	$tools.free_image(); # frees the loaded image
+
+Parameters:
+
+	Rat $angle - An angle in degrees (-360 to 360).
+
+Returns:
+
+	Imlib2::Image $rotated_image - A valid image, otherwise NULL.
+
+Creates an new copy of the current image, but rotated by angle degrees.
+On success it returns a valid image handle, otherwise NULL.
+
+=head2 C<image_flip>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.load_image("pictures/holidays.jpeg");
+	$image.context_set_image();
+	my FlipMode $flip_mode = HORIZONTAL;
+	$tools.image_flip($flip_mode);
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	FlipMode $flip_mode - The flip mode flag.
+
+Flips/mirrors the current image.
+
+=over 4
+
+=item *
+
+HORIZONTAL - Flips/mirrors the current image horizontally
+
+=item *
+
+VERTICAL - Flips/mirrors the current image vertically.
+
+=item *
+
+DIAGONAL - Flips/mirrors the current image diagonally (good for quick
+           and dirty 90 degree rotations if used before to after a
+           horizontal or vertical flip).
+
+=back
+
+=head2 C<image_orientate>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.load_image("pictures/holidays.jpeg");
+	$image.context_set_image();
+	my RotationMode $orientation = ROTATE_90_DEGREE;
+	$tools.image_orientate($orientation);
+	... some operations ...
+	$tools.free_image();
+
+Parameters:
+
+	RotationMode $orientation - The rotation mode flag.
+
+Performs 90 degree rotations on the current image.
+
+=over 4
+
+=item *
+
+ROTATE_90_DEGREE - rotates clockwise by 90 degree.
+
+=item *
+
+ROTATE_180_DEGREE - rotates clockwise by 180 degrees.
+
+=item *
+
+ROTATE_270_DEGREE - rotates clockwise by 270 degrees.
+
+=back
+
+=head2 C<save_image>
+
+Usage:
+
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	$tools.image_set_format("png");
+	... some operations ...
+	my Str $filename = "test.png";
+	$tools.save_image($filename);
+	$tools.free_image();
+
+	# save image with returned error.
+	use Imlib2;
+	my $tools = Imlib2.new();
+	my $image = $tools.create_image(100, 200);
+	$image.context_set_image();
+	$tools.image_set_format("png");
+	... some operations ...
+	my Str $filename = "test.png";
+	my LoadError $error_return;
+	$tools.save_image($filename, $error_return);
+	say "No error..." if $error_return == LOAD_ERROR_NONE;
+	$tools.free_image();
+
+Parameters:
+
+	Str $filename - Image file.
+	LoadError $error_return - The returned error.
+
+Saves the current image in the format specified by the current image's
+format settings to the filename $filename.
+If the $error_return is passed as argument the $error_return will be
+set to an error value if the save fails. 
 
 =head1 AUTHOR
 
