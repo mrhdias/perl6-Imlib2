@@ -50,6 +50,14 @@ version).
 
 The perl6 API follows closely the C implementation.
 
+=head2 Test
+
+test
+
+=head3 Test head3
+
+test...
+
 =head2 C<context_set_cliprect>
 
 Usage:
