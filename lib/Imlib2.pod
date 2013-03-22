@@ -12,37 +12,35 @@ version).
 =head1 SYNOPSIS
 
 	use Imlib2;
-	
+
 	my $im = Imlib2.new();
 	# Create a new raw image.
 	my $rawimage = $im.create_image(200, 200);
 	exit() unless $rawimage;
-	
+
 	# Sets the current image Imlib2 will be using with its function calls.
 	$rawimage.context_set();
 	
 	# Sets the color with which text, lines and rectangles are drawn when
 	# being rendered onto an image.
 	$im.context_set_color(
-	    red   => 255,
-	    green => 127,
-	    blue  => 0,
-	    alpha => 255
-	);
-	
+		red   => 255,
+		green => 127,
+		blue  => 0,
+		alpha => 255);
+
 	$im.image_draw_rectangle(
 		location => (0, 0),
 		size     => (200, 200),
-	    fill     => True
-	);
+		fill     => True);
 	
 	$im.image_set_format("png");
 	unlink("images/test_imlib2.png") if "images/test_imlib2.png".IO ~~ :e;
 	$im.save_image("images/test_imlib2.png");
-	
+
 	# Frees the image that is set as the current image in Imlib2's context. 
 	$im.free_image();
-	
+
 	exit();
 
 =head1 API REFRENCE
@@ -56,7 +54,7 @@ Functions to set/get values/properties to/from the current context image.
 =head3 C<context_set_dither_mask>
 
 Usage:
-	
+
 	use Imlib2;
 	my $im = Imlib2.new();
 	my Bool $dither_mask = True;
