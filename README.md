@@ -16,36 +16,35 @@ A sample of the code can be seen below.
 
     use Imlib2;
 
-    my $tools = Imlib2.new();
+    my $im = Imlib2.new();
     # Create a new raw image.
-    my $rawimage = $tools.create_image(200, 200);
+    my $rawimage = $im.create_image(200, 200);
     exit() unless $rawimage;
 
     # Sets the current image Imlib2 will be using with its function calls.
-    $rawimage.context_set_image();
+    $rawimage.context_set();
  
     # Sets the color with which text, lines and rectangles are drawn when
     # being rendered onto an image.
-    $tools.context_set_color(
+    $im.context_set_color(
         red   => 255,
         green => 127,
         blue  => 0,
         alpha => 255
     );
     
-    $tools.image_fill_rectangle(
-        x      => 0,
-        y      => 0,
-        width  => 200,
-        height => 200
+    $im.image_draw_rectangle(
+		location => (0, 0),
+		size     => (200, 200),
+        fill     => True
     );
     
-    $tools.image_set_format("png");
+    $im.image_set_format("png");
     unlink("images/test_imlib2.png") if "images/test_imlib2.png".IO ~~ :e;
-    $tools.save_image("images/test_imlib2.png");
+    $im.save_image("images/test_imlib2.png");
 
     # Frees the image that is set as the current image in Imlib2's context. 
-    $tools.free_image();
+    $im.free_image();
 
     exit();
 
