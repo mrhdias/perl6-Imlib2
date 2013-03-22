@@ -13,36 +13,35 @@ version).
 
 	use Imlib2;
 	
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	# Create a new raw image.
-	my $rawimage = $tools.create_image(200, 200);
+	my $rawimage = $im.create_image(200, 200);
 	exit() unless $rawimage;
 	
 	# Sets the current image Imlib2 will be using with its function calls.
-	$rawimage.context_set_image();
+	$rawimage.context_set();
 	
 	# Sets the color with which text, lines and rectangles are drawn when
 	# being rendered onto an image.
-	$tools.context_set_color(
+	$im.context_set_color(
 	    red   => 255,
 	    green => 127,
 	    blue  => 0,
 	    alpha => 255
 	);
 	
-	$tools.image_fill_rectangle(
-	    x      => 0,
-	    y      => 0,
-	    width  => 200,
-	    height => 200
+	$im.image_draw_rectangle(
+		location => (0, 0),
+		size     => (200, 200),
+	    fill     => True
 	);
 	
-	$tools.image_set_format("png");
+	$im.image_set_format("png");
 	unlink("images/test_imlib2.png") if "images/test_imlib2.png".IO ~~ :e;
-	$tools.save_image("images/test_imlib2.png");
+	$im.save_image("images/test_imlib2.png");
 	
 	# Frees the image that is set as the current image in Imlib2's context. 
-	$tools.free_image();
+	$im.free_image();
 	
 	exit();
 
@@ -50,35 +49,18 @@ version).
 
 The perl6 API follows closely the C implementation.
 
-=head2 C<context_set_cliprect>
+=head2 Context setting/getting.
 
-Usage:
+Functions to set/get values/properties to/from the current context image.
 
-	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_cliprect(
-		x      => 0,
-		y      => 0,
-		width  => 100,
-		height => 100);
-
-Parameters:
-
-	Int x - The top left x coordinate of the rectangle. 
-	Int y - The top left y coordinate of the rectangle. 
-	Int width - The width of the rectangle. 
-	Int height - The height of the rectangle. 
-
-Sets the rectangle of the current context.
-
-=head2 C<context_set_dither_mask>
+=head3 C<context_set_dither_mask>
 
 Usage:
 	
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $dither_mask = True;
-	$tools.context_set_cliprect($dither_mask);
+	$im.context_set_cliprect($dither_mask);
 
 Parameters:
 
@@ -89,13 +71,13 @@ images, if the mask is to be dithered or not. passing in True for
 dither_mask means the mask pixmap will be dithered, False means it will
 not be dithered.
 
-=head2 C<context_get_dither_mask>
+=head3 C<context_get_dither_mask>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Bool $dither_mask = $tools.context_get_dither_mask();
+	my $im = Imlib2.new();
+	my Bool $dither_mask = $im.context_get_dither_mask();
 
 Returns:
 
@@ -104,45 +86,14 @@ Returns:
 Returns the current mode for dithering pixmap masks. True means
 dithering is enabled and False means it is not.
 
-=head2 C<context_set_mask_alpha_threshold>
-
-Usage:
-	
-	use Imlib2;
-	my $tools = Imlib2.new();
-	my Int $mask_alpha_threshold = 127;
-	$tools.context_set_mask_alpha_threshold($mask_alpha_threshold);
-
-Parameters:
-
-	Int $mask_alpha_threshold - The mask alpha threshold (values between 0 and 255).
-
-Selects, if you are rendering to a mask, the alpha threshold above which
-mask bits are set. The default mask alpha threshold is 128, meaning that
-a mask bit will be set if the pixel alpha is >= 128.
-
-=head2 C<context_get_mask_alpha_threshold>
+=head3 C<context_set_anti_alias>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Int $mask_alpha_threshold = $tools.context_get_mask_alpha_threshold();
-
-Returns:
-
-	Int $mask_alpha_threshold - The current mask alpha threshold.
-
-The current mask alpha threshold.
-
-=head2 C<context_set_anti_alias>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $anti_alias = True;
-	$tools.context_set_anti_alias($anti_alias);
+	$im.context_set_anti_alias($anti_alias);
 
 Parameters:
 
@@ -154,13 +105,13 @@ anti-aliasing is used for having "smooth" edges to lines and shapes and
 this means when images are scaled they will keep their smooth appearance.
 Passing in True turns this on and False turns it off.
 
-=head2 C<context_get_anti_alias>
+=head3 C<context_get_anti_alias>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Bool $anti_alias = $tools.context_get_anti_alias();
+	my $im = Imlib2.new();
+	my Bool $anti_alias = $im.context_get_anti_alias();
 
 Returns:
 
@@ -169,14 +120,45 @@ Returns:
 Returns if Imlib2 currently will smoothly scale images. True means it
 will and False means it will not.
 
-=head2 C<context_set_dither>
+=head3 C<context_set_mask_alpha_threshold>
+
+Usage:
+	
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Int $mask_alpha_threshold = 127;
+	$im.context_set_mask_alpha_threshold($mask_alpha_threshold);
+
+Parameters:
+
+	Int $mask_alpha_threshold - The mask alpha threshold (values between 0 and 255).
+
+Selects, if you are rendering to a mask, the alpha threshold above which
+mask bits are set. The default mask alpha threshold is 128, meaning that
+a mask bit will be set if the pixel alpha is >= 128.
+
+=head3 C<context_get_mask_alpha_threshold>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
+	my Int $mask_alpha_threshold = $im.context_get_mask_alpha_threshold();
+
+Returns:
+
+	Int $mask_alpha_threshold - The current mask alpha threshold.
+
+The current mask alpha threshold.
+
+=head3 C<context_set_dither>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
 	my Bool $dither = True;
-	$tools.context_set_dither($dither);
+	$im.context_set_dither($dither);
 
 Parameters:
 
@@ -189,13 +171,13 @@ this option has no effect foe rendering in 24 bit and up, but in 16 bit
 and lower it will dither, producing smooth gradients and much better
 quality images. setting dither to True enables it and False disables it.
 
-=head2 C<context_get_dither>
+=head3 C<context_get_dither>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Bool $dither = $tools.context_get_dither();
+	my $im = Imlib2.new();
+	my Bool $dither = $im.context_get_dither();
 
 Returns:
 
@@ -204,14 +186,14 @@ Returns:
 Returns if image data is rendered with dithering currently. True means
 yes and False means no.
 
-=head2 C<context_set_blend>
+=head3 C<context_set_blend>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $blend = true;
-	$tools.context_set_blend($blend);
+	$im.context_set_blend($blend);
 
 Parameters:
 
@@ -222,30 +204,30 @@ image directly onto the drawable during rendering. Setting this to True
 will enable this. If the image has no alpha channel this has no effect.
 Setting it to False will disable this.
 
-=head2 C<context_get_blend>
+=head3 C<context_get_blend>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Bool $blend = $tools.context_get_blend();
+	my $im = Imlib2.new();
+	my Bool $blend = $im.context_get_blend();
 
 Returns:
 
 	Bool $blend - The current blending flag (True or False).
 
 Returns if Imlib2 will blend images onto a drawable whilst rendering to
-that drawable. True means yes and False means no. 
+that drawable. True means yes and False means no.
 
-=head2 C<context_set_color_modifier>
+=head3 C<context_set>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $color_modifier = $tools.create_color_modifier();
-	$color_modifier.context_set_color_modifier();
-	$tools.free_color_modifier();
+	my $im = Imlib2.new();
+	my $color_modifier = $im.create_color_modifier();
+	$color_modifier.context_set();
+	$im.free_color_modifier();
 
 Parameters:
 
@@ -258,38 +240,19 @@ to other values in the same channel when rendering, allowing for fades,
 color correction etc. to be done whilst rendering. pass in NULL as the
 color_modifier to disable the color modifier for rendering.
 
-=head2 C<context_get_color_modifier>
+=head3 C<context_get_color_modifier>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $color_modifier = $tools.context_get_color_modifier();
+	my $im = Imlib2.new();
+	my $color_modifier = $im.context_get_color_modifier();
 
 Returns:
 
 	Imlib2::ColorModifier $color_modifier - The current color modifier.
 
 Returns the current color modifier being used.
-
-=head2 C<context_set_operation>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_operation(OP_COPY);
-
-Parameters:
-
-	OperationMode $operation - The current operation mode. 
-
-When Imlib2 draws an image onto another or an image onto a drawable it
-is able to do more than just blend the result on using the given alpha
-channel of the image. It is also able to do saturating additive,
-subtractive and a combination of the both (called reshade) rendering.
-The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
-or OP_RESHADE. Use this function to set the rendering operation.
 
 =over 4
 
@@ -311,13 +274,32 @@ OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
 
 =back
 
-=head2 C<context_get_operation>
+=head3 C<context_set_operation>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	say "OP_ADD Operation mode" if $tools.context_get_operation() == OP_ADD;
+	my $im = Imlib2.new();
+	$im.context_set_operation(OP_COPY);
+
+Parameters:
+
+	OperationMode $operation - The current operation mode. 
+
+When Imlib2 draws an image onto another or an image onto a drawable it
+is able to do more than just blend the result on using the given alpha
+channel of the image. It is also able to do saturating additive,
+subtractive and a combination of the both (called reshade) rendering.
+The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
+or OP_RESHADE. Use this function to set the rendering operation.
+
+=head3 C<context_get_operation>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	say "OP_ADD Operation mode" if $im.context_get_operation() == OP_ADD;
 
 Returns:
 
@@ -325,31 +307,13 @@ Returns:
 
 Returns the current operation mode.
 
-=head2 C<font.context_set_font>
+=head3 C<context_get_font>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.add_path_to_font_path("/usr/share/fonts/corefonts");
-	my $corefont = $tools.load_font("comic", 36);
-	$corefont.context_set_font();
-	$tools.free_font();
-
-Parameters:
-
-	Imlib2::Font $font - Current font. 
-
-Sets the current font to use when rendering text. you should load the
-font first with load_font().
-
-=head2 C<context_get_font>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	my $font = $tools.context_get_font();
+	my $im = Imlib2.new();
+	my $font = $im.context_get_font();
 
 Returns:
 
@@ -357,13 +321,13 @@ Returns:
 
 Returns the current font.
 
-=head2 C<context_set_direction>
+=head3 C<context_set_direction>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_direction(TEXT_TO_RIGHT);
+	my $im = Imlib2.new();
+	$im.context_set_direction(TEXT_TO_RIGHT);
 
 Parameters:
 
@@ -375,14 +339,14 @@ TEXT_TO_RIGHT, TEXT_TO_LEFT, TEXT_TO_DOWN, TEXT_TO_UP or TEXT_TO_ANGLE.
 The default is TEXT_TO_RIGHT. If you use TEXT_TO_ANGLE, you will also
 have to set the angle with context_set_angle().
 
-=head2 C<context_get_direction>
+=head3 C<context_get_direction>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	say "TEXT_TO RIGHT is the current direction of the text."
-		if $tools.context_get_direction() == TEXT_TO_RIGHT;
+		if $im.context_get_direction() == TEXT_TO_RIGHT;
 
 Returns:
 
@@ -390,14 +354,14 @@ Returns:
 
 Returns the current direction to render text in.
 
-=head2 C<context_set_angle>
+=head3 C<context_set_angle>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Rat $angle = -45.0;
-	$tools.context_set_angle($angle);
+	$im.context_set_angle($angle);
 
 Parameters:
 
@@ -406,13 +370,13 @@ Parameters:
 Sets the angle at which text strings will be drawn if the text direction
 has been set to TEXT_TO_ANGLE with context_set_direction().
 
-=head2 C<context_get_angle>
+=head3 C<context_get_angle>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my Rat $angle = $tools.context_get_angle();
+	my $im = Imlib2.new();
+	my Rat $angle = $im.context_get_angle();
 
 Returns:
 
@@ -421,43 +385,99 @@ Returns:
 Returns the current angle used to render text at if the direction is
 TEXT_TO_ANGLE.
 
-=head2 C<context_set_color>
+=head3 C<context_set_color>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_color(
+	my $im = Imlib2.new();
+
+	# Color in RGBA space
+	$im.context_set_color(
 		red   => 127,
 		green => 255,
 		blue  => 127,
 		alpha => 255);
 
 	# Another way to setup the color channels.
-	my Str $hexcode = "#ff00ff";
-	my Int $alpha = 127;
-	$tools.context_set_color($hexcode, $alpha);
+	# This is like html color tags ("#RRGGBBAA").
+	# RR - Red, GG - Green, BB - Blue, AA - Alpha.
+	my Str $hex_str_color = "#ff00ffff";
+	$im.context_set_color($hex_str_color);
+
+	# Without the alpha color channel.
+	# The default value of alpha is 255.
+	my Str $hex_str_color_html = "#ff00ff";
+	$im.context_set_color($hex_str_color_html);
+
+	# You can even set a color in hexadecimal value.
+	my Int $hex_num_color = 0xff00ffff;
+	$im.context_set_color($hex_num_color);
+
+	# Color in HSVA space
+	$im.context_set_color(
+		hue        => 180,
+		saturation => 50,
+		value      => 75,
+		alpha      => 127);
+
+	# Color in HLSA space
+	$im.context_set_color(
+		hue        => 180,
+		lightness  => 75,
+		saturation => 50,
+		alpha      => 127);
+
+	# Color in CMYA space
+	$im.context_set_color(
+		cyan    => 25,
+		magenta => 125,
+		yellow  => 200,
+		alpha   => 255);
 
 Parameters:
 
-	Int red - Red channel of the current color.
-	Int green - Green channel of the current color.
-	Int blue - Blue channel of the current color.
-	Int alpha - Alpha channel of the current color.
-	Str $hex_color - The hexadecimal color code ("#FF00FF").
+	Color in RGBA space
+		Int red - Red channel of the current color (0 .. 255).
+		Int green - Green channel of the current color (0 .. 255).
+		Int blue - Blue channel of the current color (0 .. 255).
+		Int alpha - Alpha channel of the current color (0 .. 255).
+
+		Str $hex_str_color - Hexadecimal string like html color tags
+		                     (#RRGGBBAA / #RRGGBB).
+		Int $hex_num_color - Hexadecimal number like html color tags
+		                     (0xRRGGBBAA).
+
+	Color in HSVA space
+		Int hue - Hue channel of the current color (0 .. 360).
+		Int saturation - Saturation channel of the current color (0 .. 100).
+		Int value - Value channel of the current color (0 .. 100).
+		Int alpha - Alpha channel of the current color (0 .. 255).
+
+	Color in HLSA space
+		Int hue - Hue channel of the current color (0 .. 360).
+		Int lightness - Lightness channel of the current color (0 .. 100).
+		Int saturation - Saturation channel of the current color (0 .. 100).
+		Int alpha - Alpha channel of the current color (0 .. 255).
+
+	Color in CMYA space
+		Int cyan - Cyan channel of the current color (0 .. 255).
+		Int magenta - Magenta channel of the current color (0 .. 255).
+		Int yellow - Yellow channel of the current color (0 .. 255).
+		Int alpha - Alpha channel of the current color (0 .. 255).
 
 Sets the color with which text, lines and rectangles are drawn when
-being rendered onto an image. Values for red, green, blue and alpha
-are between 0 and 255 - any other values have undefined results.
+being rendered onto an image. The values ​​depend on the selected color
+space.
 
-=head2 C<context_get_color>
+=head3 C<context_get_color>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my %color_channels;
-	$tools.context_get_color(%color_channels);
+	$im.context_get_color(%color_channels);
 	say %color_channels{'red'};
 	say %color_channels{'green'};
 	say %color_channels{'blue'};
@@ -465,7 +485,7 @@ Usage:
 	say %color_channels{'hexcode'};
 
 	# Another way to get the color channels.
-	%color_channels = $tools.context_get_color();
+	%color_channels = $im.context_get_color();
 
 Parameters:
 
@@ -502,37 +522,14 @@ The current color for rendering text, rectangles and lines.
 
 =back
 
-=head2 C<context_set_color_hsva>
+=head3 C<context_get_color_hsva>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_color_hsva(
-		hue        => 180.0,
-		saturation => 0.50,
-		value      => 0.75,
-		alpha      => 127);
-
-Parameters:
-
-	Rat hue - Hue channel of the current color.
-	Rat saturation - Saturation channel of the current color.
-	Rat value - Value channel of the current color.
-	Int alpha - Alpha channel of the current color.
-
-Sets the color in HSVA space. Values for hue are between 0 and 360,
-values for saturation and value between 0 and 1, and values for alpha
-are between 0 and 255 - any other values have undefined results.
-
-=head2 C<context_get_color_hsva>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my %hsva_channels;
-	$tools.context_get_color_hsva(%hsva_channels);
+	$im.context_get_color_hsva(%hsva_channels);
 	say "Hue: " ~ %hsva_channels{'hue'};
 	say "Saturation: " ~ %hsva_channels{'saturation'};
 	say "Value: " ~ %hsva_channels{'value'};
@@ -565,37 +562,14 @@ The current color for rendering text, rectangles and lines in HSVA space.
 
 =back
 
-=head2 C<context_set_color_hlsa>
+=head3 C<context_get_color_hlsa>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_color_hlsa(
-		hue        => 180.0,
-		lightness  => 0.75,
-		saturation => 0.50,
-		alpha      => 127);
-
-Parameters:
-
-	Rat hue - Hue channel of the current color.
-	Rat lightness - Lightness channel of the current color.
-	Rat saturation - Saturation channel of the current color.
-	Int alpha - Alpha channel of the current color.
-
-Sets the color in HLSA space. Values for hue are between 0 and 360,
-values for lightness and saturation between 0 and 1, and values for
-alpha are between 0 and 255 - any other values have undefined results.
-
-=head2 C<context_get_color_hlsa>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my %hlsa_channels;
-	$tools.context_get_color_hlsa(%hlsa_channels);
+	$im.context_get_color_hlsa(%hlsa_channels);
 	say "Hue: " ~ %hlsa_channels{'hue'};
 	say "Lightness: " ~ %hlsa_channels{'lightness'};
 	say "Saturation: " ~ %hlsa_channels{'saturation'};
@@ -628,36 +602,14 @@ The current color for rendering text, rectangles and lines in HLSA space.
 
 =back
 
-=head2 C<context_set_color_cmya>
+=head3 C<context_get_color_cmya>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.context_set_color_cmya(
-		cyan    => 25,
-		magenta => 125,
-		yellow  => 200,
-		alpha   => 255);
-
-Parameters:
-
-	Int cyan - Cyan channel of the current color.
-	Int magenta - Magenta channel of the current color.
-	Int yellow - Yellow channel of the current color.
-	Int alpha - Alpha channel of the current color.
-
-Sets the color in CMYA space. Values for cyan, magenta, yellow and alpha
-are between 0 and 255 - any other values have undefined results.
-
-=head2 C<context_get_color_cmya>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my %cmya_channels;
-	$tools.context_get_color_cmya(%cmya_channels);
+	$im.context_get_color_cmya(%cmya_channels);
 	say "Cyan: " ~ %cmya_channels{'cyan'};
 	say "Magenta: " ~ %cmya_channels{'magenta'};
 	say "Yellow: " ~ %cmya_channels{'yellow'};
@@ -690,29 +642,13 @@ The current color for rendering text, rectangles and lines in CMYA space.
 
 =back
 
-=head2 C<context_set_color_range>
+=head3 C<context_get_color_range>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $color_range = $tools.create_color_range();
-	$color_range.context_set_color_range();
-	$tools.free_color_range();
-
-Parameters:
-
-	Imlib2::ColorRange $color_range - Color range.
-	
-Sets the current color range to use for rendering gradients.
-
-=head2 C<context_get_color_range>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	my $color_range = $tools.context_get_color_range();
+	my $im = Imlib2.new();
+	my $color_range = $im.context_get_color_range();
 	
 Returns:
 
@@ -720,16 +656,16 @@ Returns:
 
 Returns the current color range being used for gradients.
 
-=head2 C<context_set_image>
+=head3 C<context_set>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -737,13 +673,13 @@ Parameters:
 	
 Sets the current image Imlib2 will be using with its function calls.
 
-=head2 C<context_get_image>
+=head3 C<context_get_image>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.context_get_image();
+	my $im = Imlib2.new();
+	my $image = $im.context_get_image();
 	
 Returns:
 
@@ -751,14 +687,74 @@ Returns:
 
 Returns the current context image.
 
-=head2 C<set_cache_size>
+=head3 C<context_set_cliprect>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
+	$im.context_set_cliprect(
+		x      => 0,
+		y      => 0,
+		width  => 100,
+		height => 100);
+
+Parameters:
+
+	Int x - The top left x coordinate of the rectangle. 
+	Int y - The top left y coordinate of the rectangle. 
+	Int width - The width of the rectangle. 
+	Int height - The height of the rectangle. 
+
+Sets the rectangle of the current context.
+
+=head3 C<context_get_cliprect>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my %cliprect;
+	$im.context_get_cliprect(%cliprect);
+	say "x: " ~ %cliprect{'x'};
+	say "y: " ~ %cliprect{'y'};
+	say "width: " ~ %cliprect{'width'};
+	say "height: " ~ %cliprect{'height'};
+
+Parameters:
+
+	%cliprect - Hash (passed as argument) with dimensions.
+
+The rectangle of the current context.
+
+=over 4
+
+=item *
+
+%cliprect{'x'} - The top left x coordinate of the rectangle.
+
+=item *
+
+%cliprect{'y'} - The top left y coordinate of the rectangle.
+
+=item *
+
+%cliprect{'width'} - The width of the rectangle.
+
+=item *
+
+%cliprect{'height'} - The height of the rectangle.
+
+=back
+
+=head3 C<set_cache_size>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
 	my $bytes = 2048 * 1024;
-	$tools.set_cache_size($bytes);
+	$im.set_cache_size($bytes);
 
 Parameters:
 
@@ -770,13 +766,13 @@ to another value. Whenever you set the cache size Imlib2 will flush as
 many old images and pixmap from the cache as needed until the current
 cache usage is less than or equal to the cache size.
 
-=head2 C<get_cache_size>
+=head3 C<get_cache_size>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $bytes = $tools.get_cache_size();
+	my $im = Imlib2.new();
+	my $bytes = $im.get_cache_size();
 
 Returns:
 
@@ -785,14 +781,14 @@ Returns:
 Returns the current size of the image cache in bytes. The cache is a
 unified cache used for image data AND pixmaps.
 
-=head2 C<set_color_usage>
+=head3 C<set_color_usage>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $max = 256;
-	$tools.set_color_usage($max);
+	$im.set_color_usage($max);
 
 Parameters:
 
@@ -802,13 +798,13 @@ Sets the maximum number of colors you would like Imlib2 to allocate for
 you when rendering. The default is 256. This has no effect in depths
 greater than 8 bit.
 
-=head2 C<get_color_usage>
+=head3 C<get_color_usage>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $max = $tools.get_color_usage();
+	my $im = Imlib2.new();
+	my $max = $im.get_color_usage();
 
 Returns:
 
@@ -817,55 +813,42 @@ Returns:
 Gets the number of colors Imlib2 currently at a maximum is allowed to
 allocate for rendering. The default is 256.
 
-=head2 C<flush_loaders>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	$tools.flush_loaders();
-
-If you want Imlib2 to forcibly flush any cached loaders it has and
-re-load them from disk (this is useful if the program just installed a
-new loader and does not want to wait till Imlib2 deems it an optimal
-time to rescan the loaders).
-
 =head2 C<load_image>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
+	my $image = $im.load_image($file);
+	$image.context_set();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 	
 	# load image with returned error.
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
 	my LoadError $error_return;
-	my $image = $tools.load_image($file, $error_return);
+	my $image = $im.load_image($file, $error_return);
 	if $error_return == LOAD_ERROR_NONE {
 		say "No error...";
-		$image.context_set_image();
+		$image.context_set();
 		... some operations ...
-		$tools.free_image();
+		$im.free_image();
 	}
 
 	# Another way to load an image.
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image(
+	my $image = $im.load_image(
 		filename    => $file,
 		immediately => False,
 		cache       => True);
-	$image.context_set_image();
+	$image.context_set();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 	
 Parameters:
 
@@ -892,13 +875,13 @@ for more detail. Returns an image handle on success or NULL on failure.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
+	my $image = $im.load_image($file);
+	$image.context_set();
 	... some operations ...
 	my Bool $decache = False;
-	$tools.free_image() if $image.context_get_image($decache);
+	$im.free_image() if $image.context_get_image($decache);
 
 Parameters:
 
@@ -906,18 +889,31 @@ Parameters:
 	
 Frees the image that is set as the current image in Imlib2's context.
 
+=head2 C<flush_loaders>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.flush_loaders();
+
+If you want Imlib2 to forcibly flush any cached loaders it has and
+re-load them from disk (this is useful if the program just installed a
+new loader and does not want to wait till Imlib2 deems it an optimal
+time to rescan the loaders).
+
 =head2 C<image_get_width>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
-	my Int $width = $tools.image_get_width();
+	my $image = $im.load_image($file);
+	$image.context_set();
+	my Int $width = $im.image_get_width();
 	say "Width size: $width pixels";
-	$tools.free_image();
+	$im.free_image();
 
 Returns:
 
@@ -930,13 +926,13 @@ Returns the width in pixels of the current image in Imlib2's context.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
-	my Int $height = $tools.image_get_height();
+	my $image = $im.load_image($file);
+	$image.context_set();
+	my Int $height = $im.image_get_height();
 	say "Height size: $height pixels";
-	$tools.free_image();
+	$im.free_image();
 
 Returns:
 
@@ -949,18 +945,19 @@ Returns the height in pixels of the current image in Imlib2's context.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
-	my %size = $tools.image_get_size();
-	say "Width size: " ~ %size{'width'} ~ " pixels";
-	say "Height size: " ~ %size{'height'} ~ " pixels";
-	$tools.free_image();
+	my $image = $im.load_image($file);
+	$image.context_set();
+	my ($width, $height) = $im.image_get_size();
+	say "Width size: " ~ $width ~ " pixels";
+	say "Height size: " ~ $height ~ " pixels";
+	$im.free_image();
 
 Returns:
 
-	%size - Hash with size in pixels of the current image (width, height).
+	Int ($width, $height) - Parcel with size in pixels of the current 
+	                        image (width, height).
 
 Returns the size in pixels of the current image in Imlib2's context.
 
@@ -981,13 +978,13 @@ Returns the size in pixels of the current image in Imlib2's context.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my $file = "pictures/holidays.jpeg";
-	my $image = $tools.load_image($file);
-	$image.context_set_image();
-	my Str $filename = $tools.image_get_filename();
+	my $image = $im.load_image($file);
+	$image.context_set();
+	my Str $filename = $im.image_get_filename();
 	say "My filename is: $filename";
-	$tools.free_image();
+	$im.free_image();
 
 Returns:
 
@@ -1004,13 +1001,13 @@ to continue to use the string for later processing.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
 	my Bool $has_alpha = True;
-	$tools.image_set_has_alpha($has_alpha);
+	$im.image_set_has_alpha($has_alpha);
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1024,13 +1021,13 @@ enable the alpha channel in the current image, or False to disable it.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	my Bool $has_alpha = $tools.image_has_alpha();
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	my Bool $has_alpha = $im.image_has_alpha();
 	say "Alpha status: $has_alpha";
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Returns:
 
@@ -1045,12 +1042,12 @@ available - just "unused").
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.load_image("pictures/holidays.jpeg");
-	$image.context_set_image();
-	$tools.image_set_changes_on_disk();
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	$im.image_set_changes_on_disk();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 By default Imlib2 will not check the timestamp of an image on disk and
 compare it with the image in its cache - this is to minimize disk
@@ -1066,12 +1063,12 @@ needs to use this image in the cache.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	my Imlib2::Border $border = $tools.new_border();
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	my Imlib2::Border $border = $im.new_border();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Returns
 
@@ -1085,17 +1082,17 @@ current context image.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	my Imlib2::Border $border = $tools.new_border();
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	my Imlib2::Border $border = $im.new_border();
 	$border.left(2);
 	$border.right(2);
 	$border.top(4);
 	$border.bottom(4);
-	$tools.image_set_border($border);
+	$im.image_set_border($border);
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1129,17 +1126,17 @@ $border.bottom(4) - Set the value of the bottom side to 4.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	my Imlib2::Border $border = $tools.new_border();
-	$tools.image_get_border($border);
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	my Imlib2::Border $border = $im.new_border();
+	$im.image_get_border($border);
 	say "Left: " ~ $border.left;
 	say "Right: " ~ $border.right;
 	say "Top: " ~ $border.top;
 	say "Bottom: " ~ $border.bottom;
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1177,13 +1174,13 @@ $border.bottom - Returns the value of the bottom side.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.load_image("pictures/holidays.jpeg");
-	$image.context_set_image();
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
 	my Str $format = "png";
-	$tools.image_set_format($format);
+	$im.image_set_format($format);
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1193,17 +1190,17 @@ Sets the format of the current image. This is used for when you wish
 to save an image in a different format that it was loaded in, or if the
 image currently has no file format associated with it.
 
-=head2 C<image_format>
+=head2 C<image_get_format>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.load_image("pictures/holidays.jpeg");
-	$image.context_set_image();
-	my Str $format = $tools.image_format();
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my Str $format = $im.image_get_format();
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Returns:
 
@@ -1216,9 +1213,9 @@ Returns the current image's format.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $irrelevant = True;
-	$tools.image_set_irrelevant_format($irrelevant);
+	$im.image_set_irrelevant_format($irrelevant);
 
 Parameters:
 
@@ -1233,9 +1230,9 @@ irrelevant and False to make it relevant for caching.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $irrelevant = True;
-	$tools.image_set_irrelevant_border($irrelevant);
+	$im.image_set_irrelevant_border($irrelevant);
 
 Parameters:
 
@@ -1250,9 +1247,9 @@ irrelevant, and False to make it relevant.
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Bool $irrelevant = True;
-	$tools.image_set_irrelevant_alpha($irrelevant);
+	$im.image_set_irrelevant_alpha($irrelevant);
 
 Parameters:
 
@@ -1263,15 +1260,19 @@ or is not one) is important for caching purposes. By default it is not.
 Set irrelevant to True to make it irrelevant and False to make it
 relevant.
 
-=head2 C<create_image>
+=head2 Creation Functions.
+
+Functions to create, clone and resize images.
+
+=head3 C<create_image>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
+	my $im = Imlib2.new();
 	my Int $width = 100;
 	my Int $height = 200;
-	my Imlib2::Image $image = $tools.create_image($width, $height);
+	my Imlib2::Image $image = $im.create_image($width, $height);
 
 Parameters:
 
@@ -1287,20 +1288,20 @@ image at creation time are undefined (they could be garbage memory).
 You are free to do whatever you like with this image. It is not cached.
 On success an image handle is returned - on failure NULL is returned.
 
-=head2 C<clone_image>
+=head3 C<clone_image>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
-	$loaded_image.context_set_image();
-	my Imlib2::Image $cloned_image = $tools.clone_image();
-	$cloned_image.context_set_image();
+	my $im = Imlib2.new();
+	my $loaded_image = $im.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set();
+	my Imlib2::Image $cloned_image = $im.clone_image();
+	$cloned_image.context_set();
 	... some operations ...
-	$tools.free_image(); # frees the cloned image
-	$loaded_image.context_set_image();
-	$tools.free_image(); # frees the loaded image
+	$im.free_image(); # frees the cloned image
+	$loaded_image.context_set();
+	$im.free_image(); # frees the loaded image
 
 Returns:
 
@@ -1309,116 +1310,77 @@ Returns:
 Creates an exact duplicate of the current image and returns a valid
 image handle on success, or NULL on failure.
 
-=head2 C<create_cropped_image>
+=head3 C<create_resized_image>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
-	$loaded_image.context_set_image();
-	my Imlib2::Image $cropped_image = $tools.create_cropped_image(
-			x      => 0,
-			y      => 0,
-			width  => 40,
-			height => 80);
-	$cropped_image.context_set_image();
+	my $im = Imlib2.new();
+	my $loaded_image = $im.load_image("pictures/holidays.jpeg");
+
+	# Crop and Scale
+	$loaded_image.context_set();
+	my Imlib2::Image $resized_image = $im.create_resized_image(
+		location => (50, 60),
+		crop     => (150, 100),
+		scale    => (300, 300));
+	$resized_image.context_set();
 	... some operations ...
-	$tools.free_image(); # frees the cropped image
-	$loaded_image.context_set_image();
-	$tools.free_image(); # frees the loaded image
+	$im.free_image(); # frees the resized image
+
+	# Crop only
+	$loaded_image.context_set();
+	my Imlib2::Image $cropped_image = $im.create_resized_image(
+		location => (10, 20),
+		crop     => (180, 120));
+	$cropped_image.context_set();
+	... some operations ...
+	$im.free_image(); # frees the cropped image
+
+	# Scale only
+	$loaded_image.context_set();
+	my Imlib2::Image $scaled_image = $im.create_resized_image(
+		scale    => (180, 120));
+	$scaled_image.context_set();
+	... some operations ...
+	$im.free_image(); # frees the scaled image
+
+	$loaded_image.context_set();
+	$im.free_image(); # frees the loaded image
 
 Parameters:
 
-	Int x - The top left x coordinate of the rectangle. 
-	Int y - The top left y coordinate of the rectangle. 
-	Int width - The width of the rectangle. 
-	Int height - The height of the rectangle.
+	location - Parcel with the top left Int $x and Int $y coordinates
+	           of the source rectangle.
+	crop - Parcel with Int $width and Int $height of the source rectangle.
+	scale - Parcel with Int $width and Int $height of the destination image.
 
 Returns:
 
-	Imlib2::Image $cropped_image - A valid image, otherwise NULL.
+	Imlib2::Image $resized_image - A valid image, otherwise NULL.
 
-Creates a duplicate of a (x, y, width, height) rectangle in the current
-image and returns a valid image handle on success, or NULL on failure.
-
-=head2 C<create_cropped_scaled_image>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
-	$loaded_image.context_set_image();
-	my Imlib2::Image $cropped_scaled_image = $tools.create_cropped_scaled_image(
-			source_x           => 0,
-			source_y           => 0,
-			source_width       => 100,
-			source_height      => 100,
-			destination_width  => 50,
-			destination_height => 50);
-	$cropped_scaled_image.context_set_image();
-	... some operations ...
-	$tools.free_image(); # frees the cropped scaled image
-	$loaded_image.context_set_image();
-	$tools.free_image(); # frees the loaded image
-
-Parameters:
-
-	Int x - The top left x coordinate of the source rectangle. 
-	Int y - The top left y coordinate of the source rectangle. 
-	Int width - The width of the source rectangle. 
-	Int height - The height of the source rectangle.
-	Int destination_width - The width of the destination image.
-	Int destination_height - The height of the destination image.
-
-Returns:
-
-	Imlib2::Image $cropped_scaled_image - A valid image, otherwise NULL.
-
-Works the same as create_cropped_image() but will scale the new image
+If the crop option is set creates a duplicate of a (x, y, width, height)
+rectangle in the current image and returns a valid image handle on
+success, or NULL on failure. If scale is set, it will scale the new image
 to the new destination destination_width and destination_height whilst
 cropping.
 
-=head2 C<create_rotated_image>
+=head2 Image Modification.
+
+Functions to modify the images.
+
+=head3 C<image_flip>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $loaded_image = $tools.load_image("pictures/holidays.jpeg");
-	$loaded_image.context_set_image();
-	my Rat $angle = -45.0;
-	my Imlib2::Image $rotated_image = $tools.create_rotated_image($angle);
-	$rotated_image.context_set_image();
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my FlipMode $flip_mode = FLIP_HORIZONTAL;
+	$im.image_flip($flip_mode);
 	... some operations ...
-	$tools.free_image(); # frees the rotated image
-	$loaded_image.context_set_image();
-	$tools.free_image(); # frees the loaded image
-
-Parameters:
-
-	Rat $angle - An angle in degrees (-360 to 360).
-
-Returns:
-
-	Imlib2::Image $rotated_image - A valid image, otherwise NULL.
-
-Creates an new copy of the current image, but rotated by angle degrees.
-On success it returns a valid image handle, otherwise NULL.
-
-=head2 C<image_flip>
-
-Usage:
-
-	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.load_image("pictures/holidays.jpeg");
-	$image.context_set_image();
-	my FlipMode $flip_mode = HORIZONTAL;
-	$tools.image_flip($flip_mode);
-	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1430,32 +1392,32 @@ Flips/mirrors the current image.
 
 =item *
 
-HORIZONTAL - Flips/mirrors the current image horizontally
+FLIP_HORIZONTAL - Flips/mirrors the current image horizontally
 
 =item *
 
-VERTICAL - Flips/mirrors the current image vertically.
+FLIP_VERTICAL - Flips/mirrors the current image vertically.
 
 =item *
 
-DIAGONAL - Flips/mirrors the current image diagonally (good for quick
-           and dirty 90 degree rotations if used before to after a
-           horizontal or vertical flip).
+FLIP_DIAGONAL - Flips/mirrors the current image diagonally (good for
+                quick and dirty 90 degree rotations if used before to
+                after a horizontal or vertical flip).
 
 =back
 
-=head2 C<image_orientate>
+=head3 C<image_orientate>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.load_image("pictures/holidays.jpeg");
-	$image.context_set_image();
-	my RotationMode $orientation = ROTATE_90_DEGREE;
-	$tools.image_orientate($orientation);
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my RotationMode $orientation = ROTATE_90_DEGREES;
+	$im.image_orientate($orientation);
 	... some operations ...
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1467,44 +1429,908 @@ Performs 90 degree rotations on the current image.
 
 =item *
 
-ROTATE_90_DEGREE - rotates clockwise by 90 degree.
+ROTATE_90_DEGREES - rotates clockwise by 90 degrees.
 
 =item *
 
-ROTATE_180_DEGREE - rotates clockwise by 180 degrees.
+ROTATE_180_DEGREES - rotates clockwise by 180 degrees.
 
 =item *
 
-ROTATE_270_DEGREE - rotates clockwise by 270 degrees.
+ROTATE_270_DEGREES - rotates clockwise by 270 degrees.
 
 =back
 
-=head2 C<save_image>
+=head3 C<image_tile>
 
 Usage:
 
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	$tools.image_set_format("png");
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my TileMode $flip_mode = TILE_HORIZONTAL;
+	$im.image_tile($tile_mode);
+	... some operations ...
+	$im.free_image();
+
+Parameters:
+
+	TileMode $tile_mode - The tile mode flag.
+
+Modifies an image so it will tile seamlessly if used as a tile (i.e.
+drawn multiple times horizontally, vertically or both).
+
+=over 4
+
+=item *
+
+TILE_HORIZONTAL - Drawn multiple times horizontally.
+
+=item *
+
+TILE_VERTICAL - Drawn multiple times vertically.
+
+=item *
+
+TILE_BOTH - Drawn multiple times horizontally and vertically.
+
+=back
+
+=head3 C<image_blur>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my Int $radius = 12;
+	$im.image_blur($radius);
+	... some operations ...
+	$im.free_image();
+	
+Parameters:
+
+	Int $radius = The radius (value between 0 and 128).
+
+Blurs the current image. A radius value of 0 has no effect, 1 and above
+determine the blur matrix radius that determine how much to blur the
+image.
+
+=head3 C<image_sharpen>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.load_image("pictures/holidays.jpeg");
+	$image.context_set();
+	my Int $radius = 20;
+	$im.image_sharpen($radius);
+	... some operations ...
+	$im.free_image();
+
+Parameters:
+
+	Int $radius = The radius (value between 0 and 128).
+
+Sharpens the current image. The radius value affects how much to
+sharpen by.
+
+=head2 Fonts and text
+
+Functions to handle the fonts and text that you use in the images.
+
+=head3 C<load_font>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("t/fonts");
+	my Str $font = "comic";
+	my Int $size = 36;
+	my Imlib2::Font $corefont = $im.load_font($font, $size);
+	$corefont.context_set();
+	... some operations ...
+	$im.free_font();
+
+Parameters:
+
+	Str $font - The font name without ttf extension.
+	Int $size - The font size in pixels.
+
+Returns:
+
+	Imlib2::Font $corefont - A valid font, otherwise NULL if no font found.
+
+Loads a truetype font from the first directory in the font path that
+contains that font. For example. If there is a font file called blum.ttf
+somewhere in the font path you might use "blum" for font name and 20 to
+load a 20 pixel sized font of blum. If the font cannot be found NULL is
+returned.
+
+=head3 C<free_font>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my Imlib2::Font $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	... some operations ...
+	$im.free_font();
+
+Removes the current font from any fallback chain it's in and frees it.
+
+=head3 C<context_set>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	$im.free_font();
+
+Parameters:
+
+	Imlib2::Font $font - Current font. 
+
+Sets the current font to use when rendering text. you should load the
+font first with load_font().
+
+=head3 C<text_draw>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Int $x = 10;
+	my Int $y = 10;
+	my Str $text = "perl6";
+	$im.text_draw($x, $y, $text);
+
+	# text_draw but with return metrics.	
+	my %returned_metrics;
+	$im.text_draw(10, 10, "perl6", %returned_metrics);
+	say "The width of the string: " ~ %returned_metrics{'width'};
+	say "The height of the string: " ~ %returned_metrics{'height'};
+	say "The horizontal offset: " ~ %returned_metrics{'horizontal_advance'};
+	say "The vertical offset: " ~ %returned_metrics{'vertical_advance'};
+
+	$im.free_font();
+	$im.free_image();
+
+Parameters:
+
+	Int $x - The x coordinate of the top left corner.
+	Int $y - The y coordinate of the top left corner.
+	Str $text - The text string.
+	Hash returned_metrics - Hash with returned metrics of the string drawn.
+
+Draws the string text using the current font on the current image at the
+(x, y) location (x, y denoting the top left corner of the font string).
+If the hash metrics is passed also returns the width and height of the
+string drawn, and horizontal_advance returns the number of pixels you
+should advance horizontally to draw another string (useful if you are
+drawing a line of text word by word) and vertical_advance does the same
+for the vertical direction (i.e. drawing text line by line).
+
+=over 4
+
+=item *
+
+%returned_metrics{'width'} - The width of the string.
+
+=item *
+
+%returned_metrics{'height'} - The height of the string.
+
+=item *
+
+%returned_metrics{'horizontal_advance'} - The horizontal offset.
+
+=item *
+
+%returned_metrics{'vertical_advance'} - The vertical offset.
+
+=back
+
+=head3 C<get_text_size>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Str $text = "perl6";
+	my Int $width = 0;
+	my Int $height = 0;
+	$im.get_text_size($text, $width, $height);
+	say "The width of the string: " ~ $width;
+	say "The height of the string: " ~ $height;
+	$im.free_font();
+
+Parameters:
+
+	Str $text - The text string.
+	Int $width - The width of the text.
+	Int $height - The height of the text.
+
+Gets the width and height in pixels the text string would use up if
+drawn with the current font.
+
+=head3 C<get_text_advance>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Str $text = "perl6";
+	my Int $horizontal_advance = 0;
+	my Int $vertical_advance = 0;
+	$im.get_text_advance($text, $horizontal_advance, $vertical_advance);
+	say "The horizontal offset: " ~ $horizontal_advance;
+	say "The vertical offset: " ~ $vertical_advance;
+	$im.free_font();
+
+Parameters:
+
+	Str $text - The text string.
+	Int $horizontal_advance - The horizontal offset.
+	Int $vertical_advance - The vertical offset.
+
+Gets the advance horizontally and vertically in pixels the next text
+string would need to be placed at for the current font. The advances
+are not adjusted for rotation so you will have to translate the advances
+(which are calculated as if the text was drawn horizontally from left to
+right) depending on the text orientation.
+
+=head3 C<get_text_inset>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Str $text = "perl6";
+	my Int $inset = $im.get_text_inset($text);
+	say "The inset value of: " ~ $inset;
+	$im.free_font();
+
+Parameters:
+
+	Str $text - The text string.
+
+Returns:
+
+	Int $inset - The inset value of.
+
+Returns the inset of the first character of text in using the current
+font and returns that value in pixels.
+
+=head3 C<get_font_ascent>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Int $ascent = $im.get_font_ascent();
+	say "The font's ascent: " ~ $ascent;
+	$im.free_font();
+
+Returns:
+
+	Int $ascent - The font's ascent.
+
+Returns the current font's ascent value in pixels.
+
+=head3 C<get_font_descent>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Int $descent = $im.get_font_descent();
+	say "The font's descent: " ~ $descent;
+	$im.free_font();
+
+Returns:
+
+	Int $descent - The font's descent.
+
+Returns the current font's descent value in pixels.
+
+=head3 C<get_maximum_font_ascent>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Int $max_ascent = $im.get_maximum_font_ascent();
+	say "The font's maximum ascent: " ~ $max_ascent;
+	$im.free_font();
+
+Returns:
+
+	Int $max_ascent - The font's maximum ascent.
+
+Returns the current font's maximum ascent extent.
+
+=head3 C<get_maximum_font_descent>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	my Int $max_descent = $im.get_maximum_font_descent();
+	say "The font's maximum descent: " ~ $max_descent;
+	$im.free_font();
+
+Returns:
+
+	Int $max_descent - The font's maximum descent.
+
+Returns the current font's maximum descent extent.
+
+=head3 C<add_path_to_font_path>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Str $font_path = "/usr/share/fonts/corefonts";
+	$im.add_path_to_font_path($font_path);
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	... some operations ...
+	$im.free_font();
+
+Parameters:
+
+	Str $font_path - A directory path.
+
+Adds the directory path to the end of the current list of directories
+to scan for fonts.
+
+=head3 C<remove_path_from_font_path>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Str $font_path = "/usr/share/fonts/corefonts";
+	$im.add_path_to_font_path($font_path);
+	my $corefont = $im.load_font("comic", 36);
+	$corefont.context_set();
+	... some operations ...
+	$im.remove_path_from_font_path($font_path);
+	$im.free_font();
+
+Parameters:
+
+	Str $font_path - A directory path.
+
+Removes all directories in the font path that match path.
+
+=head3 C<list_font_path>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("fonts/localfonts");
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my @list = $im.list_font_path();
+	say "Number of paths in the list: " ~ @list.elems;
+	say "List of directories:\n" ~ @list.join("\n");
+
+	# Number of paths in the list: 2
+	# List of directories:
+	# fonts/localfonts
+	# /usr/share/fonts/corefonts
+
+	... some operations ...
+
+Returns:
+
+	Array @list - A list of strings paths.
+
+Returns a list of strings that are the directories in the font path.
+
+=head3 C<list_fonts>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.add_path_to_font_path("/usr/share/fonts/corefonts");
+	my @list = $im.list_font();
+	say "Number of fonts in the list: " ~ @list.elems;
+	say "List of fonts:\n" ~ @list.join("\n");
+
+	# Number of fonts in the list: 30
+	# List of fonts:
+	# comic
+	# andalemo
+	# arial
+	# arialbd
+	# arialbi 
+	# ...
+
+	... some operations ...
+
+Returns:
+
+	Array @list - A list of strings fonts.
+
+Returns a list of fonts imlib2 can find in its font path.
+
+=head3 C<set_font_cache_size>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Int $bytes = 512 * 1024;
+	$im.set_font_cache_size($bytes);
+	... some operations ...
+
+Parameters:
+
+	Int $bytes - The font cache size in bytes.
+
+Sets the font cache in bytes. Whenever you set the font cache size
+Imlib2 will flush fonts from the cache until the memory used by fonts
+is less than or equal to the font cache size. Setting the size to 0
+effectively frees all speculatively cached fonts.
+
+=head3 C<get_font_cache_size>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Int $bytes = $im.get_font_cache_size();
+	... some operations ...
+
+Returns:
+
+	Int $bytes - The font cache size in bytes.
+
+Returns the font cache size in bytes.
+
+=head3 C<flush_font_cache>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	$im.flush_font_cache();
+	... some operations ...
+
+Causes a flush of all speculatively cached fonts from the font cache.
+
+=head2 C<image_draw_rectangle>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(200, 200);
+	$image.context_set();
+	$im.context_set_color("#00ff00");
+	$im.image_draw_rectangle(
+		location => (10, 10),
+		size     => (100, 100),
+		fill     => False,
+		gradient => False,
+		angle    => 0.0,
+		hsva     => False);
+	... some operations ...
+	$im.free_image();
+
+Parameters:
+
+	location - The top left Int x and Int y coordinates of the rectangle.
+	size - Parcel with the Int width and the Int height of the rectangle.
+	Bool fill - True if the rectangle should be filled, False if outlined.
+	Bool gradient - True if the rectangle should be filled with a color
+	                gradient, False if normal color.
+	Rat angle - Angle of gradient.
+	Bool hsva - The hsva option (True or False)
+
+Draws the outline of a rectangle on the current image at the (x, y)
+coordinates with a size of width and height pixels, using the current
+color. Draws a filled rectangle on the current image if the fill option
+is set to True;
+If the fill and gradient option is set to True fills a rectangle of
+width $width and height $height at the ($x, $y) location specified in
+the current image with a linear gradient of the current color range at
+an angle of angle degrees with 0 degrees being vertical from top to
+bottom going clockwise from there. If the hsva option is set to True a
+linear gradient in HSVA color space of the current color range is used.
+
+=head2 Polygon
+
+Functions to build and handle polygons.
+
+=head3 C<polygon_new>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	my $polygon = $im.polygon_new();
+	... some operations ...
+	$polygon.free();
+	$im.free_image();
+
+Returns:
+
+	Imlib2::Polygon $polygon - Polygon object.
+
+Returns a new polygon object with no points set.
+
+=head3 C<free>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	my $polygon = $im.polygon_new();
+	... some operations ...
+	$polygon.free();
+	$im.free_image();
+
+Frees a polygon object.
+
+=head3 C<add_point>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	my $polygon = $im.polygon_new();
+	my Int $x = 1;
+	my Int $y = 1;
+	$polygon.add_point($x, $y);
+	$polygon.add_point($x+3, $y);
+	$polygon.add_point($x+3, $y+2);
+	$polygon.add_point($x+1, $y+3);
+	... some operations ...
+	$polygon.free();
+	$im.free_image();
+
+Parameters:
+
+	Int $x - The x coordinate.
+	Int $y - The y coordinate.
+
+Adds the point (x, y) to the polygon $polygon. The point will be added
+to the end of the polygon's internal point list. The points are drawn
+in order, from the first to the last.
+
+=head3 C<contains_point>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	my $polygon = $im.polygon_new();
+	my Int $x = 2;
+	my Int $y = 4;
+	$polygon.add_point($x, $y);
+	my Bool $test = $polygon.contains_point($x, $y);
+	... some operations ...
+	$polygon.free();
+	$im.free_image();
+
+Parameters:
+
+	Int $x - The x coordinate.
+	Int $y - The y coordinate.
+
+Returns:
+
+	my Bool $test - True if the point ($x, $y) is within the area,
+	                otherwise False.
+
+Returns True if the point (x, y) is within the area defined by the
+polygon poly. Otherwise returns False.
+
+=head3 C<get_bounds>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $polygon = $im.polygon_new();
+	my @points = (
+		 30,  30, # top left corner
+		180,  10, # top right corner
+		180, 180, # bottom right corner
+		 60, 190  # bottom left corner
+	);
+	for @points -> Int $x, Int $y {
+		$polygon.add_point($x, $y);
+	}
+	my ($px1, $py1, $px2, $py2) = $polygon.get_bounds();
+	say "X coordinate of the upper left corner: " ~ $px1;
+	say "Y coordinate of the upper left corner: " ~ $py1;
+	say "X coordinate of the lower right corner: " ~ $px2;
+	say "Y coordinate of the lower right corner: " ~ $py2;
+	$polygon.free();
+
+Returns:
+
+	Int $px1 - X coordinate of the upper left corner.
+	Int $py1 - Y coordinate of the upper left corner.
+	Int $px2 - X coordinate of the lower right corner.
+	Int $py2 - Y coordinate of the lower right corner.
+
+Calculates the bounding area of the polygon poly. ($px1, $py1) defines
+the upper left corner of the bounding box and ($px2, $py2) defines it's
+lower right corner.
+
+=head3 C<image_draw_polygon>
+
+Usage:
+
+	use Imlib2;
+	
+	my $im = Imlib2.new();
+	my $rawimage = $im.create_image(200, 200);
+	$rawimage.context_set();
+	my $polygon = $im.polygon_new();
+	my @points = (
+		 30,  30, # top left corner
+		180,  10, # top right corner
+		180, 180, # bottom right corner
+		 60, 190  # bottom left corner
+	);
+	for @points -> Int $x, Int $y {
+		$polygon.add_point($x, $y);
+	}
+	$im.context_set_color(0x000000ff);
+	$im.image_draw_polygon(
+		$polygon,
+		closed => True,
+		fill   => False );
+	$polygon.free();
+	$im.free_image();
+
+Parameters:
+
+	Imlib2::Polygon $polygon - A polygon.
+	Bool fill - True if the polygon should be filled, False if outlined.
+	Bool closed - Closed polygon flag (True or False).
+
+Draws the polygon $polygon onto the current context image if fill option
+is set to False otherwise fills the area defined by the polygon $polygon
+if the fill is set to True. Points which have been added to the polygon
+are drawn in sequence, first to last. The final point will be joined
+with the first point if closed is True. Fills the area defined by the
+polygon $polygon on the current context image with the current context
+color.
+
+=head2 Ellipse/Circumference
+
+Functions to handle ellipses and circumferences.
+
+=head3 C<image_draw_ellipse>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(200, 200);
+	$image.context_set();
+	$im.context_set_color(0x000000ff);
+	my Int $xcenter = 100;
+	my Int $ycenter = 100;
+	my Int $hamplitude = 50;
+	my Int $vamplitude = 50;
+	my Bool $fill = False;
+	$im.image_draw_ellipse(
+		center    => ($xcenter, $ycenter),
+		amplitude => ($hamplitude, $vamplitude)
+		fill      => $fill);
+	... some operations ...
+	$im.free_image();
+	
+Parameters:
+
+	Int $xcenter - The X coordinate of the center of the ellipse.
+	Int $ycenter - The Y coordinate of the center of the ellipse.
+	Int $hamplitude - The horizontal amplitude of the ellipse.
+	Int $vamplitude - The vertical amplitude of the ellipse.
+	Bool $fill - True if the ellipse should be filled, False if outlined.
+
+Draws the outline of a ellipse on the current context image using the
+current context color. If the $fill option is set to True fills an
+ellipse on the current context image. The ellipse is defined as
+(x-xcenter)^2/hamplitude^2 + (y-ycenter)^2/vamplitude^2 = 1. This means
+that the point (xcenter, ycenter) marks the center of the ellipse,
+a defines the horizontal amplitude of the ellipse, and vamplitude
+defines the vertical amplitude.
+
+=head3 C<image_draw_circumference>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(200, 200);
+	$image.context_set();
+	$im.context_set_color(0x000000ff);
+	my Int $xcenter = 100;
+	my Int $ycenter = 100;
+	my Int $radius = 50;
+	my Bool $fill = False;
+	$im.image_draw_circumference(
+		center => ($xcenter, $ycenter),
+		radius => $radius
+		fill   => $fill);
+	... some operations ...
+	$im.free_image();
+	
+Parameters:
+
+	Int $xcenter - The X coordinate of the center of the circumference.
+	Int $ycenter - The Y coordinate of the center of the circumference.
+	Int $radius - The radius of the circumference.
+	Bool $fill - True if the circumference should be filled, False if outlined.
+
+Draws the outline of a circumference on the current image at the center
+(xcenter, ycenter) coordinates with a radius, using the current color.
+If the $fill option is set to True fills an circumference on the current
+context image.
+
+=head2 Color Ranges
+
+Functions to build color gradients.
+
+=head3 C<create_color_range>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my Imlib2::ColorRange $color_range = $im.create_color_range();
+	$color_range.context_set();
+	... some operations ...
+	$im.free_color_range();
+
+Returns:
+
+	Imlib2::ColorRange $color_range - Valid handle. 
+
+Creates a new empty color range and returns a valid handle to that
+color range.
+	
+Sets the current color range to use for rendering gradients.
+
+=head3 C<free_color_range>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $color_range = $im.create_color_range();
+	$color_range.context_set();
+	... some operations ...
+	$im.free_color_range();
+
+Frees the current color range.
+
+=head3 C<context_set>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $color_range = $im.create_color_range();
+	$color_range.context_set();
+	... some operations ...
+	$im.free_color_range();
+
+Parameters:
+
+	Imlib2::ColorRange $color_range - Color range.
+
+=head3 C<add_color_to_color_range>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $color_range = $im.create_color_range();
+	$color_range.context_set();
+	my Int $distance_away = 0;
+	$im.add_color_to_color_range($distance_away);
+	... some operations ...
+	$im.free_color_range();
+
+Parameters:
+
+	Int $distance_away - Distance from the previous color.
+
+Adds the current color to the current color range at a $distance_away
+distance from the previous color in the range (if it's the first color
+in the range this is irrelevant).
+
+=head2 Saving.
+
+Functions to save the current image.
+
+=head3 C<save_image>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	$im.image_set_format("png");
 	... some operations ...
 	my Str $filename = "test.png";
-	$tools.save_image($filename);
-	$tools.free_image();
+	$im.save_image($filename);
+	$im.free_image();
 
 	# save image with returned error.
 	use Imlib2;
-	my $tools = Imlib2.new();
-	my $image = $tools.create_image(100, 200);
-	$image.context_set_image();
-	$tools.image_set_format("png");
+	my $im = Imlib2.new();
+	my $image = $im.create_image(100, 200);
+	$image.context_set();
+	$im.image_set_format("png");
 	... some operations ...
 	my Str $filename = "test.png";
 	my LoadError $error_return;
-	$tools.save_image($filename, $error_return);
+	$im.save_image($filename, $error_return);
 	say "No error..." if $error_return == LOAD_ERROR_NONE;
-	$tools.free_image();
+	$im.free_image();
 
 Parameters:
 
@@ -1514,7 +2340,38 @@ Parameters:
 Saves the current image in the format specified by the current image's
 format settings to the filename $filename.
 If the $error_return is passed as argument the $error_return will be
-set to an error value if the save fails. 
+set to an error value if the save fails.
+
+=head2 Rotation/Skewing
+
+Functions to rotate/swew images.
+
+=head3 C<create_rotated_image>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $loaded_image = $im.load_image("pictures/holidays.jpeg");
+	$loaded_image.context_set();
+	my Rat $angle = -45.0;
+	my Imlib2::Image $rotated_image = $im.create_rotated_image($angle);
+	$rotated_image.context_set();
+	... some operations ...
+	$im.free_image(); # frees the rotated image
+	$loaded_image.context_set();
+	$im.free_image(); # frees the loaded image
+
+Parameters:
+
+	Rat $angle - An angle in degrees (-360 to 360).
+
+Returns:
+
+	Imlib2::Image $rotated_image - A valid image, otherwise NULL.
+
+Creates an new copy of the current image, but rotated by angle degrees.
+On success it returns a valid image handle, otherwise NULL.
 
 =head1 AUTHOR
 
