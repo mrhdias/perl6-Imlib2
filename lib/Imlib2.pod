@@ -811,7 +811,11 @@ Returns:
 Gets the number of colors Imlib2 currently at a maximum is allowed to
 allocate for rendering. The default is 256.
 
-=head2 C<load_image>
+=head2 Loading Functions.
+
+Functions to load existing images.
+
+=head3 C<load_image>
 
 Usage:
 
@@ -868,7 +872,7 @@ Loads an image from disk located at the path specified by file. Please
 see the section L<How Image Loading Works|http://docs.enlightenment.org/api/imlib2/html/index.html#loading>
 for more detail. Returns an image handle on success or NULL on failure.
 
-=head2 C<free_image>
+=head3 C<free_image>
 
 Usage:
 
@@ -887,7 +891,7 @@ Parameters:
 	
 Frees the image that is set as the current image in Imlib2's context.
 
-=head2 C<flush_loaders>
+=head3 C<flush_loaders>
 
 Usage:
 
@@ -900,7 +904,12 @@ re-load them from disk (this is useful if the program just installed a
 new loader and does not want to wait till Imlib2 deems it an optimal
 time to rescan the loaders).
 
-=head2 C<image_get_width>
+=head2 Query/Modify Image Parameters.
+
+Functions to query and modify the image parameters, ie, set and get
+information about the image.
+
+=head3 C<image_get_width>
 
 Usage:
 
@@ -919,7 +928,7 @@ Returns:
 
 Returns the width in pixels of the current image in Imlib2's context.
 
-=head2 C<image_get_height>
+=head3 C<image_get_height>
 
 Usage:
 
@@ -938,7 +947,7 @@ Returns:
 
 Returns the height in pixels of the current image in Imlib2's context.
 
-=head2 C<image_get_size>
+=head3 C<image_get_size>
 
 Usage:
 
@@ -971,7 +980,7 @@ Returns the size in pixels of the current image in Imlib2's context.
 
 =back
 
-=head2 C<image_get_filename>
+=head3 C<image_get_filename>
 
 Usage:
 
@@ -994,7 +1003,7 @@ filename of the image to change. Saving the file with a different name
 would cause this. It is suggested you duplicate the string if you wish
 to continue to use the string for later processing.
 
-=head2 C<image_set_has_alpha>
+=head3 C<image_set_has_alpha>
 
 Usage:
 
@@ -1014,7 +1023,7 @@ Parameters:
 Sets the alpha flag for the current image. Set has_alpha to True to
 enable the alpha channel in the current image, or False to disable it.
 
-=head2 C<image_has_alpha>
+=head3 C<image_has_alpha>
 
 Usage:
 
@@ -1035,7 +1044,7 @@ Returns True if the current context image has an alpha channel, or
 False if it does not (the alpha data space is still there and
 available - just "unused").
 
-=head2 C<image_set_changes_on_disk>
+=head3 C<image_set_changes_on_disk>
 
 Usage:
 
@@ -1056,7 +1065,7 @@ liable to change on disk and Imlib2 will check the timestamp of the
 image file on disk and compare it with the cached image when it next
 needs to use this image in the cache.
 
-=head2 C<new_border>
+=head3 C<new_border>
 
 Usage:
 
@@ -1075,7 +1084,7 @@ Returns
 Returns a new structure to store the values of the border of the
 current context image.
 
-=head2 C<image_set_border>
+=head3 C<image_set_border>
 
 Usage:
 
@@ -1119,7 +1128,7 @@ $border.bottom(4) - Set the value of the bottom side to 4.
 
 =back
 
-=head2 C<image_get_border>
+=head3 C<image_get_border>
 
 Usage:
 
@@ -1167,7 +1176,7 @@ $border.bottom - Returns the value of the bottom side.
 
 =back
 
-=head2 C<image_set_format>
+=head3 C<image_set_format>
 
 Usage:
 
@@ -1188,7 +1197,7 @@ Sets the format of the current image. This is used for when you wish
 to save an image in a different format that it was loaded in, or if the
 image currently has no file format associated with it.
 
-=head2 C<image_get_format>
+=head3 C<image_get_format>
 
 Usage:
 
@@ -1206,7 +1215,7 @@ Returns:
 
 Returns the current image's format.
 
-=head2 C<image_set_irrelevant_format>
+=head3 C<image_set_irrelevant_format>
 
 Usage:
 
@@ -1223,7 +1232,7 @@ Sets if the format value of the current image is irrelevant for caching
 purposes - by default it is. pass irrelevant as True to make it
 irrelevant and False to make it relevant for caching.
 
-=head2 C<image_set_irrelevant_border>
+=head3 C<image_set_irrelevant_border>
 
 Usage:
 
@@ -1240,7 +1249,7 @@ Sets if the border of the current image is irrelevant for caching
 purposes. By default it is. Set irrelevant to True to make it
 irrelevant, and False to make it relevant.
 
-=head2 C<image_set_irrelevant_alpha>
+=head3 C<image_set_irrelevant_alpha>
 
 Usage:
 
@@ -1937,7 +1946,11 @@ Usage:
 
 Causes a flush of all speculatively cached fonts from the font cache.
 
-=head2 C<image_draw_rectangle>
+=head2 Drawing on images.
+
+Functions for drawing points, lines and rectangles.
+
+=head3 C<image_draw_rectangle>
 
 Usage:
 
@@ -1966,10 +1979,10 @@ Parameters:
 	Rat angle - Angle of gradient.
 	Bool hsva - The hsva option (True or False)
 
-Draws the outline of a rectangle on the current image at the (x, y)
-coordinates with a size of width and height pixels, using the current
+Draws the outline of a rectangle on the current image at the ($x, $y)
+coordinates with a size of $width and $height pixels, using the current
 color. Draws a filled rectangle on the current image if the fill option
-is set to True;
+is set to True.
 If the fill and gradient option is set to True fills a rectangle of
 width $width and height $height at the ($x, $y) location specified in
 the current image with a linear gradient of the current color range at
@@ -2378,6 +2391,7 @@ Henrique Dias - L<mrhdias@mail.com>
 =head1 SEE ALSO
 
 Imlib2 Library Documentation L<http://docs.enlightenment.org/api/imlib2/html/>
+Imlib2 Source Repository L<http://sourceforge.net/projects/enlightenment/files/imlib2-src/>
 
 =head1 LICENSE
 
