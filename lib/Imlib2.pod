@@ -2396,7 +2396,7 @@ Henrique Dias - L<mrhdias@mail.com>
 
 Imlib2 Library Documentation L<http://docs.enlightenment.org/api/imlib2/html/>
 
-item *
+=item *
 
 Imlib2 Source Repository L<http://sourceforge.net/projects/enlightenment/files/imlib2-src/>
 
