@@ -54,6 +54,7 @@ See Also
 --------
 * [Imlib2 Perl6 Module Documentation][1]  
 * [Imlib2 Library Documentation][2]
+* [Imlib2 Source Repository][3]
 
 License
 -------
@@ -62,3 +63,4 @@ This library is free software; you can redistribute it and/or modify it under th
 
 [1]: lib/Imlib2.pod "Imlib2 Perl6 Module Documentation"
 [2]: http://docs.enlightenment.org/api/imlib2/html/ "Imlib2 Library Documentation"
+[3]: http://sourceforge.net/projects/enlightenment/files/imlib2-src/
