@@ -6,7 +6,7 @@ Perl 6 interface to the Imlib2 image library.
 
 Description
 -----------
-Perl6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.
+Perl6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.  
 Note that a recent version of [Imlib2][3] library must be installed before installing this module.
 
 Synopsis
