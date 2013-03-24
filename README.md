@@ -1,5 +1,5 @@
-Imlib2
-======
+perl6-Imlib2
+============
 
 ![Imlib2 Logo](logotype/logo_32x32.png)  
 Perl 6 interface to the Imlib2 image library.
