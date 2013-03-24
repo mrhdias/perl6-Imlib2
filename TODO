@@ -163,8 +163,8 @@ imlib_get_color_modifier_tables___________________|11|x|_|_|_|
 imlib_reset_color_modifier________________________|11|x|_|_|_|
 imlib_apply_color_modifier________________________|11|x|_|_|_|
 imlib_apply_color_modifier_to_rectangle___________|11|x|_|_|_|
-imlib_image_draw_pixel____________________________|12|_|_|_|_|
-imlib_image_draw_line_____________________________|12|_|_|_|_|
+imlib_image_draw_pixel____________________________|12|x|x|x|x|
+imlib_image_draw_line_____________________________|12|x|x|x|x|
 imlib_image_draw_rectangle________________________|12|x|x|x|_|
 imlib_image_fill_rectangle________________________|12|x|x|x|_|
 imlib_image_copy_alpha_to_image___________________|12|_|_|_|_|

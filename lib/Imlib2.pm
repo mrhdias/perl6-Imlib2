@@ -457,6 +457,9 @@ class Imlib2 is repr('CPointer') {
 
 	### drawing on images ###
 
+	sub imlib_image_draw_pixel(int32, int32, int8) 
+		returns Imlib2::Updates is native(LIB) { ... };
+
 	sub imlib_image_draw_line(int32, int32, int32, int32, int8) 
 		returns Imlib2::Updates is native(LIB) { ... };
 
@@ -1186,12 +1189,20 @@ class Imlib2 is repr('CPointer') {
 
 	### drawing on images ###
 
+	method image_draw_pixel(
+			Int $x where { $x >= 0 },
+			Int $y where { $y >= 0 },
+			Bool $update = False) returns Imlib2::Updates {
+
+		return imlib_image_draw_pixel($x, $y, $update ?? 1 !! 0);
+	}
+
 	method image_draw_line(
 		Parcel :$start(Int $x1 where { $x1 >= 0 }, Int $y1 where { $y1 >= 0 }) = (0, 0),
 		Parcel :$end!(Int $x2 where { $x2 > 0 }, Int $y2 where { $y2 > 0 }),
-		Bool :$update = False) {
+		Bool :$update = False) returns Imlib2::Updates {
 
-		imlib_image_draw_line($x1, $y1, $x2, $y2, $update ?? 1 !! 0);
+		return imlib_image_draw_line($x1, $y1, $x2, $y2, $update ?? 1 !! 0);
 	}
 
 	method image_draw_rectangle(

@@ -1950,6 +1950,37 @@ Causes a flush of all speculatively cached fonts from the font cache.
 
 Functions for drawing points, lines and rectangles.
 
+=head3 C<image_draw_pixel>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(200, 200);
+	$image.context_set();
+	$im.context_set_color("#ff0000");
+	my ($x, $y) = (10, 10);
+	my $update = False;
+	my Imlib2::Updates $updates = $im.image_draw_pixel($x, $y, $update);
+	... some operations ...
+	$im.free_image();
+
+Parameters:
+
+	Int $x - The x coordinate of the pixel. 
+	Int $y - The y coordinate of the pixel.
+	Bool $update - True if should returns an updates list object, False
+	               if not. This parameter is optional.
+
+Returns:
+
+	Imlib2::Updates $updates - An object to handle the updates list.
+
+Draws a pixel using the current color on the current image at ($x, $y)
+coordinates. If the B<update> parameter is set to True it will also
+return an update you can use for an updates list, otherwise it returns
+NULL.
+
 =head3 C<image_draw_line>
 
 Usage:
