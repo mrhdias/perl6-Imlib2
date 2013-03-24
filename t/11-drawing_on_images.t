@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 3;
+plan 6;
 
 use Imlib2;
 
@@ -10,6 +10,21 @@ my $raw_image = $im.create_image(200, 200);
 $raw_image.context_set();
 
 $im.context_set_color(0xffffffff);
+
+lives_ok {
+	$im.image_draw_line(
+		start => (10, 10),
+		end   => (190, 190),
+		update => False);
+}, 'image_draw_line with update option set to False';
+
+my $updates = $im.image_draw_line(
+	start => (10, 10),
+	end   => (190, 190),
+	update => True);
+isa_ok $updates, Imlib2::Updates;
+ok $updates, 'image_draw_line with update option set to True';
+
 lives_ok {
 	$im.image_draw_rectangle(
 		location => (0, 0),

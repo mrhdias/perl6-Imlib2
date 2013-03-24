@@ -100,6 +100,10 @@ class Imlib2::Font is repr('CPointer') {
 	}
 }
 
+class Imlib2::Updates is repr('CPointer') {
+
+}
+
 class Imlib2::Image is repr('CPointer') {
 	sub imlib_context_set_image(Imlib2::Image)
 		is native(LIB) { ... };
@@ -452,6 +456,9 @@ class Imlib2 is repr('CPointer') {
 	### color modifiers ###
 
 	### drawing on images ###
+
+	sub imlib_image_draw_line(int32, int32, int32, int32, int8) 
+		returns Imlib2::Updates is native(LIB) { ... };
 
 	sub imlib_image_draw_rectangle(int32, int32, int32, int32)
 		is native(LIB) { ... };
@@ -1178,6 +1185,14 @@ class Imlib2 is repr('CPointer') {
 	### color modifiers ###
 
 	### drawing on images ###
+
+	method image_draw_line(
+		Parcel :$start(Int $x1 where { $x1 >= 0 }, Int $y1 where { $y1 >= 0 }) = (0, 0),
+		Parcel :$end!(Int $x2 where { $x2 > 0 }, Int $y2 where { $y2 > 0 }),
+		Bool :$update = False) {
+
+		imlib_image_draw_line($x1, $y1, $x2, $y2, $update ?? 1 !! 0);
+	}
 
 	method image_draw_rectangle(
 		Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),

@@ -1950,6 +1950,37 @@ Causes a flush of all speculatively cached fonts from the font cache.
 
 Functions for drawing points, lines and rectangles.
 
+=head3 C<image_draw_line>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $image = $im.create_image(200, 200);
+	$image.context_set();
+	$im.context_set_color("#ff0000");
+	my Imlib2::Updates $updates = $im.image_draw_line(
+		start => (10, 20),
+		end   => (180, 190),
+		update => False);
+	... some operations ...
+	$im.free_image();
+
+Parameters:
+
+	start - Parcel with Int x and Int y coordinates of the first point.
+	end - Parcel with Int x and Int y coordinates of the second point.
+	Bool update - True if should returns an updates list object, False if not.
+
+Returns:
+
+	Imlib2::Updates $updates - An object to handle the updates list.
+
+Draws a line using the current color on the current image from B<start>
+coordinates (x1, y1) to B<end> coordinates (x2, y2). If the B<update> option
+is set to True it will also return an update you can use for an updates
+list, otherwise it returns NULL.
+
 =head3 C<image_draw_rectangle>
 
 Usage:
