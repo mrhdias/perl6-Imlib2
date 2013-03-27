@@ -48,11 +48,11 @@ class Imlib2::Border is repr('CStruct') {
 	has int32 $.top;
 	has int32 $.bottom;
 
-	method init($left, $right, $top, $bottom) {
-		$!left = $left;
-		$!right = $right;
-		$!top = $top;
-		$!bottom = $bottom;
+	method init($l, $r, $t, $b) {
+		$!left = $l;
+		$!right = $r;
+		$!top = $t;
+		$!bottom = $b;
 	}
 	
 	multi method left(Int $l) { $!left = $l; }
