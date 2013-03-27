@@ -1,6 +1,13 @@
 use NativeCall;
 
-constant LIB = 'libImlib2.so';
+sub LIB {
+	given $*VM{'config'}{'load_ext'} {
+		when '.so' { return 'libImlib2.so' }		# Linux
+		when '.bundle' { return 'libImlib2.dylib' }	# Mac OS
+		default { return 'libImlib2' }
+	}
+}
+
 enum TextDirection <
 	TEXT_TO_RIGHT
 	TEXT_TO_LEFT
@@ -336,6 +343,9 @@ class Imlib2 is repr('CPointer') {
 
 	### rendering functions ###
 
+	sub imlib_blend_image_onto_image(Imlib2, int8, Int, Int, Int, Int, Int, Int, Int, Int)
+		is native(LIB) { ... };
+
 	### creation functions ###
 
 	sub imlib_create_image(int32, int32)
@@ -564,9 +574,6 @@ class Imlib2 is repr('CPointer') {
 		is native(LIB) { ... };
 
 	sub imlib_reset_color_modifier()
-		is native(LIB) { ... };
-
-	sub imlib_blend_image_onto_image(Imlib2, int8, Int, Int, Int, Int, Int, Int, Int, Int)
 		is native(LIB) { ... };
 
 	### METHODS ###
@@ -941,7 +948,24 @@ class Imlib2 is repr('CPointer') {
 	}
 
 	### rendering functions ###
-	
+
+	method blend_image_onto_image(
+		Parcel :$source!(
+			Imlib2::Image :$image!,
+			Parcel :location($sl)(Int $sx where { $sx >= 0 }, Int $sy where { $sy >= 0 }) = (0, 0),
+			Parcel :size($ss)!(Int $sw where { $sw > 0 }, Int $sh where { $sh > 0 })
+		),
+		Parcel :$destination!(
+			Parcel :location($dl)!(Int $dx, Int $dy),
+			Parcel :size($ds)!(Int $dw where { $dw > 0 }, Int $dh where { $dh > 0 })
+		),
+		Bool :$merge_alpha = False) {
+
+		imlib_blend_image_onto_image($image, $merge_alpha ?? 1 !! 0,
+				$sx, $sy, $sw, $sh,
+				$dx, $dy, $dw, $dh);
+	}
+
 	### creation functions ###
 
 	method create_image(Int $width, Int $height) returns Imlib2::Image {
@@ -1343,23 +1367,5 @@ class Imlib2 is repr('CPointer') {
 
 	method reset_color_modifier() {
 		imlib_reset_color_modifier();
-	}
-
-	method blend_image_onto_image(
-		:$source_image!,
-		Bool :$merge_alpha   = False,
-		:$source_x           = 0,
-		:$source_y           = 0,
-		:$source_width       = 0,
-		:$source_height      = 0,
-		:$destination_x      = 0,
-		:$destination_y      = 0,
-		:$destination_width  = 0,
-		:$destination_height = 0) {
-
-		imlib_blend_image_onto_image($source_image, $merge_alpha ?? 1 !! 0,
-			$source_x, $source_y, $source_width, $source_height,
-				$destination_x, $destination_y, $destination_width,
-					$destination_height);
 	}
 }

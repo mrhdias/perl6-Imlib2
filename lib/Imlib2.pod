@@ -1267,6 +1267,56 @@ or is not one) is important for caching purposes. By default it is not.
 Set irrelevant to True to make it irrelevant and False to make it
 relevant.
 
+=head2 Rendering Functions.
+
+Functions to blend multiple images.
+
+=head3 C<blend_image_onto_image>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $parrot_img = $im.load_image("images/parrot.png");
+	exit() unless $parrot_img;
+	my $camelia_img = $im.load_image("images/camelia-logo.jpg");
+	exit() unless $camelia_img;
+	$parrot_img.context_set();
+
+	$im.blend_image_onto_image(
+		source       => (
+			image    => $camelia_img,
+			location => (0, 0),
+			size     => (200, 200)
+		),
+		destination  => (
+			location => (10, 10),
+			size     => (261, 243)
+		),
+		merge_alpha  => True);
+
+	$im.free_image(); # frees the parrot image
+	$camelia_img.context_set();
+	$im.free_image(); # frees the camelia image
+
+Parameters:
+
+	source - The source rectangle.
+		image - The source image.
+		location - X and Y coordinates of the source image.
+		size - Width and height of the source image. 
+	destination - The destination rectangle
+		location - X and Y Int coordinates of the source image.
+		size - Width and height of the destination image.
+	merge_alpha - Alpha flag (True or False).
+
+Blends the source rectangle (location => (Int $x, Int $y) and size =>
+(Int $width, Int $height)) from source_image onto the current image at
+the destination (location => (Int $x, Int $y)) location scaled to the
+size (size => (Int $width, Int $height)) destination. If merge_alpha is
+set to True it will also modify the destination image alpha channel,
+otherwise the destination alpha channel is left untouched.
+
 =head2 Creation Functions.
 
 Functions to create, clone and resize images.

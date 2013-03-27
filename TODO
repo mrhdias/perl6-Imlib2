@@ -105,7 +105,7 @@ imlib_image_query_pixel___________________________|_5|_|_|_|_|
 imlib_image_query_pixel_hsva______________________|_5|_|_|_|_|
 imlib_image_query_pixel_hlsa______________________|_5|_|_|_|_|
 imlib_image_query_pixel_cmya______________________|_5|_|_|_|_|
-imlib_blend_image_onto_image______________________|_6|x|_|_|_|
+imlib_blend_image_onto_image______________________|_6|x|x|x|x|
 imlib_create_image________________________________|_7|x|x|x|x|
 imlib_create_image_using_data_____________________|_7|_|_|_|_|
 imlib_create_image_using_copied_data______________|_7|_|_|_|_|
