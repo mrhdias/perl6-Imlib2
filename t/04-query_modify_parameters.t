@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 30;
+plan 32;
 
 use Imlib2;
 
@@ -41,6 +41,14 @@ lives_ok { $im.image_set_changes_on_disk(); }, 'image_set_changes_on_disk';
 my $border = $im.new_border();
 isa_ok $border, Imlib2::Border;
 ok $border, 'new_border';
+
+my $pborder = $im.new_border(
+	left   => 10,
+	right  => 10,
+	top    => 10,
+	bottom => 10);
+isa_ok $pborder, Imlib2::Border;
+ok $pborder, 'new_border with named arguments';
 
 lives_ok { $border.left(1); }, 'set left border to 1';
 lives_ok { $border.right(2); }, 'set right border to 2';

@@ -1073,16 +1073,28 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.create_image(100, 200);
 	$image.context_set();
-	my Imlib2::Border $border = $im.new_border();
+	my Imlib2::Border $border = $im.new_border(
+		left   => 10,
+		right  => 10,
+		top    => 10,
+		bottom => 10);
 	... some operations ...
 	$im.free_image();
+
+Parameters:
+
+	left - Left side of the border in pixels.
+	right - Right side of the border in pixels.
+	top - Top side of the border in pixels.
+	bottom - Bottom side of the border in pixels.
 
 Returns
 
 	Imlib2::Border $border - Struct to store the values ​​of the border.
 
 Returns a new structure to store the values of the border of the
-current context image.
+current context image. The parameters are optional. By default the value
+of each side of the border is equal to zero.
 
 =head3 C<image_set_border>
 

@@ -48,11 +48,11 @@ class Imlib2::Border is repr('CStruct') {
 	has int32 $.top;
 	has int32 $.bottom;
 
-	submethod BUILD() {
-		$!left = 0;
-		$!right = 0;
-		$!top = 0;
-		$!bottom = 0;
+	method init($left, $right, $top, $bottom) {
+		$!left = $left;
+		$!right = $right;
+		$!top = $top;
+		$!bottom = $bottom;
 	}
 	
 	multi method left(Int $l) { $!left = $l; }
@@ -913,8 +913,16 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_set_changes_on_disk();
 	}
 
-	method new_border() returns Imlib2::Border {
-		return Imlib2::Border.new();
+	method new_border(
+			Int :$left where { $left >= 0 } = 0,
+			Int :$right where { $right >= 0 } = 0,
+			Int :$top where { $top >= 0 } = 0,
+			Int :$bottom where { $bottom >= 0 } = 0,
+		) returns Imlib2::Border {
+
+		my $border = Imlib2::Border.new();
+		$border.init($left, $right, $top, $bottom);
+		return $border;
 	}
 
 	# It needs to be fixed.
