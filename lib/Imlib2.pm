@@ -43,28 +43,28 @@ enum FlipMode <FLIP_HORIZONTAL FLIP_VERTICAL FLIP_DIAGONAL>;
 enum TileMode <TILE_HORIZONTAL TILE_VERTICAL TILE_BOTH>;
 
 class Imlib2::Border is repr('CStruct') {
-	has int32 $.left_border;
-	has int32 $.right_border;
-	has int32 $.top_border;
-	has int32 $.bottom_border;
+	has int32 $.left;
+	has int32 $.right;
+	has int32 $.top;
+	has int32 $.bottom;
 
 	submethod BUILD() {
-		$!left_border = 0;
-		$!right_border = 0;
-		$!top_border = 0;
-		$!bottom_border = 0;
+		$!left = 0;
+		$!right = 0;
+		$!top = 0;
+		$!bottom = 0;
 	}
 
-	multi method left(Int $l) { $!left_border = $l; }
-	multi method right(Int $r) { $!right_border = $r; }
-	multi method top(Int $t) { $!top_border = $t; }
-	multi method bottom(Int $b) { $!bottom_border = $b; }	
+	multi method left(Int $l) { $!left = $l; }
+	multi method right(Int $r) { $!right = $r; }
+	multi method top(Int $t) { $!top = $t; }
+	multi method bottom(Int $b) { $!bottom = $b; }	
 	
 	# this is a workaround, since NativeCall doesn't yet handle sized ints right
-	multi method left() { return $!left_border; }
-	multi method right() { return $!right_border; }
-	multi method top() { return $!top_border; }
-	multi method bottom() { return $!bottom_border; }
+	multi method left() { return $!left; }
+	multi method right() { return $!right; }
+	multi method top() { return $!top; }
+	multi method bottom() { return $!bottom; }
 }
 
 class Imlib2::Color is repr('CStruct') {
