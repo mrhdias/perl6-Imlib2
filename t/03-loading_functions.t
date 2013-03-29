@@ -5,8 +5,8 @@ plan 19;
 
 use Imlib2;
 
-my $test_file = "test.png";
-my $test_error_file = "test.jpg";
+my $test_file = "t/test.png";
+my $test_error_file = "t/test.jpg";
 
 my $im = Imlib2.new();
 

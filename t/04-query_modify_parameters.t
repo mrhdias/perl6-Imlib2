@@ -5,7 +5,7 @@ plan 38;
 
 use Imlib2;
 
-my $test_file = "test.png";
+my $test_file = "t/test.png";
 
 my $im = Imlib2.new();
 
@@ -90,6 +90,6 @@ lives_ok { $im.image_set_irrelevant_alpha(True); }, 'image_set_irrelevant_alpha 
 lives_ok { $im.image_set_irrelevant_alpha(False); }, 'image_set_irrelevant_alpha is set to False';
 
 $im.free_image();
-unlink($test_file) if "test.png".IO ~~ :e;
+unlink($test_file) if $test_file.IO ~~ :e;
 
 done;
