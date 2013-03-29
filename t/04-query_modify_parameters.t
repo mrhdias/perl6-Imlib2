@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 32;
+plan 38;
 
 use Imlib2;
 
@@ -38,30 +38,49 @@ is $im.image_has_alpha(), False, 'image_has_alpha returns False';
 
 lives_ok { $im.image_set_changes_on_disk(); }, 'image_set_changes_on_disk';
 
-my $border = $im.new_border();
-isa_ok $border, Imlib2::Border;
-ok $border, 'new_border';
+my $structure = Imlib2::Border.new();
+isa_ok $structure, Imlib2::Border;
+ok $structure, 'set a new border object structure';
 
-my $pborder = $im.new_border(
-	left   => 10,
-	right  => 10,
-	top    => 10,
-	bottom => 10);
-isa_ok $pborder, Imlib2::Border;
-ok $pborder, 'new_border with named arguments';
+is $structure.left, 0, 'left border stored value is 0';
+is $structure.right, 0, 'right border stored value is 0';
+is $structure.top, 0, 'top border stored value is 0';
+is $structure.bottom, 0, 'bottom border stored value is 0';
 
-lives_ok { $border.left(1); }, 'set left border to 1';
-lives_ok { $border.right(2); }, 'set right border to 2';
-lives_ok { $border.top(3); }, 'set top border to 3';
-lives_ok { $border.bottom(4); }, 'set bottom border to 4';
+lives_ok {
+	$structure.left = 1;
+	$structure.right = 2;
+	$structure.top = 3;
+	$structure.bottom = 4;
+}, 'fills the border structure with the values of the border';
+
+my $border = $structure.init();
+ok $border, 'returns a pointer which contains the values ​​of the structure';
 
 lives_ok { $im.image_set_border($border); }, 'image_set_border';
 lives_ok { $im.image_get_border($border); }, 'image_get_border';
 
-is $border.left, 1, 'left border returns 1';
-is $border.right, 2, 'right border returns 2';
-is $border.top, 3, 'top border returns 3';
-is $border.bottom, 4, 'bottom border returns 4';
+lives_ok { $structure.get($border); }, 'get the values of the border stored in structure';
+
+is $structure.left, 1, 'left border stored value is 1';
+is $structure.right, 2, 'right border stored value is 2';
+is $structure.top, 3, 'top border stored value is 3';
+is $structure.bottom, 4, 'bottom border stored value is 4';
+
+lives_ok {
+	$structure.left = 10;
+	$structure.right = 20;
+	$structure.top = 30;
+	$structure.bottom = 40;
+}, 'fills the border structure with new the values of the border';
+
+$structure.put($border);
+$structure.get($border);
+
+is $structure.left, 10, 'left border stored value is 10';
+is $structure.right, 20, 'right border stored value is 20';
+is $structure.top, 30, 'top border stored value is 30';
+is $structure.bottom, 40, 'bottom border stored value is 40';
 
 lives_ok { $im.image_set_irrelevant_format(True); }, 'image_set_irrelevant_format is set to True';
 lives_ok { $im.image_set_irrelevant_format(False); }, 'image_set_irrelevant_format is set to False';
