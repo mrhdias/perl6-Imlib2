@@ -94,7 +94,7 @@ imlib_image_put_back_data_________________________|_5|_|_|_|_|
 imlib_image_set_has_alpha_________________________|_5|x|x|x|_|
 imlib_image_has_alpha_____________________________|_5|x|x|x|_|
 imlib_image_set_changes_on_disk___________________|_5|x|x|x|_|
-imlib_image_set_border____________________________|_5|x|x|x|_|
+imlib_image_set_border____________________________|_5|x|x|x|x|
 imlib_image_get_border____________________________|_5|x|x|x|_|
 imlib_image_set_format____________________________|_5|x|x|x|_|
 imlib_image_format________________________________|_5|x|x|x|_|
