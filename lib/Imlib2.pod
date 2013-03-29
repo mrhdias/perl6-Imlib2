@@ -1065,37 +1065,6 @@ liable to change on disk and Imlib2 will check the timestamp of the
 image file on disk and compare it with the cached image when it next
 needs to use this image in the cache.
 
-=head3 C<new_border>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my $image = $im.create_image(100, 200);
-	$image.context_set();
-	my Imlib2::Border $border = $im.new_border(
-		left   => 10,
-		right  => 10,
-		top    => 10,
-		bottom => 10);
-	... some operations ...
-	$im.free_image();
-
-Parameters:
-
-	left - Left side of the border in pixels.
-	right - Right side of the border in pixels.
-	top - Top side of the border in pixels.
-	bottom - Bottom side of the border in pixels.
-
-Returns
-
-	Imlib2::Border $border - Struct to store the values ​​of the border.
-
-Returns a new structure to store the values of the border of the
-current context image. The parameters are optional. By default the value
-of each side of the border is equal to zero.
-
 =head3 C<image_set_border>
 
 Usage:
@@ -1104,41 +1073,24 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.create_image(100, 200);
 	$image.context_set();
-	my Imlib2::Border $border = $im.new_border();
-	$border.left(2);
-	$border.right(2);
-	$border.top(4);
-	$border.bottom(4);
+
+	my $structure = Imlib2::Border.new(
+		left   => 10,
+		right  => 10,
+		top    => 10,
+		bottom => 10);
+	my $border = $structure.init();
+
 	$im.image_set_border($border);
 	... some operations ...
 	$im.free_image();
 
 Parameters:
 
-	Imlib2::Border $border - The border of the image.
+	OpaquePointer $border - The border of the image.
 
 Sets the border of the current context image to the values contained in
 the Imlib2::Border structure border points to.
-
-=over 4
-
-=item *
-
-$border.left(2) - Set the value of the left side to 2.
-
-=item *
-
-$border.right(2) - Set the value of the right side to 2.
-
-=item *
-
-$border.top(4) - Set the value of the top side to 4.
-
-=item *
-
-$border.bottom(4) - Set the value of the bottom side to 4.
-
-=back
 
 =head3 C<image_get_border>
 
@@ -1148,18 +1100,22 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.create_image(100, 200);
 	$image.context_set();
-	my Imlib2::Border $border = $im.new_border();
+
+	my $structure = Imlib2::Border.new();
+	my $border = $structure.init();
+
 	$im.image_get_border($border);
-	say "Left: " ~ $border.left;
-	say "Right: " ~ $border.right;
-	say "Top: " ~ $border.top;
-	say "Bottom: " ~ $border.bottom;
+	$structure.get($border);
+	say "Left: " ~ $structure.left;
+	say "Right: " ~ $structure.right;
+	say "Top: " ~ $structure.top;
+	say "Bottom: " ~ $structure.bottom;
 	... some operations ...
 	$im.free_image();
 
 Parameters:
 
-	Imlib2::Border $border - The border of the image.
+	OpaquePointer $border - The border of the image passed as argument.
 
 Fills the Imlib2::Border structure to which border points to with the
 values of the border of the current context image. The border is the
@@ -1167,26 +1123,6 @@ area at the edge of the image that does not scale with the rest of the
 image when resized - the borders remain constant in size. This is
 useful for scaling bevels at the edge of images differently to the
 image center.
-
-=over 4
-
-=item *
-
-$border.left - Returns the value of the left side.
-
-=item *
-
-$border.right - Returns the value of the right side.
-
-=item *
-
-$border.top - Returns the value of the top side.
-
-=item *
-
-$border.bottom - Returns the value of the bottom side.
-
-=back
 
 =head3 C<image_set_format>
 
@@ -2507,6 +2443,102 @@ Returns:
 
 Creates an new copy of the current image, but rotated by angle degrees.
 On success it returns a valid image handle, otherwise NULL.
+
+=head2 Imlib2::Border
+
+Structure to store and handle the values of the border.
+
+=head3 C<new>
+
+Usage:
+
+	use Imlib2;
+	my $structure = Imlib2::Border.new(
+		left   => 10,
+		right  => 10,
+		top    => 10,
+		bottom => 10);
+	... some operations ...
+
+Parameters:
+
+	left - Left side of the border in pixels.
+	right - Right side of the border in pixels.
+	top - Top side of the border in pixels.
+	bottom - Bottom side of the border in pixels.
+
+Returns:
+
+	Imlib2::Border $structure - Structure to store the values ​​of the border.
+
+Returns a new structure to store the values of the border of the
+current context image. The parameters are optional. By default the value
+of each side of the border is equal to zero.
+
+=head3 C<init>
+
+Usage:
+
+	use Imlib2;
+	my $structure = Imlib2::Border.new(
+		left   => 10,
+		right  => 10,
+		top    => 10,
+		bottom => 10);
+	my $border = $structure.init();
+	... some operations ...
+
+Returns:
+
+	OpaquePointer $border - Returns a C pointer.
+
+Store the values of the border in C structure and returns a pointer
+to this.
+
+=head3 C<put>
+
+Usage:
+
+	use Imlib2;
+	my $structure = Imlib2::Border.new();
+	my $border = $structure.init();
+	$structure.left = 10;
+	$structure.right = 10;
+	$structure.top = 10;
+	$structure.bottom = 10;
+	$structure.put($border);
+	... some operations ...
+
+Parameters:
+
+	OpaquePointer $border - C pointer.
+
+Only store the values of the border in C structure.
+
+=head3 C<get>
+
+Usage:
+
+	use Imlib2;
+	my $structure = Imlib2::Border.new(
+		left   => 10,
+		right  => 10,
+		top    => 10,
+		bottom => 10);
+	my $border = $structure.init();
+	$structure.get($border);
+	say "Left: " ~ $structure.left;
+	say "Right: " ~ $structure.right;
+	say "Top: " ~ $structure.top;
+	say "Bottom: " ~ $structure.bottom;
+	... some operations ...
+
+Parameters:
+
+	OpaquePointer $border - C pointer.
+
+Get the stored values of the border from the C structure and update the
+attributes left, right, top and bottom.
 
 =head1 AUTHOR
 
