@@ -19,6 +19,9 @@ sub find_lib($libname) {
 	return $path;
 }
 
+sub IMLIB2() { return libname("libImlib2"); }
+sub LOCAL_LIB() { return find_lib(libname("Imlib2")); }
+
 enum TextDirection <
 	TEXT_TO_RIGHT
 	TEXT_TO_LEFT
@@ -60,13 +63,13 @@ class Imlib2::Border {
 	has Int $.bottom is rw = 0;
 
 	sub p6_imlib_init_border(int32, int32, int32, int32)
-		returns OpaquePointer is native(find_lib(libname("Imlib2"))) { ... };
+		returns OpaquePointer is native(LOCAL_LIB) { ... };
 
 	sub p6_imlib_put_border(OpaquePointer, int32, int32, int32, int32)
-		is native(find_lib(libname("Imlib2"))) { ... };
+		is native(LOCAL_LIB) { ... };
 
 	sub p6_imlib_get_border(OpaquePointer)
-		returns CArray[int32] is native(find_lib(libname("Imlib2"))) { ... };
+		returns CArray[int32] is native(LOCAL_LIB) { ... };
 
 	method init() returns OpaquePointer {
 		return p6_imlib_init_border($.left, $.right, $.top, $.bottom);
@@ -100,7 +103,7 @@ class Imlib2::Color is repr('CStruct') {
 
 class Imlib2::ColorModifier is repr('CPointer') {
 	sub imlib_context_set_color_modifier(Imlib2::ColorModifier)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	method context_set() {
 		imlib_context_set_color_modifier(self);
@@ -109,7 +112,7 @@ class Imlib2::ColorModifier is repr('CPointer') {
 
 class Imlib2::ColorRange is repr('CPointer') {
 	sub imlib_context_set_color_range(Imlib2::ColorRange)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	method context_set() {
 		imlib_context_set_color_range(self);
@@ -118,7 +121,7 @@ class Imlib2::ColorRange is repr('CPointer') {
 
 class Imlib2::Font is repr('CPointer') {
 	sub imlib_context_set_font(Imlib2::Font)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	method context_set() {
 		imlib_context_set_font(self);
@@ -131,7 +134,7 @@ class Imlib2::Updates is repr('CPointer') {
 
 class Imlib2::Image is repr('CPointer') {
 	sub imlib_context_set_image(Imlib2::Image)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	method context_set() {
 		imlib_context_set_image(self);
@@ -140,18 +143,18 @@ class Imlib2::Image is repr('CPointer') {
 
 class Imlib2::Polygon is repr('CPointer') {
 	sub imlib_polygon_add_point(Imlib2::Polygon, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 	
 	sub imlib_polygon_contains_point(Imlib2::Polygon, int32, int32)
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_polygon_get_bounds(Imlib2::Polygon $poly,
 			CArray[int32] $px1, CArray[int32] $py1,
 			CArray[int32] $px2, CArray[int32] $py2)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_polygon_free(Imlib2::Polygon)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	method add_point(Int $x, Int $y) {
 		imlib_polygon_add_point(self, $x, $y);
@@ -183,368 +186,368 @@ class Imlib2 is repr('CPointer') {
 	### context setting/getting ###
 
 	sub imlib_context_set_dither_mask(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_dither_mask()
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_context_set_anti_alias(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_anti_alias()
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_context_set_mask_alpha_threshold(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_mask_alpha_threshold()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_context_set_dither(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_dither()
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_context_set_blend(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_blend()
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color_modifier()
-		returns Imlib2::ColorModifier is native(libname("libImlib2")) { ... };
+		returns Imlib2::ColorModifier is native(IMLIB2) { ... };
 
 	sub imlib_context_set_operation(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_operation()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_context_get_font()
-		returns Imlib2::Font is native(libname("libImlib2")) { ... };
+		returns Imlib2::Font is native(IMLIB2) { ... };
 
 	sub imlib_context_set_direction(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_direction()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_context_set_angle(num)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_angle()
-		returns num is native(libname("libImlib2")) { ... };
+		returns num is native(IMLIB2) { ... };
 
 	sub imlib_context_set_color(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color(CArray[int32] $red, CArray[int32] $green,
 			CArray[int32] $blue, CArray[int32] $alpha)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_imlib_color()
-		returns Imlib2::Color is native(libname("libImlib2")) { ... };
+		returns Imlib2::Color is native(IMLIB2) { ... };
 
 	sub imlib_context_set_color_hsva(num32, num32, num32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color_hsva(CArray[num32] $hue, CArray[num32] $saturation,
 			CArray[num32] $value, CArray[int32] $alpha)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_set_color_hlsa(num32, num32, num32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color_hlsa(CArray[num32] $hue, CArray[num32] $lightness,
 			CArray[num32] $saturation, CArray[int32] $alpha)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_set_color_cmya(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color_cmya(CArray[int32] $cyan, CArray[int32] $magenta,
 			CArray[int32] $yellow, CArray[int32] $alpha)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_color_range()
-		returns Imlib2::ColorRange is native(libname("libImlib2")) { ... };
+		returns Imlib2::ColorRange is native(IMLIB2) { ... };
 
 	sub imlib_context_get_image()
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_context_set_cliprect(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_context_get_cliprect(CArray[int32] $x, CArray[int32] $y,
 			CArray[int32] $w, CArray[int32] $h)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_set_cache_size(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_cache_size()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_set_color_usage(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_color_usage()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	### loading functions ###
 
 	sub imlib_load_image(Str)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_load_image_immediately(Str)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_load_image_without_cache(Str)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_load_image_immediately_without_cache(Str)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_load_image_with_error_return(Str $filename, CArray[int32] $error_return)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_free_image()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_free_image_and_decache()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_flush_loaders()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### query/modify image parameters ###
 
 	sub imlib_image_get_width()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_image_get_height()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_image_get_filename()
-		returns Str is native(libname("libImlib2")) { ... };
+		returns Str is native(IMLIB2) { ... };
 
 	sub imlib_image_set_has_alpha(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_has_alpha()
-		returns int8 is native(libname("libImlib2")) { ... };
+		returns int8 is native(IMLIB2) { ... };
 
 	sub imlib_image_set_changes_on_disk()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_set_border(OpaquePointer)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_get_border(OpaquePointer)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_set_format(Str)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_format()
-		returns Str is native(libname("libImlib2")) { ... };
+		returns Str is native(IMLIB2) { ... };
 
 	sub imlib_image_set_irrelevant_format(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_set_irrelevant_border(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_set_irrelevant_alpha(int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### rendering functions ###
 
 	sub imlib_blend_image_onto_image(Imlib2, int8, Int, Int, Int, Int, Int, Int, Int, Int)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### creation functions ###
 
 	sub imlib_create_image(int32, int32)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_clone_image()
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_create_cropped_image(int32, int32, int32, int32)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	sub imlib_create_cropped_scaled_image(int32, int32, int32, int32, int32, int32)
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	### imlib updates ###
 	
 	### image modification ###
 
 	sub imlib_image_flip_horizontal()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_flip_vertical()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_flip_diagonal()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_orientate(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_blur(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_sharpen(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_tile()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_tile_horizontal()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_tile_vertical()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### fonts and text ###
 
 	sub imlib_load_font(Str)
-		returns Imlib2::Font is native(libname("libImlib2")) { ... };
+		returns Imlib2::Font is native(IMLIB2) { ... };
 
 	sub imlib_free_font()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_text_draw(int32, int32, Str)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_text_draw_with_return_metrics(int32 $x, int32 $y, Str $text,
 			CArray[int32] $w, CArray[int32] $h, CArray[int32] $ha, CArray[int32] $va)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_text_size(Str $text, CArray[int32] $w, CArray[int32] $h)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_text_advance(Str $text, CArray[int32] $ha, CArray[int32] $va)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_text_inset(Str)
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_text_get_index_and_location(
 			Str $text, int32 $x, int32 $y,
 			CArray[int32] $cx, CArray[int32] $cy,
 			CArray[int32] $cw, CArray[int32] $ch)
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_text_get_location_at_index(
 			Str $text, int32 $x, int32 $y,
 			CArray[int32] $cx, CArray[int32] $cy,
 			CArray[int32] $cw, CArray[int32] $ch)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_font_ascent()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 	
 	sub imlib_get_font_descent()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_get_maximum_font_ascent()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_get_maximum_font_descent()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_add_path_to_font_path(Str)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_remove_path_from_font_path(Str)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_list_font_path(CArray[int32] $number)
-		returns CArray[Str] is native(libname("libImlib2")) { ... };
+		returns CArray[Str] is native(IMLIB2) { ... };
 
 	sub imlib_list_fonts(CArray[int32] $number)
-		returns CArray[Str] is native(libname("libImlib2")) { ... };
+		returns CArray[Str] is native(IMLIB2) { ... };
 
 	sub imlib_free_font_list(CArray[Str] $list, int32 $number)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_set_font_cache_size(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_get_font_cache_size()
-		returns int32 is native(libname("libImlib2")) { ... };
+		returns int32 is native(IMLIB2) { ... };
 
 	sub imlib_flush_font_cache()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### color modifiers ###
 
 	### drawing on images ###
 
 	sub imlib_image_draw_pixel(int32, int32, int8) 
-		returns Imlib2::Updates is native(libname("libImlib2")) { ... };
+		returns Imlib2::Updates is native(IMLIB2) { ... };
 
 	sub imlib_image_draw_line(int32, int32, int32, int32, int8) 
-		returns Imlib2::Updates is native(libname("libImlib2")) { ... };
+		returns Imlib2::Updates is native(IMLIB2) { ... };
 
 	sub imlib_image_draw_rectangle(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_fill_rectangle(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### polygons ###
 
 	sub imlib_polygon_new()
-		returns Imlib2::Polygon is native(libname("libImlib2")) { ... };
+		returns Imlib2::Polygon is native(IMLIB2) { ... };
 
 	sub imlib_image_draw_polygon(Imlib2::Polygon, int8)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_fill_polygon(Imlib2::Polygon)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### ellipses/circumferences ###
 
 	sub imlib_image_draw_ellipse(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_fill_ellipse(int32, int32, int32, int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 	
 	### color ranges ###
 
 	sub imlib_create_color_range()
-		returns Imlib2::ColorRange is native(libname("libImlib2")) { ... };
+		returns Imlib2::ColorRange is native(IMLIB2) { ... };
 
 	sub imlib_free_color_range()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_add_color_to_color_range(int32)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_fill_color_range_rectangle(int32, int32, int32, int32, num64)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_image_fill_hsva_color_range_rectangle(int32, int32, int32, int32, num64)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### saving ###
 
 	sub imlib_save_image(Str)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 	
 	sub imlib_save_image_with_error_return(Str $filename, CArray[int32] $error_return)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### rotation/skewing ###
 
 	sub imlib_create_rotated_image(num) 	 
-		returns Imlib2::Image is native(libname("libImlib2")) { ... };
+		returns Imlib2::Image is native(IMLIB2) { ... };
 
 	### image filters ###
 
@@ -565,34 +568,34 @@ class Imlib2 is repr('CPointer') {
 	############
 	
 	sub imlib_apply_color_modifier()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_apply_color_modifier_to_rectangle(Int, Int, Int, Int)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_free_color_modifier()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_create_color_modifier()
-		returns Imlib2::ColorModifier is native(libname("libImlib2")) { ... };
+		returns Imlib2::ColorModifier is native(IMLIB2) { ... };
 		
 	sub imlib_get_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_set_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_modify_color_modifier_brightness(num)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 	
 	sub imlib_modify_color_modifier_contrast(num)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_modify_color_modifier_gamma(num)
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	sub imlib_reset_color_modifier()
-		is native(libname("libImlib2")) { ... };
+		is native(IMLIB2) { ... };
 
 	### METHODS ###
 	
