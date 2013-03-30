@@ -6,7 +6,9 @@
  * 
  */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "Imlib2.h"
 
 #ifdef WIN32
