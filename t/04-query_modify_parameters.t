@@ -82,12 +82,12 @@ is $structure.right, 20, 'right border stored value is 20';
 is $structure.top, 30, 'top border stored value is 30';
 is $structure.bottom, 40, 'bottom border stored value is 40';
 
-lives_ok { $im.image_set_irrelevant_format(True); }, 'image_set_irrelevant_format is set to True';
-lives_ok { $im.image_set_irrelevant_format(False); }, 'image_set_irrelevant_format is set to False';
-lives_ok { $im.image_set_irrelevant_border(True); }, 'image_set_irrelevant_border is set to True';
-lives_ok { $im.image_set_irrelevant_border(False); }, 'image_set_irrelevant_border is set to False';
-lives_ok { $im.image_set_irrelevant_alpha(True); }, 'image_set_irrelevant_alpha is set to True';
-lives_ok { $im.image_set_irrelevant_alpha(False); }, 'image_set_irrelevant_alpha is set to False';
+lives_ok { $im.image_set_irrelevant(format => True); }, 'image_set_irrelevant_format is set to True';
+lives_ok { $im.image_set_irrelevant(format => False); }, 'image_set_irrelevant_format is set to False';
+lives_ok { $im.image_set_irrelevant(border => True); }, 'image_set_irrelevant_border is set to True';
+lives_ok { $im.image_set_irrelevant(border => False); }, 'image_set_irrelevant_border is set to False';
+lives_ok { $im.image_set_irrelevant(alpha => True); }, 'image_set_irrelevant_alpha is set to True';
+lives_ok { $im.image_set_irrelevant(alpha => False); }, 'image_set_irrelevant_alpha is set to False';
 
 $im.free_image();
 unlink($test_file) if $test_file.IO ~~ :e;

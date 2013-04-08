@@ -952,16 +952,14 @@ class Imlib2 is repr('CPointer') {
 		return imlib_image_format();
 	}
 
-	method image_set_irrelevant_format(Bool $irrelevant) {
-		imlib_image_set_irrelevant_format($irrelevant ?? 1 !! 0);
-	}
-	
-	method image_set_irrelevant_border(Bool $irrelevant) {
-		imlib_image_set_irrelevant_border($irrelevant ?? 1 !! 0);
-	}
-	
-	method image_set_irrelevant_alpha(Bool $irrelevant) {
-		imlib_image_set_irrelevant_alpha($irrelevant ?? 1 !! 0);
+	method image_set_irrelevant(
+		Bool :$format,
+		Bool :$border,
+		Bool :$alpha) {
+
+		imlib_image_set_irrelevant_format($format ?? 1 !! 0) if defined($format);
+		imlib_image_set_irrelevant_border($border ?? 1 !! 0) if defined($border);
+		imlib_image_set_irrelevant_alpha($alpha ?? 1 !! 0) if defined($alpha);	
 	}
 
 	### rendering functions ###

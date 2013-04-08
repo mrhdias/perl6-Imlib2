@@ -1165,57 +1165,28 @@ Returns:
 
 Returns the current image's format.
 
-=head3 C<image_set_irrelevant_format>
+=head3 C<image_set_irrelevant>
 
 Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
 	my Bool $irrelevant = True;
-	$im.image_set_irrelevant_format($irrelevant);
+	$im.image_set_irrelevant(
+		format => True,
+		border => False,
+		alpha  => True);
 
 Parameters:
 
-	Bool $irrelevant - Irrelevant format flag (True or False).
+	Bool format - Irrelevant format flag (True or False).
+	Bool border - Irrelevant border flag (True or False).
+	Bool alpha - Irrelevant alpha flag (True or False).
 
-Sets if the format value of the current image is irrelevant for caching
+Sets if the format, border or alpha channel status value of the current
+image (i.e. if there is or is not one) is irrelevant for caching
 purposes - by default it is. pass irrelevant as True to make it
 irrelevant and False to make it relevant for caching.
-
-=head3 C<image_set_irrelevant_border>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my Bool $irrelevant = True;
-	$im.image_set_irrelevant_border($irrelevant);
-
-Parameters:
-
-	Bool $irrelevant - Irrelevant border flag (True or False).
-	
-Sets if the border of the current image is irrelevant for caching
-purposes. By default it is. Set irrelevant to True to make it
-irrelevant, and False to make it relevant.
-
-=head3 C<image_set_irrelevant_alpha>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my Bool $irrelevant = True;
-	$im.image_set_irrelevant_alpha($irrelevant);
-
-Parameters:
-
-	Bool $irrelevant - Irrelevant alpha flag (True or False).
-
-Sets if the alpha channel status of the current image (i.e. if there is
-or is not one) is important for caching purposes. By default it is not.
-Set irrelevant to True to make it irrelevant and False to make it
-relevant.
 
 =head2 Rendering Functions.
 
