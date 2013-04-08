@@ -35,9 +35,9 @@ Flip
 	my $selected = prompt("Please select a mode: ");
 	my $mode;
 	given $option {
-		when 1 { $mode = FLIP_HORIZONTAL; }
-		when 2 { $mode = FLIP_VERTICAL; }
-		when 3 { $mode = FLIP_DIAGONAL; }
+		when 1 { $mode = IMLIB_FLIP_HORIZONTAL; }
+		when 2 { $mode = IMLIB_FLIP_VERTICAL; }
+		when 3 { $mode = IMLIB_FLIP_DIAGONAL; }
 		default { $im.free_image(); exit(); }
 	}
 	$im.image_flip($mode);
@@ -53,9 +53,9 @@ Rotate
 	my $selected = prompt("Please select a mode: ");
 	my $mode;
 	given $option {
-		when 1 { $mode = ROTATE_90_DEGREES; }
-		when 2 { $mode = ROTATE_180_DEGREES; }
-		when 3 { $mode = ROTATE_270_DEGREES; }
+		when 1 { $mode = IMLIB_ROTATE_90_DEGREES; }
+		when 2 { $mode = IMLIB_ROTATE_180_DEGREES; }
+		when 3 { $mode = IMLIB_ROTATE_270_DEGREES; }
 		default { say "Exit..."; $im.free_image(); exit(); }
 	}
 	$im.image_orientate($mode);
@@ -71,9 +71,9 @@ Tile
 	my $selected = prompt("Please select a mode: ");
 	my $mode;
 	given $option {
-		when 1 { $mode = TILE_HORIZONTAL; }
-		when 2 { $mode = TILE_VERTICAL; }
-		when 3 { $mode = TILE_BOTH; }
+		when 1 { $mode = IMLIB_TILE_HORIZONTAL; }
+		when 2 { $mode = IMLIB_TILE_VERTICAL; }
+		when 3 { $mode = IMLIB_TILE_BOTH; }
 		default { say "Exit..."; $im.free_image(); exit(); }
 	}
 	$im.image_tile($mode);

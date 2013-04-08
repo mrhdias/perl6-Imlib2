@@ -32,12 +32,13 @@ $corefont.context_set();
 
 # Sets the direction in which to draw text in terms of simple 90 degree
 # orientations or an arbitrary angle. The direction can be one of:
-# TEXT_TO_RIGHT, TEXT_TO_LEFT, TEXT_TO_DOWN, TEXT_TO_UP or TEXT_TO_ANGLE.
-# The default is TEXT_TO_RIGHT. If you use TEXT_TO_ANGLE, you will also
+# IMLIB_TEXT_TO_RIGHT, IMLIB_TEXT_TO_LEFT, IMLIB_TEXT_TO_DOWN,
+# IMLIB_TEXT_TO_UP or IMLIB_TEXT_TO_ANGLE. The default is
+# IMLIB_TEXT_TO_RIGHT. If you use IMLIB_TEXT_TO_ANGLE, you will also
 # have to set the angle with context_set_angle().
-$im.context_set_direction(TEXT_TO_ANGLE);
+$im.context_set_direction(IMLIB_TEXT_TO_ANGLE);
 
-say "Text to Angle..." if $im.context_get_direction() == TEXT_TO_ANGLE;
+say "Text to Angle..." if $im.context_get_direction() == IMLIB_TEXT_TO_ANGLE;
 
 $im.context_set_angle(-45.0);
 

@@ -14,10 +14,10 @@ my $option = prompt("Please selecct an operation: ");
 
 my $operation = 0;
 given $option {
-	when 1 { $operation = OP_COPY; }
-	when 2 { $operation = OP_ADD; }
-	when 3 { $operation = OP_SUBTRACT; }
-	when 4 { $operation = OP_RESHADE; }
+	when 1 { $operation = IMLIB_OP_COPY; }
+	when 2 { $operation = IMLIB_OP_ADD; }
+	when 3 { $operation = IMLIB_OP_SUBTRACT; }
+	when 4 { $operation = IMLIB_OP_RESHADE; }
 	default { exit(); }
 }
 

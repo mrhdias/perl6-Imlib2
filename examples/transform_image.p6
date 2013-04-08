@@ -11,9 +11,9 @@ $loaded_image.context_set();
 
 $im.image_set_format("png");
 
-$im.image_flip(FLIP_HORIZONTAL);
+$im.image_flip(IMLIB_FLIP_HORIZONTAL);
 
-$im.image_orientate(ROTATE_90_DEGREES);
+$im.image_orientate(IMLIB_ROTATE_90_DEGREES);
 
 unlink("images/test_transform.png") if "images/test_transform.png".IO ~~ :e;
 $im.save_image("images/test_transform.png");
