@@ -53,7 +53,7 @@ lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_RIGHT); }, 'context_set_direc
 is $im.context_get_direction(), IMLIB_TEXT_TO_RIGHT, 'context_get_direction returns IMLIB_TEXT_TO_RIGHT';
 lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_LEFT); }, 'context_set_direction is set to IMLIB_TEXT_TO_LEFT';
 is $im.context_get_direction(), IMLIB_TEXT_TO_LEFT, 'context_get_direction returns IMLIB_TEXT_TO_LEFT';
-lives_ok { $im.context_set_direction(TEXT_TO_DOWN); }, 'context_set_direction is set to IMLIB_TEXT_TO_DOWN';
+lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_DOWN); }, 'context_set_direction is set to IMLIB_TEXT_TO_DOWN';
 is $im.context_get_direction(), IMLIB_TEXT_TO_DOWN, 'context_get_direction returns IMLIB_TEXT_TO_DOWN';
 lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_UP); }, 'context_set_direction is set to IMLIB_TEXT_TO_UP';
 is $im.context_get_direction(), IMLIB_TEXT_TO_UP, 'context_get_direction returns IMLIB_TEXT_TO_UP';
