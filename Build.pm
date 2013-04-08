@@ -1,7 +1,7 @@
 use Panda::Common;
 use Panda::Builder;
 
-%*ENV{'LD_LIBRARY_PATH'} = $*CWD ~ "/blib/lib";
+%*ENV{'LD_LIBRARY_PATH'} = join("/", $*CWD, "blib/lib");
 
 my $o  = $*VM<config><o>;
 my $so = $*VM<config><load_ext>;
