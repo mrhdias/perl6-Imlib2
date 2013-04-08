@@ -37,28 +37,28 @@ isa_ok $get_color_modifier, Imlib2::ColorModifier;
 ok $get_color_modifier, 'context_get_color_modifier';
 $im.free_color_modifier();
 
-lives_ok { $im.context_set_operation(OP_COPY); }, 'context_set_operation is set to OP_COPY mode';
-is $im.context_get_operation(), OP_COPY, 'context_get_operation returns OP_COPY mode';
-lives_ok { $im.context_set_operation(OP_ADD); }, 'context_set_operation is set to OP_ADD mode';
-is $im.context_get_operation(), OP_ADD, 'context_get_operation returns OP_ADD mode';
-lives_ok { $im.context_set_operation(OP_SUBTRACT); }, 'context_set_operation is set to OP_SUBTRACT mode';
-is $im.context_get_operation(), OP_SUBTRACT, 'context_get_operation returns OP_SUBTRACT mode';
-lives_ok { $im.context_set_operation(OP_RESHADE); }, 'context_set_operation is set to OP_RESHADE mode';
-is $im.context_get_operation(), OP_RESHADE, 'context_get_operation returns OP_RESHADE mode';
+lives_ok { $im.context_set_operation(IMLIB_OP_COPY); }, 'context_set_operation is set to IMLIB_OP_COPY mode';
+is $im.context_get_operation(), IMLIB_OP_COPY, 'context_get_operation returns IMLIB_OP_COPY mode';
+lives_ok { $im.context_set_operation(IMLIB_OP_ADD); }, 'context_set_operation is set to IMLIB_OP_ADD mode';
+is $im.context_get_operation(), IMLIB_OP_ADD, 'context_get_operation returns IMLIB_OP_ADD mode';
+lives_ok { $im.context_set_operation(IMLIB_OP_SUBTRACT); }, 'context_set_operation is set to IMLIB_OP_SUBTRACT mode';
+is $im.context_get_operation(), IMLIB_OP_SUBTRACT, 'context_get_operation returns IMLIB_OP_SUBTRACT mode';
+lives_ok { $im.context_set_operation(IMLIB_OP_RESHADE); }, 'context_set_operation is set to IMLIB_OP_RESHADE mode';
+is $im.context_get_operation(), IMLIB_OP_RESHADE, 'context_get_operation returns IMLIB_OP_RESHADE mode';
 
 # context_set_font -> xx-fonts_and_text.t
 # context_get_font -> xx-fonts_and_text.t
 
-lives_ok { $im.context_set_direction(TEXT_TO_RIGHT); }, 'context_set_direction is set to TEXT_TO_RIGHT';
-is $im.context_get_direction(), TEXT_TO_RIGHT, 'context_get_direction returns TEXT_TO_RIGHT';
-lives_ok { $im.context_set_direction(TEXT_TO_LEFT); }, 'context_set_direction is set to TEXT_TO_LEFT';
-is $im.context_get_direction(), TEXT_TO_LEFT, 'context_get_direction returns TEXT_TO_LEFT';
-lives_ok { $im.context_set_direction(TEXT_TO_DOWN); }, 'context_set_direction is set to TEXT_TO_DOWN';
-is $im.context_get_direction(), TEXT_TO_DOWN, 'context_get_direction returns TEXT_TO_DOWN';
-lives_ok { $im.context_set_direction(TEXT_TO_UP); }, 'context_set_direction is set to TEXT_TO_UP';
-is $im.context_get_direction(), TEXT_TO_UP, 'context_get_direction returns TEXT_TO_UP';
-lives_ok { $im.context_set_direction(TEXT_TO_ANGLE); }, 'context_set_direction is set to TEXT_TO_ANGLE';
-is $im.context_get_direction(), TEXT_TO_ANGLE, 'context_get_direction returns TEXT_TO_ANGLE';
+lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_RIGHT); }, 'context_set_direction is set to IMLIB_TEXT_TO_RIGHT';
+is $im.context_get_direction(), IMLIB_TEXT_TO_RIGHT, 'context_get_direction returns IMLIB_TEXT_TO_RIGHT';
+lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_LEFT); }, 'context_set_direction is set to IMLIB_TEXT_TO_LEFT';
+is $im.context_get_direction(), IMLIB_TEXT_TO_LEFT, 'context_get_direction returns IMLIB_TEXT_TO_LEFT';
+lives_ok { $im.context_set_direction(TEXT_TO_DOWN); }, 'context_set_direction is set to IMLIB_TEXT_TO_DOWN';
+is $im.context_get_direction(), IMLIB_TEXT_TO_DOWN, 'context_get_direction returns IMLIB_TEXT_TO_DOWN';
+lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_UP); }, 'context_set_direction is set to IMLIB_TEXT_TO_UP';
+is $im.context_get_direction(), IMLIB_TEXT_TO_UP, 'context_get_direction returns IMLIB_TEXT_TO_UP';
+lives_ok { $im.context_set_direction(IMLIB_TEXT_TO_ANGLE); }, 'context_set_direction is set to IMLIB_TEXT_TO_ANGLE';
+is $im.context_get_direction(), IMLIB_TEXT_TO_ANGLE, 'context_get_direction returns IMLIB_TEXT_TO_ANGLE';
 
 lives_ok { $im.context_set_angle(-45.0); }, 'context_set_angle is set to -45.0';
 is $im.context_get_angle(), -45.0, 'context_get_angle returns -45.0';

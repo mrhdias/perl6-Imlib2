@@ -51,18 +51,18 @@ my LoadError $error;
 my $error_image = $im.load_image($test_file, $error);
 isa_ok $error_image, Imlib2::Image;
 ok $error_image, 'imlib_load_image_with_error_return';
-is $error, LOAD_ERROR_NONE, 'imlib_load_image_with_error_return LOAD_ERROR_NONE';
+is $error, IMLIB_LOAD_ERROR_NONE, 'imlib_load_image_with_error_return IMLIB_LOAD_ERROR_NONE';
 $error_image.context_set();
 
 $im.save_image("notexist/$test_file", $error);
-is $error, LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT, 'imlib_save_image_with_error_return LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT';
+is $error, IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT, 'imlib_save_image_with_error_return IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT';
 $im.save_image($test_file, $error);
-is $error, LOAD_ERROR_NONE, 'imlib_save_image_with_error_return LOAD_ERROR_NONE';
+is $error, IMLIB_LOAD_ERROR_NONE, 'imlib_save_image_with_error_return IMLIB_LOAD_ERROR_NONE';
 
 lives_ok { $im.free_image(True); }, 'imlib_free_image_and_decache';
 
 my $fail_image = $im.load_image($test_error_file, $error);
-is $error, LOAD_ERROR_FILE_DOES_NOT_EXIST, 'imlib_load_image_with_error_return LOAD_ERROR_FILE_DOES_NOT_EXIST';
+is $error, IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST, 'imlib_load_image_with_error_return IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST';
 $im.free_image() if $im.context_get_image();
 
 lives_ok { $im.flush_loaders(); }, 'flush_loaders';
