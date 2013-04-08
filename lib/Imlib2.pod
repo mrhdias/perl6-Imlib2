@@ -256,19 +256,19 @@ Returns the current color modifier being used.
 
 =item *
 
-OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
+IMLIB_OP_COPY performs basic alpha blending: DST = (SRC * A) + (DST * (1 - A)).
 
 =item *
 
-OP_ADD does DST = DST + (SRC * A).
+IMLIB_OP_ADD does DST = DST + (SRC * A).
 
 =item *
 
-OP_SUBTRACT does DST = DST - (SRC * A).
+IMLIB_OP_SUBTRACT does DST = DST - (SRC * A).
 
 =item *
 
-OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
+IMLIB_OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
 
 =back
 
@@ -278,7 +278,7 @@ Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
-	$im.context_set_operation(OP_COPY);
+	$im.context_set_operation(IMLIB_OP_COPY);
 
 Parameters:
 
@@ -288,8 +288,9 @@ When Imlib2 draws an image onto another or an image onto a drawable it
 is able to do more than just blend the result on using the given alpha
 channel of the image. It is also able to do saturating additive,
 subtractive and a combination of the both (called reshade) rendering.
-The default mode is OP_COPY. you can also set it to OP_ADD, OP_SUBTRACT
-or OP_RESHADE. Use this function to set the rendering operation.
+The default mode is IMLIB_OP_COPY. you can also set it to IMLIB_OP_ADD,
+IMLIB_OP_SUBTRACT or IMLIB_OP_RESHADE. Use this function to set the
+rendering operation.
 
 =head3 C<context_get_operation>
 
@@ -297,7 +298,7 @@ Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
-	say "OP_ADD Operation mode" if $im.context_get_operation() == OP_ADD;
+	say "IMLIB_OP_ADD Operation mode" if $im.context_get_operation() == IMLIB_OP_ADD;
 
 Returns:
 
@@ -325,7 +326,7 @@ Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
-	$im.context_set_direction(TEXT_TO_RIGHT);
+	$im.context_set_direction(IMLIB_TEXT_TO_RIGHT);
 
 Parameters:
 
@@ -333,9 +334,10 @@ Parameters:
 
 Sets the direction in which to draw text in terms of simple 90 degree
 orientations or an arbitrary angle. The direction can be one of
-TEXT_TO_RIGHT, TEXT_TO_LEFT, TEXT_TO_DOWN, TEXT_TO_UP or TEXT_TO_ANGLE.
-The default is TEXT_TO_RIGHT. If you use TEXT_TO_ANGLE, you will also
-have to set the angle with context_set_angle().
+IMLIB_TEXT_TO_RIGHT, IMLIB_TEXT_TO_LEFT, IMLIB_TEXT_TO_DOWN,
+IMLIB_TEXT_TO_UP or IMLIB_TEXT_TO_ANGLE.
+The default is IMLIB_TEXT_TO_RIGHT. If you use IMLIB_TEXT_TO_ANGLE,
+you will also have to set the angle with context_set_angle().
 
 =head3 C<context_get_direction>
 
@@ -833,7 +835,7 @@ Usage:
 	my $file = "pictures/holidays.jpeg";
 	my LoadError $error_return;
 	my $image = $im.load_image($file, $error_return);
-	if $error_return == LOAD_ERROR_NONE {
+	if $error_return == IMLIB_LOAD_ERROR_NONE {
 		say "No error...";
 		$image.context_set();
 		... some operations ...
@@ -1382,7 +1384,7 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.load_image("pictures/holidays.jpeg");
 	$image.context_set();
-	my FlipMode $flip_mode = FLIP_HORIZONTAL;
+	my FlipMode $flip_mode = IMLIB_FLIP_HORIZONTAL;
 	$im.image_flip($flip_mode);
 	... some operations ...
 	$im.free_image();
@@ -1397,17 +1399,17 @@ Flips/mirrors the current image.
 
 =item *
 
-FLIP_HORIZONTAL - Flips/mirrors the current image horizontally
+IMLIB_FLIP_HORIZONTAL - Flips/mirrors the current image horizontally
 
 =item *
 
-FLIP_VERTICAL - Flips/mirrors the current image vertically.
+IMLIB_FLIP_VERTICAL - Flips/mirrors the current image vertically.
 
 =item *
 
-FLIP_DIAGONAL - Flips/mirrors the current image diagonally (good for
-                quick and dirty 90 degree rotations if used before to
-                after a horizontal or vertical flip).
+IMLIB_FLIP_DIAGONAL - Flips/mirrors the current image diagonally (good
+                      for quick and dirty 90 degree rotations if used
+                      before to after a horizontal or vertical flip).
 
 =back
 
@@ -1419,7 +1421,7 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.load_image("pictures/holidays.jpeg");
 	$image.context_set();
-	my RotationMode $orientation = ROTATE_90_DEGREES;
+	my RotationMode $orientation = IMLIB_ROTATE_90_DEGREES;
 	$im.image_orientate($orientation);
 	... some operations ...
 	$im.free_image();
@@ -1434,15 +1436,15 @@ Performs 90 degree rotations on the current image.
 
 =item *
 
-ROTATE_90_DEGREES - rotates clockwise by 90 degrees.
+IMLIB_ROTATE_90_DEGREES - rotates clockwise by 90 degrees.
 
 =item *
 
-ROTATE_180_DEGREES - rotates clockwise by 180 degrees.
+IMLIB_ROTATE_180_DEGREES - rotates clockwise by 180 degrees.
 
 =item *
 
-ROTATE_270_DEGREES - rotates clockwise by 270 degrees.
+IMLIB_ROTATE_270_DEGREES - rotates clockwise by 270 degrees.
 
 =back
 
@@ -1454,7 +1456,7 @@ Usage:
 	my $im = Imlib2.new();
 	my $image = $im.load_image("pictures/holidays.jpeg");
 	$image.context_set();
-	my TileMode $flip_mode = TILE_HORIZONTAL;
+	my TileMode $flip_mode = IMLIB_TILE_HORIZONTAL;
 	$im.image_tile($tile_mode);
 	... some operations ...
 	$im.free_image();
@@ -1470,15 +1472,15 @@ drawn multiple times horizontally, vertically or both).
 
 =item *
 
-TILE_HORIZONTAL - Drawn multiple times horizontally.
+IMLIB_TILE_HORIZONTAL - Drawn multiple times horizontally.
 
 =item *
 
-TILE_VERTICAL - Drawn multiple times vertically.
+IMLIB_TILE_VERTICAL - Drawn multiple times vertically.
 
 =item *
 
-TILE_BOTH - Drawn multiple times horizontally and vertically.
+IMLIB_TILE_BOTH - Drawn multiple times horizontally and vertically.
 
 =back
 
@@ -2400,7 +2402,7 @@ Usage:
 	my Str $filename = "test.png";
 	my LoadError $error_return;
 	$im.save_image($filename, $error_return);
-	say "No error..." if $error_return == LOAD_ERROR_NONE;
+	say "No error..." if $error_return == IMLIB_LOAD_ERROR_NONE;
 	$im.free_image();
 
 Parameters:
