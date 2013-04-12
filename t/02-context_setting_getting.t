@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 72;
+plan 76;
 
 use Imlib2;
 
@@ -72,56 +72,105 @@ lives_ok {
 lives_ok {
 	$im.context_set_color(0xffffffff);
 }, 'context_set_color with hexadecimal color number';
-lives_ok {
-	$im.context_set_color(red => 10, green => 127, blue => 200, alpha => 255);
-}, 'context_set_color - rgba colar space with named arguments';
-my %color_channels;
-lives_ok { $im.context_get_color(%color_channels); }, 'context_get_color';
-is %color_channels{'red'}, 10, 'the red channel of the current color is 10';
-is %color_channels{'green'}, 127, 'the green channel of the current color is 127';
-is %color_channels{'blue'}, 200, 'the blue channel of the current color is 200';
-is %color_channels{'alpha'}, 255, 'the alpha channel of the current color is 255';
-is %color_channels{'hexcode'}, "#0a7fc8", 'the hexacode of the current color is #0a7fc8';
 
-#my %cc = $im.context_get_color();
-#say %cc{'red'};
-#say %cc{'green'};
-#say %cc{'blue'};
-#say %cc{'alpha'};
-#say %cc{'hexcode'};
+# Color in RGBA space
 
 lives_ok {
-	$im.context_set_color(hue => 180, saturation => 50, value => 75, alpha => 127);
-}, 'context_set_color - hsva color space';
+	$im.context_set_color(
+		red   => 50,
+		green => 100,
+		blue  => 150,
+		alpha => 200);
+}, 'imlib_context_set_color - sets the color channel in RGBA color space';
 
-#my %hsva_channels;
-#$im.context_get_color_hsva(%hsva_channels);
-#say "Hue: " ~ %hsva_channels{'hue'};
-#say "Saturation: " ~ %hsva_channels{'saturation'};
-#say "Value: " ~ %hsva_channels{'value'};
-#say "Alpha: " ~ %hsva_channels{'alpha'};
+my ($red, $green, $blue, $alpha);
+lives_ok {
+	$im.context_get_color(
+		red   => $red = 0,
+		green => $green = 0,
+		blue  => $blue = 0,
+		alpha => $alpha = 0);
+}, 'imlib_context_get_color - gets the colors channel in RGBA color space';
+
+is $red, 50, 'returns the value 50 for red color channel';
+is $green, 100, 'returns the value 100 for green color channel';
+is $blue, 150, 'returns the value 150 for blue color channel';
+is $alpha, 200, 'returns the value 200 for alpha color channel';
+
+my $hex = $im.get_hex_color_code($red, $green, $blue, $alpha);
+is $hex, "#326496c8", 'get_hex_color_code returns the code #326496c8';
+
+# Color in HSVA space
 
 lives_ok {
-	$im.context_set_color(hue => 180, lightness => 50, saturation => 75, alpha => 127);
-}, 'context_set_color - hlsa color space';
+	$im.context_set_color(
+		hue        => 55,
+		saturation => 15,
+		value      => 95,
+		alpha      => 205);
+}, 'imlib_context_set_color_hsva - sets the color channel in HSVA color space';
 
-#my %hlsa_channels;
-#$im.context_get_color_hlsa(%hlsa_channels);
-#say "Hue: " ~ %hlsa_channels{'hue'};
-#say "Lightness: " ~ %hlsa_channels{'lightness'};
-#say "Saturation: " ~ %hlsa_channels{'saturation'};
-#say "Alpha: " ~ %hlsa_channels{'alpha'};
+my ($hue, $saturation, $value);
+lives_ok {
+	$im.context_get_color(
+		hue        => $hue = 0,
+		saturation => $saturation = 0,
+		value      => $value = 0,
+		alpha      => $alpha = 0);
+}, 'imlib_context_get_color_hsva - gets the colors channel in HSVA color space';
+
+#is $hue, 55, 'returns the value 55 for hue color channel';
+#is $saturation, 15, 'returns the value 15 for saturation color channel';
+#is $value, 95, 'returns the value 95 for value color channel';
+is $alpha, 205, 'returns the value 205 for alpha color channel';
+
+# Color in HLSA space
 
 lives_ok {
-	$im.context_set_color(cyan => 25, magenta => 125, yellow => 200, alpha => 255);
-}, 'context_set_color - cmya color space';
+	$im.context_set_color(
+		hue        => 60,
+		lightness  => 25,
+		saturation => 85,
+		alpha      => 210);
+}, 'imlib_context_set_color_hlsa - sets the color channel in HLSA color space';
 
-my %cmya_channels;
-lives_ok { $im.context_get_color_cmya(%cmya_channels); }, 'context_get_color_cmya';
-is %cmya_channels{'cyan'}, 25, 'the cyan channel of the current color is 25';
-is %cmya_channels{'magenta'}, 125, 'the magenta channel of the current color is 25';
-is %cmya_channels{'yellow'}, 200, 'the yellow channel of the current color is 200';
-is %cmya_channels{'alpha'}, 255, 'the alpha channel of the current color is 255';
+my $lightness;
+lives_ok {
+	$im.context_get_color(
+		hue        => $hue = 0,
+		lightness  => $lightness = 0,
+		saturation => $saturation = 0,
+		alpha      => $alpha = 0);
+}, 'imlib_context_get_color_hlsa - gets the colors channel in HLSA color space';
+
+#is $hue, 60, 'returns the value 60 for hue color channel';
+#is $lightness, 25, 'returns the value 25 for lightness color channel';
+#is $saturation, 85, 'returns the value 85 for saturation color channel';
+is $alpha, 210, 'returns the value 210 for alpha color channel';
+
+# Color in CMYA space
+
+lives_ok {
+	$im.context_set_color(
+		cyan    => 65,
+		magenta => 115,
+		yellow  => 165,
+		alpha   => 215);
+}, 'imlib_context_set_color_cmya - sets the color channel in CMYA color space';
+
+my ($cyan, $magenta, $yellow);
+lives_ok {
+	$im.context_get_color(
+		cyan    => $cyan = 0,
+		magenta => $magenta = 0,
+		yellow  => $yellow = 0,
+		alpha   => $alpha = 0);
+}, 'imlib_context_get_color_cmya - gets the colors channel in CMYA color space';
+
+is $cyan, 65, 'returns the value 65 for cyan color channel';
+is $magenta, 115, 'returns the value 115 for magenta color channel';
+is $yellow, 165, 'returns the value 165 for yellow color channel';
+is $alpha, 215, 'returns the value 215 for alpha color channel';
 
 # context_set_color_range -> xx-color_range.t
 # context_get_color_range -> xx-color_range.t

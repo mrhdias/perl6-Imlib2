@@ -22,30 +22,37 @@ $im.context_set_color(
 	alpha => 255
 );
 
-my %color_channels = (
-	red     => 0,
-	green   => 0,
-	blue    => 0,
-	alpha   => 0,
-	hexcode => "#000000"
+$im.context_get_color(
+	red   => my $red = 0,
+	green => my $green = 0,
+	blue  => my $blue = 0,
+	alpha => my $alpha = 0
 );
-$im.context_get_color(%color_channels);
-say "Pass hash colors as argument:";
-say "-----------------------------";
-say "__Red: " ~ %color_channels{'red'};
-say "Green: " ~ %color_channels{'green'};
-say "_Blue: " ~ %color_channels{'blue'};
-say "Alpha: " ~ %color_channels{'alpha'};
-say "__Hex: " ~ %color_channels{'hexcode'};
 
-%color_channels = $im.context_get_color();
-say "\nReturn hash colors:";
-say "-----------------------------";
-say "__Red: " ~ %color_channels{'red'};
-say "Green: " ~ %color_channels{'green'};
-say "_Blue: " ~ %color_channels{'blue'};
-say "Alpha: " ~ %color_channels{'alpha'};
-say "__Hex: " ~ %color_channels{'hexcode'};
+my $hex = $im.get_hex_color_code($red, $green, $blue, $alpha);
+
+say "RGBA Color Space:";
+say "-----------------";
+say "__Red: " ~ $red;
+say "Green: " ~ $green;
+say "_Blue: " ~ $blue;
+say "Alpha: " ~ $alpha;
+say "__Hex: " ~ $hex;
+say "";
+
+$im.context_get_color(
+	hue        => my $hue = 0,
+	saturation => my $saturation = 0,
+	value      => my $value = 0,
+	alpha      => $alpha = 0
+);
+
+say "HSVA Color Space:";
+say "-----------------";
+say "_______Hue: " ~ $hue;
+say "Saturation: " ~ $saturation;
+say "_____Value: " ~ $value;
+say "_____Alpha: " ~ $alpha;
 
 $im.image_draw_rectangle(
 	location => (0, 0),

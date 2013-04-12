@@ -476,171 +476,69 @@ Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
-	my %color_channels;
-	$im.context_get_color(%color_channels);
-	say %color_channels{'red'};
-	say %color_channels{'green'};
-	say %color_channels{'blue'};
-	say %color_channels{'alpha'};
-	say %color_channels{'hexcode'};
 
-	# Another way to get the color channels.
-	%color_channels = $im.context_get_color();
+	# Color in RGBA space
+	$im.context_get_color(
+		red   => my $red = 0,
+		green => my $green = 0,
+		blue  => my $blue = 0,
+		alpha => my $alpha = 0
+	);
+	say "Red: $red";
+	say "Green: $green";
+	say "Blue: $blue";
+	say "Alpha: $alpha";
 
-Parameters:
+	say "Hex: " ~ $im.get_hex_color_code($red, $green, $blue, $alpha);
 
-	%color_channels - If a hash is passed as argument.
-	
-Returns:
+	# Color in HSVA space
+	$im.context_get_color(
+		hue        => my $hue = 0,
+		saturation => my $saturation = 0,
+		value      => my $value = 0,
+		alpha      => $alpha = 0);
 
-	%color_channels - Hash with the channels and a hexcode of the
-	                  current colors if no argument is passed.
+	# Color in HLSA space
+	$im.context_get_color(
+		hue        => my $hue = 0,
+		lightness  => my $lightness = 0,
+		saturation => my $saturation = 0,
+		alpha      => $alpha = 0);
 
-The current color for rendering text, rectangles and lines.
-
-=over 4
-
-=item *
-
-%color_channels{'red'} - Red channel of the current color.
-
-=item *
-
-%color_channels{'green'} - Green channel of the current color.
-
-=item *
-
-%color_channels{'blue'} - Blue channel of the current color.
-
-=item *
-
-%color_channels{'alpha'} - Alpha channel of the current color.
-
-=item *
-
-%color_channels{'hexcode'} - Hexadecimal code of the current color.
-
-=back
-
-=head3 C<context_get_color_hsva>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my %hsva_channels;
-	$im.context_get_color_hsva(%hsva_channels);
-	say "Hue: " ~ %hsva_channels{'hue'};
-	say "Saturation: " ~ %hsva_channels{'saturation'};
-	say "Value: " ~ %hsva_channels{'value'};
-	say "Alpha: " ~ %hsva_channels{'alpha'};
+	# Color in CMYA space
+	$im.context_get_color(
+		cyan    => $cyan = 0,
+		magenta => $magenta = 0,
+		yellow  => $yellow = 0,
+		alpha   => $alpha = 0);
 
 Parameters:
 
-	%hsva_channels - Hash (passed as argument) with the channels of
-	                 the current color.
+	Color in RGBA space
+		Int red is rw - Red channel of the current color.
+		Int green is rw - Green channel of the current color.
+		Int blue is rw - Blue channel of the current color.
+		Int alpha is rw - Alpha channel of the current color.
 
-The current color for rendering text, rectangles and lines in HSVA space.
+	Color in HSVA space
+		Int hue is rw - Hue channel of the current color.
+		Int saturation is rw - Saturation channel of the current color.
+		Int value is rw - Value channel of the current color.
+		Int alpha is rw - Alpha channel of the current color.
 
-=over 4
+	Color in HLSA space
+		Int hue is rw - Hue channel of the current color.
+		Int ligtness is rw - Ligtness channel of the current color.
+		Int saturation is rw - Saturation channel of the current color.
+		Int alpha is rw - Alpha channel of the current color.
 
-=item *
+	Color in CMYA space
+		Int cyan is rw - Cyan channel of the current color.
+		Int magenta is rw - Magenta channel of the current color.
+		Int yellow is rw - Yellow channel of the current color.
+		Int alpha is rw - Alpha channel of the current color.
 
-%hsva_channels{'hue'} - Hue channel of the current color.
-
-=item *
-
-%hsva_channels{'saturation'} - Saturation channel of the current color.
-
-=item *
-
-%hsva_channels{'value'} - Value channel of the current color.
-
-=item *
-
-%hsva_channels{'alpha'} - Alpha channel of the current color.
-
-=back
-
-=head3 C<context_get_color_hlsa>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my %hlsa_channels;
-	$im.context_get_color_hlsa(%hlsa_channels);
-	say "Hue: " ~ %hlsa_channels{'hue'};
-	say "Lightness: " ~ %hlsa_channels{'lightness'};
-	say "Saturation: " ~ %hlsa_channels{'saturation'};
-	say "Alpha: " ~ %hlsa_channels{'alpha'};
-
-Parameters:
-
-	%hlsa_channels - Hash (passed as argument) with the channels of
-	                 the current color.
-
-The current color for rendering text, rectangles and lines in HLSA space.
-
-=over 4
-
-=item *
-
-%hlsa_channels{'hue'} - Hue channel of the current color.
-
-=item *
-
-%hlsa_channels{'lightness'} - Lightness channel of the current color.
-
-=item *
-
-%hlsa_channels{'saturation'} - Saturation channel of the current color.
-
-=item *
-
-%hlsa_channels{'alpha'} - Alpha channel of the current color.
-
-=back
-
-=head3 C<context_get_color_cmya>
-
-Usage:
-
-	use Imlib2;
-	my $im = Imlib2.new();
-	my %cmya_channels;
-	$im.context_get_color_cmya(%cmya_channels);
-	say "Cyan: " ~ %cmya_channels{'cyan'};
-	say "Magenta: " ~ %cmya_channels{'magenta'};
-	say "Yellow: " ~ %cmya_channels{'yellow'};
-	say "Alpha: " ~ %cmya_channels{'alpha'};
-
-Parameters:
-
-	%cmya_channels - Hash (passed as argument) with the CMYA channels of
-	                 the current color.
-
-The current color for rendering text, rectangles and lines in CMYA space.
-
-=over 4
-
-=item *
-
-%cmya_channels{'cyan'} - Cyan channel of the current color.
-
-=item *
-
-%cmya_channels{'magenta'} - Magenta channel of the current color.
-
-=item *
-
-%cmya_channels{'yellow'} - Yellow channel of the current color.
-
-=item *
-
-%cmya_channels{'alpha'} - Alpha channel of the current color.
-
-=back
+The current color space for rendering text, rectangles and lines.
 
 =head3 C<context_get_color_range>
 
