@@ -868,18 +868,6 @@ Returns:
 
 Returns the size in pixels of the current image in Imlib2's context.
 
-=over 4
-
-=item *
-
-%size{'width'} - The width in pixels of the current image.
-
-=item *
-
-%size{'height'} - The height in pixels of the current image.
-
-=back
-
 =head3 C<image_get_filename>
 
 Usage:
