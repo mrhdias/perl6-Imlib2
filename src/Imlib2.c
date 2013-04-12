@@ -17,6 +17,17 @@
 #define DLLEXPORT extern
 #endif
 
+DLLEXPORT void p6_imlib_image_query_pixel(int x, int y, int *red, int *green, int *blue, int *alpha) {
+	Imlib_Color color_return;
+
+	imlib_image_query_pixel(x, y, &color_return);
+	*red = color_return.red;
+	*green = color_return.green;
+	*blue = color_return.blue;
+	*alpha = color_return.alpha;
+}
+
+
 DLLEXPORT Imlib_Border *p6_imlib_init_border(int left, int right, int top, int bottom) {
 	Imlib_Border *b = (Imlib_Border*)malloc(sizeof(Imlib_Border));
 	
