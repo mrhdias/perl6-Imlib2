@@ -51,7 +51,7 @@ The perl6 API follows closely the C implementation.
 
 Functions to set/get values/properties to/from the current context image.
 
-=head3 C<context_set_dither_mask>
+=head3 context_set_dither_mask
 
 Usage:
 
@@ -69,7 +69,7 @@ images, if the mask is to be dithered or not. passing in True for
 dither_mask means the mask pixmap will be dithered, False means it will
 not be dithered.
 
-=head3 C<context_get_dither_mask>
+=head3 context_get_dither_mask
 
 Usage:
 
@@ -84,7 +84,7 @@ Returns:
 Returns the current mode for dithering pixmap masks. True means
 dithering is enabled and False means it is not.
 
-=head3 C<context_set_anti_alias>
+=head3 context_set_anti_alias
 
 Usage:
 
@@ -103,7 +103,7 @@ anti-aliasing is used for having "smooth" edges to lines and shapes and
 this means when images are scaled they will keep their smooth appearance.
 Passing in True turns this on and False turns it off.
 
-=head3 C<context_get_anti_alias>
+=head3 context_get_anti_alias
 
 Usage:
 
@@ -118,7 +118,7 @@ Returns:
 Returns if Imlib2 currently will smoothly scale images. True means it
 will and False means it will not.
 
-=head3 C<context_set_mask_alpha_threshold>
+=head3 context_set_mask_alpha_threshold
 
 Usage:
 	
@@ -135,7 +135,7 @@ Selects, if you are rendering to a mask, the alpha threshold above which
 mask bits are set. The default mask alpha threshold is 128, meaning that
 a mask bit will be set if the pixel alpha is >= 128.
 
-=head3 C<context_get_mask_alpha_threshold>
+=head3 context_get_mask_alpha_threshold
 
 Usage:
 
@@ -149,7 +149,7 @@ Returns:
 
 The current mask alpha threshold.
 
-=head3 C<context_set_dither>
+=head3 context_set_dither
 
 Usage:
 
@@ -169,7 +169,7 @@ this option has no effect foe rendering in 24 bit and up, but in 16 bit
 and lower it will dither, producing smooth gradients and much better
 quality images. setting dither to True enables it and False disables it.
 
-=head3 C<context_get_dither>
+=head3 context_get_dither
 
 Usage:
 
@@ -184,7 +184,7 @@ Returns:
 Returns if image data is rendered with dithering currently. True means
 yes and False means no.
 
-=head3 C<context_set_blend>
+=head3 context_set_blend
 
 Usage:
 
@@ -202,7 +202,7 @@ image directly onto the drawable during rendering. Setting this to True
 will enable this. If the image has no alpha channel this has no effect.
 Setting it to False will disable this.
 
-=head3 C<context_get_blend>
+=head3 context_get_blend
 
 Usage:
 
@@ -217,7 +217,7 @@ Returns:
 Returns if Imlib2 will blend images onto a drawable whilst rendering to
 that drawable. True means yes and False means no.
 
-=head3 C<context_set>
+=head3 context_set
 
 Usage:
 
@@ -238,7 +238,7 @@ to other values in the same channel when rendering, allowing for fades,
 color correction etc. to be done whilst rendering. pass in NULL as the
 color_modifier to disable the color modifier for rendering.
 
-=head3 C<context_get_color_modifier>
+=head3 context_get_color_modifier
 
 Usage:
 
@@ -272,7 +272,7 @@ IMLIB_OP_RESHADE does DST = DST + (((SRC - 0.5) / 2) * A).
 
 =back
 
-=head3 C<context_set_operation>
+=head3 context_set_operation
 
 Usage:
 
@@ -292,7 +292,7 @@ The default mode is IMLIB_OP_COPY. you can also set it to IMLIB_OP_ADD,
 IMLIB_OP_SUBTRACT or IMLIB_OP_RESHADE. Use this function to set the
 rendering operation.
 
-=head3 C<context_get_operation>
+=head3 context_get_operation
 
 Usage:
 
@@ -306,7 +306,7 @@ Returns:
 
 Returns the current operation mode.
 
-=head3 C<context_get_font>
+=head3 context_get_font
 
 Usage:
 
@@ -320,7 +320,7 @@ Returns:
 
 Returns the current font.
 
-=head3 C<context_set_direction>
+=head3 context_set_direction
 
 Usage:
 
@@ -339,7 +339,7 @@ IMLIB_TEXT_TO_UP or IMLIB_TEXT_TO_ANGLE.
 The default is IMLIB_TEXT_TO_RIGHT. If you use IMLIB_TEXT_TO_ANGLE,
 you will also have to set the angle with context_set_angle().
 
-=head3 C<context_get_direction>
+=head3 context_get_direction
 
 Usage:
 
@@ -354,7 +354,7 @@ Returns:
 
 Returns the current direction to render text in.
 
-=head3 C<context_set_angle>
+=head3 context_set_angle
 
 Usage:
 
@@ -370,7 +370,7 @@ Parameters:
 Sets the angle at which text strings will be drawn if the text direction
 has been set to TEXT_TO_ANGLE with context_set_direction().
 
-=head3 C<context_get_angle>
+=head3 context_get_angle
 
 Usage:
 
@@ -385,7 +385,7 @@ Returns:
 Returns the current angle used to render text at if the direction is
 TEXT_TO_ANGLE.
 
-=head3 C<context_set_color>
+=head3 context_set_color
 
 Usage:
 
@@ -470,7 +470,7 @@ Sets the color with which text, lines and rectangles are drawn when
 being rendered onto an image. The values ​​depend on the selected color
 space.
 
-=head3 C<context_get_color>
+=head3 context_get_color
 
 Usage:
 
@@ -540,7 +540,7 @@ Parameters:
 
 The current color space for rendering text, rectangles and lines.
 
-=head3 C<context_get_color_range>
+=head3 context_get_color_range
 
 Usage:
 
@@ -554,7 +554,7 @@ Returns:
 
 Returns the current color range being used for gradients.
 
-=head3 C<context_set>
+=head3 context_set
 
 Usage:
 
@@ -571,7 +571,7 @@ Parameters:
 	
 Sets the current image Imlib2 will be using with its function calls.
 
-=head3 C<context_get_image>
+=head3 context_get_image
 
 Usage:
 
@@ -585,7 +585,7 @@ Returns:
 
 Returns the current context image.
 
-=head3 C<context_set_cliprect>
+=head3 context_set_cliprect
 
 Usage:
 
@@ -606,7 +606,7 @@ Parameters:
 
 Sets the rectangle of the current context.
 
-=head3 C<context_get_cliprect>
+=head3 context_get_cliprect
 
 Usage:
 
@@ -632,27 +632,7 @@ Parameters:
 
 The rectangle of the current context.
 
-=over 4
-
-=item *
-
-%cliprect{'x'} - The top left x coordinate of the rectangle.
-
-=item *
-
-%cliprect{'y'} - The top left y coordinate of the rectangle.
-
-=item *
-
-%cliprect{'width'} - The width of the rectangle.
-
-=item *
-
-%cliprect{'height'} - The height of the rectangle.
-
-=back
-
-=head3 C<set_cache_size>
+=head3 set_cache_size
 
 Usage:
 
@@ -671,7 +651,7 @@ to another value. Whenever you set the cache size Imlib2 will flush as
 many old images and pixmap from the cache as needed until the current
 cache usage is less than or equal to the cache size.
 
-=head3 C<get_cache_size>
+=head3 get_cache_size
 
 Usage:
 
@@ -686,7 +666,7 @@ Returns:
 Returns the current size of the image cache in bytes. The cache is a
 unified cache used for image data AND pixmaps.
 
-=head3 C<set_color_usage>
+=head3 set_color_usage
 
 Usage:
 
@@ -703,7 +683,7 @@ Sets the maximum number of colors you would like Imlib2 to allocate for
 you when rendering. The default is 256. This has no effect in depths
 greater than 8 bit.
 
-=head3 C<get_color_usage>
+=head3 get_color_usage
 
 Usage:
 
@@ -722,7 +702,7 @@ allocate for rendering. The default is 256.
 
 Functions to load existing images.
 
-=head3 C<load_image>
+=head3 load_image
 
 Usage:
 
@@ -779,7 +759,7 @@ Loads an image from disk located at the path specified by file. Please
 see the section L<How Image Loading Works|http://docs.enlightenment.org/api/imlib2/html/index.html#loading>
 for more detail. Returns an image handle on success or NULL on failure.
 
-=head3 C<free_image>
+=head3 free_image
 
 Usage:
 
@@ -798,7 +778,7 @@ Parameters:
 	
 Frees the image that is set as the current image in Imlib2's context.
 
-=head3 C<flush_loaders>
+=head3 flush_loaders
 
 Usage:
 
@@ -816,7 +796,7 @@ time to rescan the loaders).
 Functions to query and modify the image parameters, ie, set and get
 information about the image.
 
-=head3 C<image_get_width>
+=head3 image_get_width
 
 Usage:
 
@@ -835,7 +815,7 @@ Returns:
 
 Returns the width in pixels of the current image in Imlib2's context.
 
-=head3 C<image_get_height>
+=head3 image_get_height
 
 Usage:
 
@@ -854,7 +834,7 @@ Returns:
 
 Returns the height in pixels of the current image in Imlib2's context.
 
-=head3 C<image_get_size>
+=head3 image_get_size
 
 Usage:
 
@@ -875,7 +855,7 @@ Returns:
 
 Returns the size in pixels of the current image in Imlib2's context.
 
-=head3 C<image_get_filename>
+=head3 image_get_filename
 
 Usage:
 
@@ -898,7 +878,7 @@ filename of the image to change. Saving the file with a different name
 would cause this. It is suggested you duplicate the string if you wish
 to continue to use the string for later processing.
 
-=head3 C<image_set_has_alpha>
+=head3 image_set_has_alpha
 
 Usage:
 
@@ -918,7 +898,7 @@ Parameters:
 Sets the alpha flag for the current image. Set has_alpha to True to
 enable the alpha channel in the current image, or False to disable it.
 
-=head3 C<image_has_alpha>
+=head3 image_has_alpha
 
 Usage:
 
@@ -939,7 +919,7 @@ Returns True if the current context image has an alpha channel, or
 False if it does not (the alpha data space is still there and
 available - just "unused").
 
-=head3 C<image_set_changes_on_disk>
+=head3 image_set_changes_on_disk
 
 Usage:
 
@@ -960,7 +940,7 @@ liable to change on disk and Imlib2 will check the timestamp of the
 image file on disk and compare it with the cached image when it next
 needs to use this image in the cache.
 
-=head3 C<image_set_border>
+=head3 image_set_border
 
 Usage:
 
@@ -987,7 +967,7 @@ Parameters:
 Sets the border of the current context image to the values contained in
 the Imlib2::Border structure border points to.
 
-=head3 C<image_get_border>
+=head3 image_get_border
 
 Usage:
 
@@ -1019,7 +999,7 @@ image when resized - the borders remain constant in size. This is
 useful for scaling bevels at the edge of images differently to the
 image center.
 
-=head3 C<image_set_format>
+=head3 image_set_format
 
 Usage:
 
@@ -1040,7 +1020,7 @@ Sets the format of the current image. This is used for when you wish
 to save an image in a different format that it was loaded in, or if the
 image currently has no file format associated with it.
 
-=head3 C<image_get_format>
+=head3 image_get_format
 
 Usage:
 
@@ -1058,7 +1038,7 @@ Returns:
 
 Returns the current image's format.
 
-=head3 C<image_set_irrelevant>
+=head3 image_set_irrelevant
 
 Usage:
 
@@ -1085,7 +1065,7 @@ irrelevant and False to make it relevant for caching.
 
 Functions to blend multiple images.
 
-=head3 C<blend_image_onto_image>
+=head3 blend_image_onto_image
 
 Usage:
 
@@ -1135,7 +1115,7 @@ otherwise the destination alpha channel is left untouched.
 
 Functions to create, clone and resize images.
 
-=head3 C<create_image>
+=head3 create_image
 
 Usage:
 
@@ -1159,7 +1139,7 @@ image at creation time are undefined (they could be garbage memory).
 You are free to do whatever you like with this image. It is not cached.
 On success an image handle is returned - on failure NULL is returned.
 
-=head3 C<clone_image>
+=head3 clone_image
 
 Usage:
 
@@ -1181,7 +1161,7 @@ Returns:
 Creates an exact duplicate of the current image and returns a valid
 image handle on success, or NULL on failure.
 
-=head3 C<create_resized_image>
+=head3 create_resized_image
 
 Usage:
 
@@ -1240,7 +1220,7 @@ cropping.
 
 Functions to modify the images.
 
-=head3 C<image_flip>
+=head3 image_flip
 
 Usage:
 
@@ -1277,7 +1257,7 @@ IMLIB_FLIP_DIAGONAL - Flips/mirrors the current image diagonally (good
 
 =back
 
-=head3 C<image_orientate>
+=head3 image_orientate
 
 Usage:
 
@@ -1312,7 +1292,7 @@ IMLIB_ROTATE_270_DEGREES - rotates clockwise by 270 degrees.
 
 =back
 
-=head3 C<image_tile>
+=head3 image_tile
 
 Usage:
 
@@ -1348,7 +1328,7 @@ IMLIB_TILE_BOTH - Drawn multiple times horizontally and vertically.
 
 =back
 
-=head3 C<image_blur>
+=head3 image_blur
 
 Usage:
 
@@ -1369,7 +1349,7 @@ Blurs the current image. A radius value of 0 has no effect, 1 and above
 determine the blur matrix radius that determine how much to blur the
 image.
 
-=head3 C<image_sharpen>
+=head3 image_sharpen
 
 Usage:
 
@@ -1393,7 +1373,7 @@ sharpen by.
 
 Functions to handle the fonts and text that you use in the images.
 
-=head3 C<load_font>
+=head3 load_font
 
 Usage:
 
@@ -1422,7 +1402,7 @@ somewhere in the font path you might use "blum" for font name and 20 to
 load a 20 pixel sized font of blum. If the font cannot be found NULL is
 returned.
 
-=head3 C<free_font>
+=head3 free_font
 
 Usage:
 
@@ -1436,7 +1416,7 @@ Usage:
 
 Removes the current font from any fallback chain it's in and frees it.
 
-=head3 C<context_set>
+=head3 context_set
 
 Usage:
 
@@ -1454,7 +1434,7 @@ Parameters:
 Sets the current font to use when rendering text. you should load the
 font first with load_font().
 
-=head3 C<text_draw>
+=head3 text_draw
 
 Usage:
 
@@ -1516,7 +1496,7 @@ for the vertical direction (i.e. drawing text line by line).
 
 =back
 
-=head3 C<get_text_size>
+=head3 get_text_size
 
 Usage:
 
@@ -1543,7 +1523,7 @@ Returns:
 Gets the width and height in pixels the text string would use up if
 drawn with the current font.
 
-=head3 C<get_text_advance>
+=head3 get_text_advance
 
 Usage:
 
@@ -1573,7 +1553,7 @@ are not adjusted for rotation so you will have to translate the advances
 (which are calculated as if the text was drawn horizontally from left to
 right) depending on the text orientation.
 
-=head3 C<get_text_inset>
+=head3 get_text_inset
 
 Usage:
 
@@ -1598,7 +1578,7 @@ Returns:
 Returns the inset of the first character of text in using the current
 font and returns that value in pixels.
 
-=head3 C<get_font_ascent>
+=head3 get_font_ascent
 
 Usage:
 
@@ -1617,7 +1597,7 @@ Returns:
 
 Returns the current font's ascent value in pixels.
 
-=head3 C<get_font_descent>
+=head3 get_font_descent
 
 Usage:
 
@@ -1636,7 +1616,7 @@ Returns:
 
 Returns the current font's descent value in pixels.
 
-=head3 C<get_maximum_font_ascent>
+=head3 get_maximum_font_ascent
 
 Usage:
 
@@ -1655,7 +1635,7 @@ Returns:
 
 Returns the current font's maximum ascent extent.
 
-=head3 C<get_maximum_font_descent>
+=head3 get_maximum_font_descent
 
 Usage:
 
@@ -1674,7 +1654,7 @@ Returns:
 
 Returns the current font's maximum descent extent.
 
-=head3 C<add_path_to_font_path>
+=head3 add_path_to_font_path
 
 Usage:
 
@@ -1694,7 +1674,7 @@ Parameters:
 Adds the directory path to the end of the current list of directories
 to scan for fonts.
 
-=head3 C<remove_path_from_font_path>
+=head3 remove_path_from_font_path
 
 Usage:
 
@@ -1714,7 +1694,7 @@ Parameters:
 
 Removes all directories in the font path that match path.
 
-=head3 C<list_font_path>
+=head3 list_font_path
 
 Usage:
 
@@ -1730,7 +1710,6 @@ Usage:
 	# List of directories:
 	# fonts/localfonts
 	# /usr/share/fonts/corefonts
-
 	... some operations ...
 
 Returns:
@@ -1739,7 +1718,7 @@ Returns:
 
 Returns a list of strings that are the directories in the font path.
 
-=head3 C<list_fonts>
+=head3 list_fonts
 
 Usage:
 
@@ -1767,7 +1746,7 @@ Returns:
 
 Returns a list of fonts imlib2 can find in its font path.
 
-=head3 C<set_font_cache_size>
+=head3 set_font_cache_size
 
 Usage:
 
@@ -1786,7 +1765,7 @@ Imlib2 will flush fonts from the cache until the memory used by fonts
 is less than or equal to the font cache size. Setting the size to 0
 effectively frees all speculatively cached fonts.
 
-=head3 C<get_font_cache_size>
+=head3 get_font_cache_size
 
 Usage:
 
@@ -1801,7 +1780,7 @@ Returns:
 
 Returns the font cache size in bytes.
 
-=head3 C<flush_font_cache>
+=head3 flush_font_cache
 
 Usage:
 
@@ -1819,7 +1798,7 @@ through a color modifier table that can correct gamma, brightness and
 contrast values of an image - as well as indepednantly being able to
 determine the mapping tables of each R, G, B and A channel in an image.
 
-=head3 C<create_color_modifier>
+=head3 create_color_modifier
 
 Usage:
 
@@ -1838,7 +1817,7 @@ Returns:
 Creates a new empty color modifier and returns a valid handle on
 success. NULL is returned on failure.
 
-=head3 C<free_color_modifier>
+=head3 free_color_modifier
 
 Usage:
 
@@ -1853,7 +1832,7 @@ Usage:
 
 Frees the current color modifier. 
 
-=head3 C<modify_color_modifier>
+=head3 modify_color_modifier
 
 Usage:
 
@@ -1886,7 +1865,7 @@ completely black and 127 will make things all white. Values in-between
 vary brightness linearly. Contrast of 0 does nothing. -127 will merge to
 gray, 127 will double contrast etc.
 
-=head3 C<set_color_modifier_tables>
+=head3 set_color_modifier_tables
 
 Usage:
 
@@ -1923,7 +1902,7 @@ tables are 256 entry arrays of DATA8 which are a mapping of that channel
 value to a new channel value. A normal mapping would be linear
 (v[0] = 0, v[10] = 10, v[50] = 50, v[200] = 200, v[255] = 255).
 
-=head3 C<get_color_modifier_tables>
+=head3 get_color_modifier_tables
 
 Usage:
 
@@ -1953,7 +1932,7 @@ Internally, copies the table values from the current color modifier into
 the pointers to mapping tables specified. They must have 256 entries and
 be DATA8 format.
 
-=head3 C<reset_color_modifier>
+=head3 reset_color_modifier
 
 Usage:
 
@@ -1969,7 +1948,7 @@ Usage:
 
 Resets the current color modifier to have linear mapping tables.
 
-=head3 C<apply_color_modifier>
+=head3 apply_color_modifier
 
 Usage:
 
@@ -1998,7 +1977,7 @@ otherwise applies to the entire image.
 
 Functions for drawing points, lines and rectangles.
 
-=head3 C<image_draw_pixel>
+=head3 image_draw_pixel
 
 Usage:
 
@@ -2029,7 +2008,7 @@ coordinates. If the B<update> parameter is set to True it will also
 return an update you can use for an updates list, otherwise it returns
 NULL.
 
-=head3 C<image_draw_line>
+=head3 image_draw_line
 
 Usage:
 
@@ -2060,7 +2039,7 @@ coordinates (x1, y1) to B<end> coordinates (x2, y2). If the B<update> option
 is set to True it will also return an update you can use for an updates
 list, otherwise it returns NULL.
 
-=head3 C<image_draw_rectangle>
+=head3 image_draw_rectangle
 
 Usage:
 
@@ -2104,7 +2083,7 @@ linear gradient in HSVA color space of the current color range is used.
 
 Functions to build and handle polygons.
 
-=head3 C<polygon_new>
+=head3 polygon_new
 
 Usage:
 
@@ -2124,7 +2103,7 @@ Returns:
 
 Returns a new polygon object with no points set.
 
-=head3 C<free>
+=head3 free
 
 Usage:
 
@@ -2140,7 +2119,7 @@ Usage:
 
 Frees a polygon object.
 
-=head3 C<add_point>
+=head3 add_point
 
 Usage:
 
@@ -2169,7 +2148,7 @@ Adds the point (x, y) to the polygon $polygon. The point will be added
 to the end of the polygon's internal point list. The points are drawn
 in order, from the first to the last.
 
-=head3 C<contains_point>
+=head3 contains_point
 
 Usage:
 
@@ -2200,7 +2179,7 @@ Returns:
 Returns True if the point (x, y) is within the area defined by the
 polygon poly. Otherwise returns False.
 
-=head3 C<get_bounds>
+=head3 get_bounds
 
 Usage:
 
@@ -2235,7 +2214,7 @@ Calculates the bounding area of the polygon poly. ($px1, $py1) defines
 the upper left corner of the bounding box and ($px2, $py2) defines it's
 lower right corner.
 
-=head3 C<image_draw_polygon>
+=head3 image_draw_polygon
 
 Usage:
 
@@ -2280,7 +2259,7 @@ color.
 
 Functions to handle ellipses and circumferences.
 
-=head3 C<image_draw_ellipse>
+=head3 image_draw_ellipse
 
 Usage:
 
@@ -2317,7 +2296,7 @@ that the point (xcenter, ycenter) marks the center of the ellipse,
 a defines the horizontal amplitude of the ellipse, and vamplitude
 defines the vertical amplitude.
 
-=head3 C<image_draw_circumference>
+=head3 image_draw_circumference
 
 Usage:
 
@@ -2353,7 +2332,7 @@ context image.
 
 Functions to build color gradients.
 
-=head3 C<create_color_range>
+=head3 create_color_range
 
 Usage:
 
@@ -2373,7 +2352,7 @@ color range.
 	
 Sets the current color range to use for rendering gradients.
 
-=head3 C<free_color_range>
+=head3 free_color_range
 
 Usage:
 
@@ -2386,7 +2365,7 @@ Usage:
 
 Frees the current color range.
 
-=head3 C<context_set>
+=head3 context_set
 
 Usage:
 
@@ -2401,7 +2380,7 @@ Parameters:
 
 	Imlib2::ColorRange $color_range - Color range.
 
-=head3 C<add_color_to_color_range>
+=head3 add_color_to_color_range
 
 Usage:
 
@@ -2426,7 +2405,7 @@ in the range this is irrelevant).
 
 Functions to save the current image.
 
-=head3 C<save_image>
+=head3 save_image
 
 Usage:
 
@@ -2467,7 +2446,7 @@ set to an error value if the save fails.
 
 Functions to rotate/swew images.
 
-=head3 C<create_rotated_image>
+=head3 create_rotated_image
 
 Usage:
 
@@ -2498,7 +2477,7 @@ On success it returns a valid image handle, otherwise NULL.
 
 Structure to store and handle the values of the border.
 
-=head3 C<new>
+=head3 new
 
 Usage:
 
@@ -2525,7 +2504,7 @@ Returns a new structure to store the values of the border of the
 current context image. The parameters are optional. By default the value
 of each side of the border is equal to zero.
 
-=head3 C<init>
+=head3 init
 
 Usage:
 
@@ -2545,7 +2524,7 @@ Returns:
 Store the values of the border in C structure and returns a pointer
 to this.
 
-=head3 C<put>
+=head3 put
 
 Usage:
 
@@ -2565,7 +2544,7 @@ Parameters:
 
 Only store the values of the border in C structure.
 
-=head3 C<get>
+=head3 get
 
 Usage:
 
