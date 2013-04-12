@@ -1083,12 +1083,16 @@ class Imlib2 is repr('CPointer') {
 	
 	### image modification ###
 
-	method image_flip(FlipMode $flip) {
-		given $flip {
-			imlib_image_flip_horizontal() when IMLIB_FLIP_HORIZONTAL;
-			imlib_image_flip_vertical() when IMLIB_FLIP_VERTICAL;
-			imlib_image_flip_diagonal() when IMLIB_FLIP_DIAGONAL;
-		}
+	multi method image_flip(FlipMode $flip where $flip == IMLIB_FLIP_HORIZONTAL) {
+		imlib_image_flip_horizontal();
+	}
+
+	multi method image_flip(FlipMode $flip where $flip == IMLIB_FLIP_VERTICAL) {
+		imlib_image_flip_vertical();
+	}
+
+	multi method image_flip(FlipMode $flip where $flip == IMLIB_FLIP_DIAGONAL) {
+		imlib_image_flip_diagonal();
 	}
 	
 	method image_orientate(RotationMode $rotation) {
@@ -1103,12 +1107,16 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_sharpen($radius);
 	}
 
-	method image_tile(TileMode $tile = IMLIB_TILE_BOTH) {
-		given $tile {
-			imlib_image_tile_horizontal() when IMLIB_TILE_HORIZONTAL;
-			imlib_image_tile_vertical() when IMLIB_TILE_VERTICAL;
-			imlib_image_tile() when IMLIB_TILE_BOTH;
-		}
+	multi method image_tile(TileMode $tile where $tile == IMLIB_TILE_HORIZONTAL) {
+		imlib_image_tile_horizontal();
+	}
+
+	multi method image_tile(TileMode $tile where $tile == IMLIB_TILE_VERTICAL) {
+		imlib_image_tile_vertical();
+	}
+
+	multi method image_tile(TileMode $tile where { $tile == IMLIB_TILE_BOTH } = IMLIB_TILE_BOTH) {
+		imlib_image_tile();
 	}
 
 	### fonts and text ###
