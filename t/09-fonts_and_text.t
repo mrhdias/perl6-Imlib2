@@ -56,16 +56,16 @@ is %returned_metrics{'vertical_advance'}, 66, 'the vertical offset is 66 pixels'
 my $width = 0;
 my $height = 0;
 lives_ok {
-	$im.get_text_size("test", $width, $height);
-}, 'get_text_size';
+	($width, $height) = $im.get_text_size("test");
+}, 'imlib_get_text_size';
 is $width, 94, 'the width of the string is 94 pixels';
 is $height, 66, 'the height of the string is 66 pixels';
 
 my $horizontal_advance = 0;
 my $vertical_advance = 0;
 lives_ok {
-	$im.get_text_advance("test", $horizontal_advance, $vertical_advance);
-}, 'get_text_advance';
+	($horizontal_advance, $vertical_advance) = $im.get_text_advance("test");
+}, 'imlib_get_text_advance';
 is $horizontal_advance, 95, 'the horizontal offset is 78 pixels';
 is $vertical_advance, 66, 'the vertical offset is 66 pixels';
 

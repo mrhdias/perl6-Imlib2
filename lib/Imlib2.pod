@@ -1526,9 +1526,7 @@ Usage:
 	my $corefont = $im.load_font("comic", 36);
 	$corefont.context_set();
 	my Str $text = "perl6";
-	my Int $width = 0;
-	my Int $height = 0;
-	$im.get_text_size($text, $width, $height);
+	my ($width, $height) = $im.get_text_size($text);
 	say "The width of the string: " ~ $width;
 	say "The height of the string: " ~ $height;
 	$im.free_font();
@@ -1536,6 +1534,9 @@ Usage:
 Parameters:
 
 	Str $text - The text string.
+
+Returns:
+
 	Int $width - The width of the text.
 	Int $height - The height of the text.
 
@@ -1552,9 +1553,7 @@ Usage:
 	my $corefont = $im.load_font("comic", 36);
 	$corefont.context_set();
 	my Str $text = "perl6";
-	my Int $horizontal_advance = 0;
-	my Int $vertical_advance = 0;
-	$im.get_text_advance($text, $horizontal_advance, $vertical_advance);
+	my ($horizontal_advance, $vertical_advance) = $im.get_text_advance($text);
 	say "The horizontal offset: " ~ $horizontal_advance;
 	say "The vertical offset: " ~ $vertical_advance;
 	$im.free_font();
@@ -1562,6 +1561,9 @@ Usage:
 Parameters:
 
 	Str $text - The text string.
+
+Returns:
+
 	Int $horizontal_advance - The horizontal offset.
 	Int $vertical_advance - The vertical offset.
 

@@ -65,9 +65,7 @@ $im.context_set_color(
 # Gets the width and height in pixels the text string would use up if
 # drawn with the current font
 my $text = "Perl 6";
-my Int $tw = 0;
-my Int $th = 0;
-$im.get_text_size($text, $tw, $th);
+my ($tw, $th) = $im.get_text_size($text);
 
 $im.text_draw(($tw/2).Int, ($th/2).Int, $text);
 

@@ -1152,28 +1152,22 @@ class Imlib2 is repr('CPointer') {
 		%metrics{'vertical_advance'} = @va[0];
 	}
 
-	method get_text_size(
-			Str $text,
-			Int $width_return is rw,
-			Int $height_return is rw) {
+	method get_text_size(Str $text) {
 		my @w := CArray[int32].new();
 		my @h := CArray[int32].new();
 		@w[0] = @h[0] = 0;
 		imlib_get_text_size($text, @w, @h);
-		$width_return = @w[0];
-		$height_return = @h[0];
+
+		return (@w[0], @h[0]);
 	}
 
-	method get_text_advance(
-			Str $text,
-			Int $horizontal_advance is rw,
-			Int $vertical_advance is rw) {
+	method get_text_advance(Str $text) {
 		my @ha := CArray[int32].new();
 		my @va := CArray[int32].new();
 		@ha[0] = @va[0] = 0;
 		imlib_get_text_advance($text, @ha, @va);
-		$horizontal_advance = @ha[0];
-		$vertical_advance = @va[0];
+
+		return (@ha[0], @va[0]);
 	}
 
 	method get_text_inset(Str $text) returns Int {
