@@ -1094,7 +1094,7 @@ class Imlib2 is repr('CPointer') {
 	multi method image_query_pixel(
 			Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
 			Int :$hue! is rw,
-			Int :$ligtness! is rw,
+			Int :$lightness! is rw,
 			Int :$saturation! is rw,
 			Int :$alpha! is rw) {
 
