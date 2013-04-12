@@ -763,8 +763,6 @@ class Imlib2 is repr('CPointer') {
 		imlib_context_set_color($red, $green, $blue, $alpha);
 	}
 
-#####################
-
 	# RGBA
 	multi method context_get_color(
 			Int :$red! is rw,
@@ -852,85 +850,6 @@ class Imlib2 is repr('CPointer') {
 		$yellow = @cyellow[0];
 		$alpha = @calpha[0];
 	}
-
-	#multi method context_get_color(%color_channels) {
-		#my @red_color := CArray[int32].new();
-		#my @green_color := CArray[int32].new();
-		#my @blue_color := CArray[int32].new();
-		#my @alpha_color := CArray[int32].new();
-		#@red_color[0] = @green_color[0] = @blue_color[0] = @alpha_color[0] = 0;
-
-		#imlib_context_get_color(@red_color, @green_color, @blue_color, @alpha_color);
-
-		#%color_channels{'red'} = @red_color[0];
-		#%color_channels{'green'} = @green_color[0];
-		#%color_channels{'blue'} = @blue_color[0];
-		#%color_channels{'alpha'} = @alpha_color[0];
-		#%color_channels{'hexcode'} = hexcode(@red_color[0], @green_color[0], @blue_color[0]);
-	#}
-
-	## It needs to be fixed.
-	#multi method context_get_color() returns Hash {
-		#my $color_channels = imlib_context_get_imlib_color();
-
-		#return {
-			#red     => $color_channels.red,
-			#green   => $color_channels.green,
-			#blue    => $color_channels.blue,
-			#alpha   => $color_channels.alpha,
-			#hexcode => hexcode($color_channels.red, $color_channels.green, $color_channels.blue)};
-	#}
-
-	## It needs to be fixed.
-	#method context_get_color_hsva(%hsva_channels) {
-		#my @hue := CArray[num32].new();
-		#my @saturation := CArray[num32].new();
-		#my @value := CArray[num32].new();
-		#my @alpha := CArray[int32].new();
-		#@hue[0] = @saturation[0] = @value[0] = 0e0;
-		#@alpha[0] = 0;
-
-		#imlib_context_get_color_hsva(@hue, @saturation, @value, @alpha);
-
-		#%hsva_channels{'hue'} = @hue[0].Rat;
-		#%hsva_channels{'saturation'} = (@saturation[0]).Rat;
-		#%hsva_channels{'value'} = @value[0].Rat;
-		#%hsva_channels{'alpha'} = @alpha[0];
-	#}
-
-	## It needs to be fixed.
-	#method context_get_color_hlsa(%hlsa_channels) {
-		#my @hue := CArray[num32].new();
-		#my @lightness := CArray[num32].new();
-		#my @saturation := CArray[num32].new();
-		#my @alpha := CArray[int32].new();
-		#@hue[0] = @lightness[0] = @saturation[0] = 0e0;
-		#@alpha[0] = 0;
-
-		#imlib_context_get_color_hlsa(@hue, @lightness, @saturation, @alpha);
-
-		#%hlsa_channels{'hue'} = @hue[0].Rat;
-		#%hlsa_channels{'lightness'} = (@lightness[0]).Rat;
-		#%hlsa_channels{'saturation'} = @saturation[0].Rat;
-		#%hlsa_channels{'alpha'} = @alpha[0];
-	#}
-
-	#method context_get_color_cmya(%cmya_channels) {
-		#my @cyan := CArray[int32].new();
-		#my @magenta := CArray[int32].new();
-		#my @yellow := CArray[int32].new();
-		#my @alpha := CArray[int32].new();
-		#@cyan[0] = @magenta[0] = @yellow[0] = @alpha[0] = 0;
-
-		#imlib_context_get_color_cmya(@cyan, @magenta, @yellow, @alpha);
-
-		#%cmya_channels{'cyan'} = @cyan[0];
-		#%cmya_channels{'magenta'} = @magenta[0];
-		#%cmya_channels{'yellow'} = @yellow[0];
-		#%cmya_channels{'alpha'} = @alpha[0];
-	#}
-
-###################
 
 	method context_get_color_range() returns Imlib2::ColorRange {
 		return imlib_context_get_color_range();
