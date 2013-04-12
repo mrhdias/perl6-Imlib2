@@ -1882,7 +1882,7 @@ this repeatedly has cumulative effects. The values ​​of the parameters are
 applied in sequence, i.e., In the example, first the gamma is applied,
 then the brightness and finally the contrast. You can change the
 sequence and can even repeat the parameters. Example: brightness => 25,
-contrast => -26, brightness => 62. The range of values ​​goes from -127 to
+contrast => -26, brightness => 62. The range of values goes from -127 to
 127. A gamma of 0 is normal linear, 127 brightens and -127 darkens etc.
 Brightness values of 0 do not affect anything. -127 will make things
 completely black and 127 will make things all white. Values in-between
