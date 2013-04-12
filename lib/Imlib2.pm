@@ -498,6 +498,36 @@ class Imlib2 is repr('CPointer') {
 
 	### color modifiers ###
 
+	sub imlib_create_color_modifier()
+		returns Imlib2::ColorModifier is native(LOCAL_LIB) { ... };
+
+	sub imlib_free_color_modifier()
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_modify_color_modifier_brightness(num)
+		is native(LOCAL_LIB) { ... };
+	
+	sub imlib_modify_color_modifier_contrast(num)
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_modify_color_modifier_gamma(num)
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_set_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_get_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_reset_color_modifier()
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_apply_color_modifier()
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_apply_color_modifier_to_rectangle(Int, Int, Int, Int)
+		is native(LOCAL_LIB) { ... };
+
 	### drawing on images ###
 
 	sub imlib_image_draw_pixel(int32, int32, int8) 
@@ -565,19 +595,19 @@ class Imlib2 is repr('CPointer') {
 
 	### auxiliary functions ###
 
-	multi method get_hex_color_code(Int $red, Int $green, Int $blue) {
-		return ("#",
-			sprintf('%02x', $red),
-			sprintf('%02x', $green),
-			sprintf('%02x', $blue)).join("");
-	}
-
 	multi method get_hex_color_code(Int $red, Int $green, Int $blue, Int $alpha) {
 		return ("#",
 			sprintf('%02x', $red),
 			sprintf('%02x', $green),
 			sprintf('%02x', $blue),
 			sprintf('%02x', $alpha)).join("");
+	}
+
+	multi method get_hex_color_code(Int $red, Int $green, Int $blue) {
+		return ("#",
+			sprintf('%02x', $red),
+			sprintf('%02x', $green),
+			sprintf('%02x', $blue)).join("");
 	}
 
 	sub copy_CArray2p6Array(@carray, Int $number_elements) returns Array {
@@ -588,37 +618,15 @@ class Imlib2 is repr('CPointer') {
 		return @p6array;
 	}
 
-	############
-	
-	sub imlib_apply_color_modifier()
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_apply_color_modifier_to_rectangle(Int, Int, Int, Int)
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_free_color_modifier()
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_create_color_modifier()
-		returns Imlib2::ColorModifier is native(LOCAL_LIB) { ... };
-		
-	sub imlib_get_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_set_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_modify_color_modifier_brightness(num)
-		is native(LOCAL_LIB) { ... };
-	
-	sub imlib_modify_color_modifier_contrast(num)
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_modify_color_modifier_gamma(num)
-		is native(LOCAL_LIB) { ... };
-
-	sub imlib_reset_color_modifier()
-		is native(LOCAL_LIB) { ... };
+	sub init_table(@table = ()) {
+		my $ctable = CArray[int8].new();
+		if @table.elems {
+			$ctable[$_] = @table[$_].Int for 0..255;
+		} else {
+			$ctable[$_] = 0 for 0..255;
+		}
+		return $ctable;
+	}
 
 	### METHODS ###
 	
@@ -1260,6 +1268,77 @@ class Imlib2 is repr('CPointer') {
 
 	### color modifiers ###
 
+	method create_color_modifier() {
+		return imlib_create_color_modifier();
+	}
+
+	method free_color_modifier() {
+		imlib_free_color_modifier();
+	}
+
+	method modify_color_modifier(*%arguments) {
+		for %arguments.kv -> Str $key, Int $value where -127 .. 127 {
+			next unless $value;
+			given $key {
+				imlib_modify_color_modifier_brightness(($value/127).Num) when "brightness"; # range -1 .. 1
+				imlib_modify_color_modifier_contrast((1 + $value/127).Num) when "contrast"; # range 0 .. 2
+				imlib_modify_color_modifier_gamma((1 + $value/127).Num) when "gamma";       # range 0 .. 2
+			}
+		}
+	}
+
+	method modify_color_modifier_brightness(Rat $brightness_value where -1.0 .. 1.0 = 0.0) {
+		imlib_modify_color_modifier_brightness($brightness_value.Num);
+	}
+
+	method modify_color_modifier_contrast(Rat $contrast_value where 0.0 .. 2.0 = 1.0) {
+		imlib_modify_color_modifier_contrast($contrast_value.Num);
+	}
+
+	method modify_color_modifier_gamma(Rat $gamma_value where 0.0 .. 2.0 = 1.0) {
+		imlib_modify_color_modifier_gamma($gamma_value.Num);
+	}
+
+	method set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
+		my $cred_table = init_table(@red_table);
+		my $cgreen_table = init_table(@green_table);
+		my $cblue_table = init_table(@blue_table);
+		my $calpha_table = init_table(@alpha_table);
+
+		imlib_set_color_modifier_tables($cred_table, $cgreen_table, $cblue_table, $calpha_table);
+	}
+
+	method get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
+		my $cred_table = init_table();
+		my $cgreen_table = init_table();
+		my $cblue_table = init_table();
+		my $calpha_table = init_table();
+
+		imlib_get_color_modifier_tables($cred_table, $cgreen_table, $cblue_table, $calpha_table);
+
+		for 0..255 {
+			@red_table[$_] = $cred_table[$_];
+			@green_table[$_] = $cgreen_table[$_];
+			@blue_table[$_] = $cblue_table[$_];
+			@alpha_table[$_] = $calpha_table[$_];
+		}
+	}
+
+	method reset_color_modifier() {
+		imlib_reset_color_modifier();
+	}
+
+	multi method apply_color_modifier() {
+		imlib_apply_color_modifier();
+	}
+
+	multi method apply_color_modifier(
+		Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
+		Parcel :$size!(Int $w where { $w > 0 }, Int $h where { $h > 0 })) {
+
+		imlib_apply_color_modifier_to_rectangle($x, $y, $w, $h);
+	}
+
 	### drawing on images ###
 
 	method image_draw_pixel(
@@ -1373,48 +1452,48 @@ class Imlib2 is repr('CPointer') {
 
 	#####################
 
-	method apply_color_modifier() {
-		imlib_apply_color_modifier();
-	}
+	#method apply_color_modifier() {
+		#imlib_apply_color_modifier();
+	#}
 
-	method apply_color_modifier_to_rectangle(
-		Int :$x where {$x >= 0} = 0,
-		Int :$y where {$y >= 0} = 0,
-		Int :$width where {$width >= 0},
-		Int :$height where {$height >= 0}) {
+	#method apply_color_modifier_to_rectangle(
+		#Int :$x where {$x >= 0} = 0,
+		#Int :$y where {$y >= 0} = 0,
+		#Int :$width where {$width >= 0},
+		#Int :$height where {$height >= 0}) {
 
-		imlib_apply_color_modifier_to_rectangle($x, $y, $width, $height);
-	}
+		#imlib_apply_color_modifier_to_rectangle($x, $y, $width, $height);
+	#}
 
-	method free_color_modifier() {
-		imlib_free_color_modifier();
-	}
+	#method free_color_modifier() {
+		#imlib_free_color_modifier();
+	#}
 
-	method create_color_modifier() {
-		return imlib_create_color_modifier();
-	}	
+	#method create_color_modifier() {
+		#return imlib_create_color_modifier();
+	#}	
 
-	method get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
-		imlib_get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
-	}
+	#method get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
+		#imlib_get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
+	#}
 
-	method set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
-		imlib_set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
-	}
+	#method set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
+		#imlib_set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
+	#}
 
-	method modify_color_modifier_brightness(Rat $brightness_value where -1.0 .. 1.0 = 0.0) {
-		imlib_modify_color_modifier_brightness($brightness_value.Num);
-	}
+	#method modify_color_modifier_brightness(Rat $brightness_value where -1.0 .. 1.0 = 0.0) {
+		#imlib_modify_color_modifier_brightness($brightness_value.Num);
+	#}
 
-	method modify_color_modifier_contrast(Rat $contrast_value where 0.0 .. 2.0 = 1.0) {
-		imlib_modify_color_modifier_contrast($contrast_value.Num);
-	}
+	#method modify_color_modifier_contrast(Rat $contrast_value where 0.0 .. 2.0 = 1.0) {
+		#imlib_modify_color_modifier_contrast($contrast_value.Num);
+	#}
 
-	method modify_color_modifier_gamma(Rat $gamma_value where 0.5 .. 2.0 = 1.0) {
-		imlib_modify_color_modifier_gamma($gamma_value.Num);
-	}
+	#method modify_color_modifier_gamma(Rat $gamma_value where 0.5 .. 2.0 = 1.0) {
+		#imlib_modify_color_modifier_gamma($gamma_value.Num);
+	#}
 
-	method reset_color_modifier() {
-		imlib_reset_color_modifier();
-	}
+	#method reset_color_modifier() {
+		#imlib_reset_color_modifier();
+	#}
 }

@@ -1815,6 +1815,188 @@ Usage:
 
 Causes a flush of all speculatively cached fonts from the font cache.
 
+=head2 Color modifiers
+
+Imlib 2 also supports Color Modifier curves. You can pass any operation
+through a color modifier table that can correct gamma, brightness and
+contrast values of an image - as well as indepednantly being able to
+determine the mapping tables of each R, G, B and A channel in an image.
+
+=head3 C<create_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	# Create highlight color modifier
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	$im.modify_color_modifier(brightness => 25);
+	... some operations ...
+
+Returns:
+
+	Imlib2::ColorModifier $cm - Valid handle.
+
+Creates a new empty color modifier and returns a valid handle on
+success. NULL is returned on failure.
+
+=head3 C<free_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	# Create highlight color modifier
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	$im.modify_color_modifier(brightness => 25);
+	... some operations ...
+	$im.free_color_modifier();
+
+Frees the current color modifier. 
+
+=head3 C<modify_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	$im.modify_color_modifier(
+		gamma      => -50,
+		brightness => 25,
+		contrast   => 95);
+	... some operations ...
+
+Parameters:
+
+	Int gamma - Value of gamma.
+	Int brightness - Value of brightness.
+	Int contrast - Value of contrast.
+
+Modifies the current color modifier by adjusting the gamma, brightness
+and contrast values. The color modifier is modified not set, so calling
+this repeatedly has cumulative effects. The values ​​of the parameters are
+applied in sequence, i.e., In the example, first the gamma is applied,
+then the brightness and finally the contrast. You can change the
+sequence and can even repeat the parameters. Example: brightness => 25,
+contrast => -26, brightness => 62. The range of values ​​goes from -127 to
+127. A gamma of 0 is normal linear, 127 brightens and -127 darkens etc.
+Brightness values of 0 do not affect anything. -127 will make things
+completely black and 127 will make things all white. Values in-between
+vary brightness linearly. Contrast of 0 does nothing. -127 will merge to
+gray, 127 will double contrast etc.
+
+=head3 C<set_color_modifier_tables>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	# Initialize the array tables
+	my (@red_table, @green_table, @blue_table, @alpha_table);
+	loop (my $i = 0; $i <= 255; $i++) {
+		@red_table[255-$i] = $i;
+		@green_table[255-$i] = $i;
+		@blue_table[255-$i] = $i;
+		@alpha_table[$i] = 127;
+	}
+	$im.set_color_modifier_tables(
+		@red_table,
+		@green_table,
+		@blue_table,
+		@alpha_table);
+	$im.apply_color_modifier();
+	... some operations ...
+
+Parameters:
+
+	@red_table - An array of Int.
+	@green_table - An array of Int.
+	@blue_table - An array of Int.
+	@alpha_table - An array of Int.
+
+Explicitly copies the mapping tables from the table pointers passed into
+this function into those of the current color modifier. Internally,
+tables are 256 entry arrays of DATA8 which are a mapping of that channel
+value to a new channel value. A normal mapping would be linear
+(v[0] = 0, v[10] = 10, v[50] = 50, v[200] = 200, v[255] = 255).
+
+=head3 C<get_color_modifier_tables>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	# Initialize the array tables
+	my @red_table = ();
+	@red_table[$_] = 0 for 0..255;
+	my @alpha_table = my @blue_table = my @green_table = @red_table;
+	$im.get_color_modifier_tables(
+		@red_table,
+		@green_table,
+		@blue_table,
+		@alpha_table);
+	... some operations ...
+
+Parameters:
+
+	@red_table - An array of Int.
+	@green_table - An array of Int.
+	@blue_table - An array of Int.
+	@alpha_table - An array of Int.
+
+Internally, copies the table values from the current color modifier into
+the pointers to mapping tables specified. They must have 256 entries and
+be DATA8 format.
+
+=head3 C<reset_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	# Create highlight color modifier
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	$im.reset_color_modifier();
+	$im.modify_color_modifier(gamma => 75);
+	... some operations ...
+	$im.free_color_modifier();
+
+Resets the current color modifier to have linear mapping tables.
+
+=head3 C<apply_color_modifier>
+
+Usage:
+
+	use Imlib2;
+	my $im = Imlib2.new();
+	my $cm = $im.create_color_modifier();
+	$cm.context_set_color_modifier();
+	$im.modify_color_modifier(brightness => 25);
+	$im.apply_color_modifier(
+		location => (20, 20),
+		size     => (200, 200)
+	);
+	... some operations ...
+
+Parameters:
+
+	location - The top left Int x and Int y coordinates of the rectangle.
+	size - Parcel with the Int width and the Int height of the rectangle.
+
+Uses the current color modifier and modifies the current image using the
+mapping tables in the current color modifier. If the parameters are
+provided only modifies a selected rectangle in the current image,
+otherwise applies to the entire image.
+
 =head2 Drawing on images.
 
 Functions for drawing points, lines and rectangles.
