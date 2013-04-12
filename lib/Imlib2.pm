@@ -368,6 +368,42 @@ class Imlib2 is repr('CPointer') {
 	sub imlib_image_set_irrelevant_format(int8)
 		is native(LOCAL_LIB) { ... };
 
+	sub p6_imlib_image_query_pixel(
+			int32 $x,
+			int32 $y,
+			CArray[int32] $red,
+			CArray[int32] $green,
+			CArray[int32] $blue,
+			CArray[int32] $alpha)
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_image_query_pixel_hsva(
+			int32 $x,
+			int32 $y,
+			CArray[num32] $hue,
+			CArray[num32] $saturation,
+			CArray[num32] $value,
+			CArray[int32] $alpha)
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_image_query_pixel_hlsa(
+			int32 $x,
+			int32 $y,
+			CArray[num32] $hue,
+			CArray[num32] $lightness,
+			CArray[num32] $saturation,
+			CArray[int32] $alpha)
+		is native(LOCAL_LIB) { ... };
+
+	sub imlib_image_query_pixel_cmya(
+			int32 $x,
+			int32 $y,
+			CArray[int32] $cyan,
+			CArray[int32] $magenta,
+			CArray[int32] $yellow,
+			CArray[int32] $alpha)
+		is native(LOCAL_LIB) { ... };
+
 	sub imlib_image_set_irrelevant_border(int8)
 		is native(LOCAL_LIB) { ... };
 
@@ -1007,6 +1043,96 @@ class Imlib2 is repr('CPointer') {
 		imlib_image_set_irrelevant_format($format ?? 1 !! 0) if defined($format);
 		imlib_image_set_irrelevant_border($border ?? 1 !! 0) if defined($border);
 		imlib_image_set_irrelevant_alpha($alpha ?? 1 !! 0) if defined($alpha);	
+	}
+
+	# RGBA Pixel
+	multi method image_query_pixel(
+			Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
+			Int :$red! is rw,
+			Int :$green! is rw,
+			Int :$blue! is rw,
+			Int :$alpha! is rw) {
+
+		my @red_color := CArray[int32].new();
+		my @green_color := CArray[int32].new();
+		my @blue_color := CArray[int32].new();
+		my @alpha_color := CArray[int32].new();
+		@red_color[0] = @green_color[0] = @blue_color[0] = @alpha_color[0] = 0;
+		
+		p6_imlib_image_query_pixel($x, $y, @red_color, @green_color, @blue_color, @alpha_color);
+		
+		$red = @red_color[0];
+		$green = @green_color[0];
+		$blue = @blue_color[0];
+		$alpha = @alpha_color[0];
+	}
+
+	# HSVA Pixel
+	multi method image_query_pixel(
+			Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
+			Int :$hue! is rw,
+			Int :$saturation! is rw,
+			Int :$value! is rw,
+			Int :$alpha! is rw) {
+
+		my @chue := CArray[num32].new();
+		my @csaturation := CArray[num32].new();
+		my @cvalue := CArray[num32].new();
+		my @calpha := CArray[int32].new();
+		@chue[0] = @csaturation[0] = @cvalue[0] = 0e0;
+		@calpha[0] = 0;
+
+		imlib_image_query_pixel_hsva($x, $y, @chue, @csaturation, @cvalue, @calpha);
+
+		$hue = @chue[0].Int;
+		$saturation = (@csaturation[0] * 100).Int;
+		$value = (@cvalue[0] * 100).Int;
+		$alpha = @calpha[0];
+	}
+
+	# HLSA Pixel
+	multi method image_query_pixel(
+			Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
+			Int :$hue! is rw,
+			Int :$ligtness! is rw,
+			Int :$saturation! is rw,
+			Int :$alpha! is rw) {
+
+		my @chue := CArray[num32].new();
+		my @clightness := CArray[num32].new();
+		my @csaturation := CArray[num32].new();
+		my @calpha := CArray[int32].new();
+		@chue[0] = @clightness[0] = @csaturation[0] = 0e0;
+		@calpha[0] = 0;
+
+		imlib_image_query_pixel_hlsa($x, $y, @chue, @clightness, @csaturation, @calpha);
+
+		$hue = @chue[0].Int;
+		$lightness = (@clightness[0] * 100).Int;
+		$saturation = (@csaturation[0] * 100).Int;
+		$alpha = @calpha[0];
+	}
+
+	# CMYA Pixel
+	multi method image_query_pixel(
+			Parcel :$location(Int $x where { $x >= 0 }, Int $y where { $y >= 0 }) = (0, 0),
+			Int :$cyan! is rw,
+			Int :$magenta! is rw,
+			Int :$yellow! is rw,
+			Int :$alpha! is rw) {	
+
+		my @cyan_color := CArray[int32].new();
+		my @magenta_color := CArray[int32].new();
+		my @yellow_color := CArray[int32].new();
+		my @alpha_color := CArray[int32].new();
+		@cyan_color[0] = @magenta_color[0] = @yellow_color[0] = @alpha_color[0] = 0;
+		
+		imlib_image_query_pixel_cmya($x, $y, @cyan_color, @magenta_color, @yellow_color, @alpha_color);
+		
+		$cyan = @cyan_color[0];
+		$magenta = @magenta_color[0];
+		$yellow = @yellow_color[0];
+		$alpha = @alpha_color[0];
 	}
 
 	### rendering functions ###
