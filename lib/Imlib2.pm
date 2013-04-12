@@ -875,19 +875,24 @@ class Imlib2 is repr('CPointer') {
 		imlib_context_set_cliprect($x, $y, $width, $height);
 	}
 
-	method context_get_cliprect(%cliprect) {
-		my @x := CArray[int32].new();
-		my @y := CArray[int32].new();
-		my @w := CArray[int32].new();
-		my @h := CArray[int32].new();
-		@x[0] = @y[0] = @w[0] = @h[0] = 0;
+	method context_get_cliprect(
+			Int :$x! is rw,
+			Int :$y! is rw,
+			Int :$width! is rw,
+			Int :$height! is rw) {
 
-		imlib_context_get_cliprect(@x, @y, @w, @h);
+		my @cx := CArray[int32].new();
+		my @cy := CArray[int32].new();
+		my @cw := CArray[int32].new();
+		my @ch := CArray[int32].new();
+		@cx[0] = @cy[0] = @cw[0] = @ch[0] = 0;
 
-		%cliprect{'x'} = @x[0];
-		%cliprect{'y'} = @y[0];
-		%cliprect{'width'} = @w[0];
-		%cliprect{'height'} = @h[0];
+		imlib_context_get_cliprect(@cx, @cy, @cw, @ch);
+
+		$x = @cx[0];
+		$y = @cy[0];
+		$width = @cw[0];
+		$height = @ch[0];
 	}
 
 	method set_cache_size(Int $bytes where {$bytes >= 0} = 0) {
@@ -1457,51 +1462,4 @@ class Imlib2 is repr('CPointer') {
 	}
 
 	### image filters ###
-
-	#####################
-
-	#method apply_color_modifier() {
-		#imlib_apply_color_modifier();
-	#}
-
-	#method apply_color_modifier_to_rectangle(
-		#Int :$x where {$x >= 0} = 0,
-		#Int :$y where {$y >= 0} = 0,
-		#Int :$width where {$width >= 0},
-		#Int :$height where {$height >= 0}) {
-
-		#imlib_apply_color_modifier_to_rectangle($x, $y, $width, $height);
-	#}
-
-	#method free_color_modifier() {
-		#imlib_free_color_modifier();
-	#}
-
-	#method create_color_modifier() {
-		#return imlib_create_color_modifier();
-	#}	
-
-	#method get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
-		#imlib_get_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
-	#}
-
-	#method set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table) {
-		#imlib_set_color_modifier_tables(@red_table, @green_table, @blue_table, @alpha_table);
-	#}
-
-	#method modify_color_modifier_brightness(Rat $brightness_value where -1.0 .. 1.0 = 0.0) {
-		#imlib_modify_color_modifier_brightness($brightness_value.Num);
-	#}
-
-	#method modify_color_modifier_contrast(Rat $contrast_value where 0.0 .. 2.0 = 1.0) {
-		#imlib_modify_color_modifier_contrast($contrast_value.Num);
-	#}
-
-	#method modify_color_modifier_gamma(Rat $gamma_value where 0.5 .. 2.0 = 1.0) {
-		#imlib_modify_color_modifier_gamma($gamma_value.Num);
-	#}
-
-	#method reset_color_modifier() {
-		#imlib_reset_color_modifier();
-	#}
 }

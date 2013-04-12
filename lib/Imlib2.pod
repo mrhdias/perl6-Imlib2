@@ -612,16 +612,23 @@ Usage:
 
 	use Imlib2;
 	my $im = Imlib2.new();
-	my %cliprect;
-	$im.context_get_cliprect(%cliprect);
-	say "x: " ~ %cliprect{'x'};
-	say "y: " ~ %cliprect{'y'};
-	say "width: " ~ %cliprect{'width'};
-	say "height: " ~ %cliprect{'height'};
+	$im.context_get_cliprect(
+		x      => my $x = 0,
+		y      => my $y = 0,
+		width  => my $width = 0,
+		height => my $height = 0);
+
+	say "x: $x";
+	say "y: $y";
+	say "width: $width";
+	say "height: $height";
 
 Parameters:
 
-	%cliprect - Hash (passed as argument) with dimensions.
+	Int x is rw - The top left x coordinate of the rectangle. 
+	Int y is rw - The top left y coordinate of the rectangle. 
+	Int width is rw - The width of the rectangle. 
+	Int height is rw - The height of the rectangle. 
 
 The rectangle of the current context.
 

@@ -1,7 +1,7 @@
 use v6;
 use Test;
 
-plan 76;
+plan 73;
 
 use Imlib2;
 
@@ -30,12 +30,8 @@ is $im.context_get_blend(), True, 'context_get_blend returns True';
 lives_ok { $im.context_set_blend(False); }, 'context_set_blend is set to False';
 is $im.context_get_blend(), False, 'context_get_blend returns False';
 
-my $color_modifier = $im.create_color_modifier();
-lives_ok { $color_modifier.context_set(); }, 'context_set color_modifier';
-my $get_color_modifier = $im.context_get_color_modifier();
-isa_ok $get_color_modifier, Imlib2::ColorModifier;
-ok $get_color_modifier, 'context_get_color_modifier';
-$im.free_color_modifier();
+# imlib_context_set_color_modifier -> xx-color_modifiers.t
+# imlib_context_get_color_modifier -> xx-color_modifiers.t
 
 lives_ok { $im.context_set_operation(IMLIB_OP_COPY); }, 'context_set_operation is set to IMLIB_OP_COPY mode';
 is $im.context_get_operation(), IMLIB_OP_COPY, 'context_get_operation returns IMLIB_OP_COPY mode';
@@ -185,12 +181,19 @@ lives_ok {
 	$im.context_set_cliprect(x => 10, y => 25, width => 100, height => 125);
 }, 'context_set_cliprect';
 
-my %cliprect;
-lives_ok { $im.context_get_cliprect(%cliprect); }, 'context_get_cliprect';
-is %cliprect{'x'}, 10, 'the top left x coordinate of the rectangle is 10';
-is %cliprect{'y'}, 25, 'the top left y coordinate of the rectangle is 25';
-is %cliprect{'width'}, 100, 'the width of the rectangle is 100';
-is %cliprect{'height'}, 125, 'the height of the rectangle is 125';
+my ($x, $y, $width, $height);
+lives_ok {
+	$im.context_get_cliprect(
+		x      => $x = 0,
+		y      => $y = 0,
+		width  => $width = 0,
+		height => $height = 0);
+}, 'imlib_context_get_cliprect - gets the rectangle of the current context';
+
+is $x, 10, 'the top left x coordinate of the rectangle is 10';
+is $y, 25, 'the top left y coordinate of the rectangle is 25';
+is $width, 100, 'the width of the rectangle is 100';
+is $height, 125, 'the height of the rectangle is 125';
 
 lives_ok { $im.set_cache_size(2048 * 1024); }, 'set_cache_size';
 is $im.get_cache_size(), 2048 * 1024, 'the cache size is set to 2048 * 1024 bytes';
