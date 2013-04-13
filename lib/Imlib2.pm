@@ -636,6 +636,9 @@ class Imlib2 is repr('CPointer') {
 
 	### image filters ###
 
+	sub imlib_image_clear()
+		is native(LOCAL_LIB) { ... };
+
 	### auxiliary functions ###
 
 	sub copy_CArray2p6Array(@carray, Int $number_elements) returns Array {
@@ -1575,6 +1578,10 @@ class Imlib2 is repr('CPointer') {
 
 	### image filters ###
 	
+	method image_clear() {
+		imlib_image_clear();
+	}
+
 	### auxiliary functions ###
 
 	multi method get_hex_color_code(Int $red, Int $green, Int $blue, Int $alpha) {
