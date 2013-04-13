@@ -136,8 +136,15 @@ class Imlib2::Image is repr('CPointer') {
 	sub imlib_context_set_image(Imlib2::Image)
 		is native(LOCAL_LIB) { ... };
 
+	sub p6_create_transparent_image(Imlib2::Image, int32)
+		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+
 	method context_set() {
 		imlib_context_set_image(self);
+	}
+
+	method create_transparent_image(Int $alpha where 0 .. 255) {
+		return p6_create_transparent_image(self, $alpha);
 	}
 }
 
@@ -630,21 +637,6 @@ class Imlib2 is repr('CPointer') {
 	### image filters ###
 
 	### auxiliary functions ###
-
-	multi method get_hex_color_code(Int $red, Int $green, Int $blue, Int $alpha) {
-		return ("#",
-			sprintf('%02x', $red),
-			sprintf('%02x', $green),
-			sprintf('%02x', $blue),
-			sprintf('%02x', $alpha)).join("");
-	}
-
-	multi method get_hex_color_code(Int $red, Int $green, Int $blue) {
-		return ("#",
-			sprintf('%02x', $red),
-			sprintf('%02x', $green),
-			sprintf('%02x', $blue)).join("");
-	}
 
 	sub copy_CArray2p6Array(@carray, Int $number_elements) returns Array {
 		my @p6array;
@@ -1582,4 +1574,22 @@ class Imlib2 is repr('CPointer') {
 	}
 
 	### image filters ###
+	
+	### auxiliary functions ###
+
+	multi method get_hex_color_code(Int $red, Int $green, Int $blue, Int $alpha) {
+		return ("#",
+			sprintf('%02x', $red),
+			sprintf('%02x', $green),
+			sprintf('%02x', $blue),
+			sprintf('%02x', $alpha)).join("");
+	}
+
+	multi method get_hex_color_code(Int $red, Int $green, Int $blue) {
+		return ("#",
+			sprintf('%02x', $red),
+			sprintf('%02x', $green),
+			sprintf('%02x', $blue)).join("");
+	}
+
 }

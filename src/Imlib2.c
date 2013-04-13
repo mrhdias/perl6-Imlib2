@@ -17,6 +17,32 @@
 #define DLLEXPORT extern
 #endif
 
+DLLEXPORT Imlib_Image p6_create_transparent_image(Imlib_Image source, int alpha) {
+	Imlib_Image destination;
+	Imlib_Color color_return;
+	int x, y, w, h;
+
+	imlib_context_set_image(source);
+	w = imlib_image_get_width();
+	h = imlib_image_get_height();
+
+	destination = imlib_create_image(w, h);
+	imlib_context_set_image(destination);
+	imlib_image_set_has_alpha(1);
+
+	for (y = 0; y < h; y++) {
+		for (x = 0; x < w; x++)  {
+			imlib_context_set_image(source);
+			imlib_image_query_pixel(x, y, &color_return);
+			imlib_context_set_color(color_return.red, color_return.green, color_return.blue, alpha);
+			imlib_context_set_image(destination);
+			imlib_image_draw_pixel(x, y, 0);
+		}
+	}
+
+	return destination;
+}
+
 DLLEXPORT void p6_imlib_image_query_pixel(int x, int y, int *red, int *green, int *blue, int *alpha) {
 	Imlib_Color color_return;
 
