@@ -28,6 +28,7 @@ DLLEXPORT Imlib_Image p6_create_transparent_image(Imlib_Image source, int alpha)
 
 	destination = imlib_create_image(w, h);
 	imlib_context_set_image(destination);
+	imlib_image_clear();
 	imlib_image_set_has_alpha(1);
 
 	for (y = 0; y < h; y++) {
