@@ -52,7 +52,7 @@ sub create_transparent_image($source_image, $new_alpha) {
 	my $dest_image = $im.create_image($width, $height);
 	exit() unless $dest_image;
 	$dest_image.context_set();
-	
+	$im.image_clear();
 	$im.image_set_has_alpha(True);
 	
 	my ($red, $green, $blue, $alpha) = (0, 0, 0, 0);
