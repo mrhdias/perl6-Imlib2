@@ -1,14 +1,15 @@
 use NativeCall;
+use LibraryMake;
 
-sub libname($lib) {
-	given $*VM{'config'}{'load_ext'} {
-		when '.so' { return "$lib.so" }         # Linux
-		when '.bundle' { return "$lib.dylib" }  # Mac OS
-		default { return $lib }
-	}
-};
-
-sub LOCAL_LIB() { return libname("Imlib2"); }
+sub library {
+    my $so = get-vars('')<SO>;
+    for @*INC {
+        if ($_~'/Imlib2'~$so).path.r {
+            return $_~'/Imlib2'~$so;
+        }
+    }
+    die "Unable to find Imlib2";
+}
 
 enum TextDirection <
 	IMLIB_TEXT_TO_RIGHT
@@ -63,13 +64,16 @@ class Imlib2::Border {
 	has Int $.bottom is rw = 0;
 
 	sub p6_imlib_init_border(int32, int32, int32, int32)
-		returns OpaquePointer is native(LOCAL_LIB) { ... };
+		returns OpaquePointer  { ... };
+    trait_mod:<is>(&p6_imlib_init_border, :native(library));
 
 	sub p6_imlib_put_border(OpaquePointer, int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&p6_imlib_put_border, :native(library));
 
 	sub p6_imlib_get_border(OpaquePointer)
-		returns CArray[int32] is native(LOCAL_LIB) { ... };
+		returns CArray[int32]  { ... };
+    trait_mod:<is>(&p6_imlib_get_border, :native(library));
 
 	method init() returns OpaquePointer {
 		return p6_imlib_init_border($.left, $.right, $.top, $.bottom);
@@ -103,7 +107,8 @@ class Imlib2::Color is repr('CStruct') {
 
 class Imlib2::ColorModifier is repr('CPointer') {
 	sub imlib_context_set_color_modifier(Imlib2::ColorModifier)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color_modifier, :native(library));
 
 	method context_set() {
 		imlib_context_set_color_modifier(self);
@@ -112,7 +117,8 @@ class Imlib2::ColorModifier is repr('CPointer') {
 
 class Imlib2::ColorRange is repr('CPointer') {
 	sub imlib_context_set_color_range(Imlib2::ColorRange)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color_range, :native(library));
 
 	method context_set() {
 		imlib_context_set_color_range(self);
@@ -121,7 +127,8 @@ class Imlib2::ColorRange is repr('CPointer') {
 
 class Imlib2::Font is repr('CPointer') {
 	sub imlib_context_set_font(Imlib2::Font)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_font, :native(library));
 
 	method context_set() {
 		imlib_context_set_font(self);
@@ -134,10 +141,12 @@ class Imlib2::Updates is repr('CPointer') {
 
 class Imlib2::Image is repr('CPointer') {
 	sub imlib_context_set_image(Imlib2::Image)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_image, :native(library));
 
 	sub p6_create_transparent_image(Imlib2::Image, int32)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&p6_create_transparent_image, :native(library));
 
 	method context_set() {
 		imlib_context_set_image(self);
@@ -150,18 +159,22 @@ class Imlib2::Image is repr('CPointer') {
 
 class Imlib2::Polygon is repr('CPointer') {
 	sub imlib_polygon_add_point(Imlib2::Polygon, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_polygon_add_point, :native(library));
 	
 	sub imlib_polygon_contains_point(Imlib2::Polygon, int32, int32)
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_polygon_contains_point, :native(library));
 
 	sub imlib_polygon_get_bounds(Imlib2::Polygon $poly,
 			CArray[int32] $px1, CArray[int32] $py1,
 			CArray[int32] $px2, CArray[int32] $py2)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_polygon_get_bounds, :native(library));
 
 	sub imlib_polygon_free(Imlib2::Polygon)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_polygon_free, :native(library));
 
 	method add_point(Int $x, Int $y) {
 		imlib_polygon_add_point(self, $x, $y);
@@ -193,187 +206,241 @@ class Imlib2 is repr('CPointer') {
 	### context setting/getting ###
 
 	sub imlib_context_set_dither_mask(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_dither_mask, :native(library));
 
 	sub imlib_context_get_dither_mask()
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_context_get_dither_mask, :native(library));
 
 	sub imlib_context_set_anti_alias(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_anti_alias, :native(library));
 
 	sub imlib_context_get_anti_alias()
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_context_get_anti_alias, :native(library));
 
 	sub imlib_context_set_mask_alpha_threshold(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_mask_alpha_threshold, :native(library));
 
 	sub imlib_context_get_mask_alpha_threshold()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_context_get_mask_alpha_threshold, :native(library));
 
 	sub imlib_context_set_dither(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_dither, :native(library));
 
 	sub imlib_context_get_dither()
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_context_get_dither, :native(library));
 
 	sub imlib_context_set_blend(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_blend, :native(library));
 
 	sub imlib_context_get_blend()
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_context_get_blend, :native(library));
 
 	sub imlib_context_get_color_modifier()
-		returns Imlib2::ColorModifier is native(LOCAL_LIB) { ... };
+		returns Imlib2::ColorModifier  { ... };
+    trait_mod:<is>(&imlib_context_get_color_modifier, :native(library));
 
 	sub imlib_context_set_operation(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_operation, :native(library));
 
 	sub imlib_context_get_operation()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_context_get_operation, :native(library));
 
 	sub imlib_context_get_font()
-		returns Imlib2::Font is native(LOCAL_LIB) { ... };
+		returns Imlib2::Font  { ... };
+    trait_mod:<is>(&imlib_context_get_font, :native(library));
 
 	sub imlib_context_set_direction(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_direction, :native(library));
 
 	sub imlib_context_get_direction()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_context_get_direction, :native(library));
 
 	sub imlib_context_set_angle(num)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_angle, :native(library));
 
 	sub imlib_context_get_angle()
-		returns num is native(LOCAL_LIB) { ... };
+		returns num  { ... };
+    trait_mod:<is>(&imlib_context_get_angle, :native(library));
 
 	sub imlib_context_set_color(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color, :native(library));
 
 	sub imlib_context_get_color(
 			CArray[int32] $red,
 			CArray[int32] $green,
 			CArray[int32] $blue,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_get_color, :native(library));
 
 	sub imlib_context_get_imlib_color()
-		returns Imlib2::Color is native(LOCAL_LIB) { ... };
+		returns Imlib2::Color  { ... };
+    trait_mod:<is>(&imlib_context_get_imlib_color, :native(library));
 
 	sub imlib_context_set_color_hsva(num32, num32, num32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color_hsva, :native(library));
 
 	sub imlib_context_get_color_hsva(
 			CArray[num32] $hue,
 			CArray[num32] $saturation,
 			CArray[num32] $value,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_get_color_hsva, :native(library));
 
 	sub imlib_context_set_color_hlsa(num32, num32, num32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color_hlsa, :native(library));
 
 	sub imlib_context_get_color_hlsa(
 			CArray[num32] $hue,
 			CArray[num32] $lightness,
 			CArray[num32] $saturation,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_get_color_hlsa, :native(library));
 
 	sub imlib_context_set_color_cmya(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_color_cmya, :native(library));
 
 	sub imlib_context_get_color_cmya(
 			CArray[int32] $cyan,
 			CArray[int32] $magenta,
 			CArray[int32] $yellow,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_get_color_cmya, :native(library));
 
 	sub imlib_context_get_color_range()
-		returns Imlib2::ColorRange is native(LOCAL_LIB) { ... };
+		returns Imlib2::ColorRange  { ... };
+    trait_mod:<is>(&imlib_context_get_color_range, :native(library));
 
 	sub imlib_context_get_image()
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_context_get_image, :native(library));
 
 	sub imlib_context_set_cliprect(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_set_cliprect, :native(library));
 
 	sub imlib_context_get_cliprect(CArray[int32] $x, CArray[int32] $y,
 			CArray[int32] $w, CArray[int32] $h)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_context_get_cliprect, :native(library));
 
 	sub imlib_set_cache_size(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_set_cache_size, :native(library));
 
 	sub imlib_get_cache_size()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_cache_size, :native(library));
 
 	sub imlib_set_color_usage(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_set_color_usage, :native(library));
 
 	sub imlib_get_color_usage()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_color_usage, :native(library));
 
 	### loading functions ###
 
 	sub imlib_load_image(Str)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_load_image, :native(library));
 
 	sub imlib_load_image_immediately(Str)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_load_image_immediately, :native(library));
 
 	sub imlib_load_image_without_cache(Str)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_load_image_without_cache, :native(library));
 
 	sub imlib_load_image_immediately_without_cache(Str)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_load_image_immediately_without_cache, :native(library));
 
 	sub imlib_load_image_with_error_return(Str $filename, CArray[int32] $error_return)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_load_image_with_error_return, :native(library));
 
 	sub imlib_free_image()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_image, :native(library));
 
 	sub imlib_free_image_and_decache()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_image_and_decache, :native(library));
 
 	sub imlib_flush_loaders()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_flush_loaders, :native(library));
 
 	### query/modify image parameters ###
 
 	sub imlib_image_get_width()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_image_get_width, :native(library));
 
 	sub imlib_image_get_height()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_image_get_height, :native(library));
 
 	sub imlib_image_get_filename()
-		returns Str is native(LOCAL_LIB) { ... };
+		returns Str  { ... };
+    trait_mod:<is>(&imlib_image_get_filename, :native(library));
 
 	sub imlib_image_set_has_alpha(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_has_alpha, :native(library));
 
 	sub imlib_image_has_alpha()
-		returns int8 is native(LOCAL_LIB) { ... };
+		returns int8  { ... };
+    trait_mod:<is>(&imlib_image_has_alpha, :native(library));
 
 	sub imlib_image_set_changes_on_disk()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_changes_on_disk, :native(library));
 
 	sub imlib_image_set_border(OpaquePointer)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_border, :native(library));
 
 	sub imlib_image_get_border(OpaquePointer)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_get_border, :native(library));
 
 	sub imlib_image_set_format(Str)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_format, :native(library));
 
 	sub imlib_image_format()
-		returns Str is native(LOCAL_LIB) { ... };
+		returns Str  { ... };
+    trait_mod:<is>(&imlib_image_format, :native(library));
 
 	sub imlib_image_set_irrelevant_format(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_irrelevant_format, :native(library));
 
 	sub p6_imlib_image_query_pixel(
 			int32 $x,
@@ -382,7 +449,8 @@ class Imlib2 is repr('CPointer') {
 			CArray[int32] $green,
 			CArray[int32] $blue,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&p6_imlib_image_query_pixel, :native(library));
 
 	sub imlib_image_query_pixel_hsva(
 			int32 $x,
@@ -391,7 +459,8 @@ class Imlib2 is repr('CPointer') {
 			CArray[num32] $saturation,
 			CArray[num32] $value,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_query_pixel_hsva, :native(library));
 
 	sub imlib_image_query_pixel_hlsa(
 			int32 $x,
@@ -400,7 +469,8 @@ class Imlib2 is repr('CPointer') {
 			CArray[num32] $lightness,
 			CArray[num32] $saturation,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_query_pixel_hlsa, :native(library));
 
 	sub imlib_image_query_pixel_cmya(
 			int32 $x,
@@ -409,235 +479,301 @@ class Imlib2 is repr('CPointer') {
 			CArray[int32] $magenta,
 			CArray[int32] $yellow,
 			CArray[int32] $alpha)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_query_pixel_cmya, :native(library));
 
 	sub imlib_image_set_irrelevant_border(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_irrelevant_border, :native(library));
 
 	sub imlib_image_set_irrelevant_alpha(int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_set_irrelevant_alpha, :native(library));
 
 	### rendering functions ###
 
 	sub imlib_blend_image_onto_image(Imlib2, int8, Int, Int, Int, Int, Int, Int, Int, Int)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_blend_image_onto_image, :native(library));
 
 	### creation functions ###
 
 	sub imlib_create_image(int32, int32)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_create_image, :native(library));
 
 	sub imlib_clone_image()
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_clone_image, :native(library));
 
 	sub imlib_create_cropped_image(int32, int32, int32, int32)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_create_cropped_image, :native(library));
 
 	sub imlib_create_cropped_scaled_image(int32, int32, int32, int32, int32, int32)
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_create_cropped_scaled_image, :native(library));
 
 	### imlib updates ###
 	
 	### image modification ###
 
 	sub imlib_image_flip_horizontal()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_flip_horizontal, :native(library));
 
 	sub imlib_image_flip_vertical()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_flip_vertical, :native(library));
 
 	sub imlib_image_flip_diagonal()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_flip_diagonal, :native(library));
 
 	sub imlib_image_orientate(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_orientate, :native(library));
 
 	sub imlib_image_blur(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_blur, :native(library));
 
 	sub imlib_image_sharpen(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_sharpen, :native(library));
 
 	sub imlib_image_tile()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_tile, :native(library));
 
 	sub imlib_image_tile_horizontal()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_tile_horizontal, :native(library));
 
 	sub imlib_image_tile_vertical()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_tile_vertical, :native(library));
 
 	### fonts and text ###
 
 	sub imlib_load_font(Str)
-		returns Imlib2::Font is native(LOCAL_LIB) { ... };
+		returns Imlib2::Font  { ... };
+    trait_mod:<is>(&imlib_load_font, :native(library));
 
 	sub imlib_free_font()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_font, :native(library));
 
 	sub imlib_text_draw(int32, int32, Str)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_text_draw, :native(library));
 
 	sub imlib_text_draw_with_return_metrics(int32 $x, int32 $y, Str $text,
 			CArray[int32] $w, CArray[int32] $h, CArray[int32] $ha, CArray[int32] $va)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_text_draw_with_return_metrics, :native(library));
 
 	sub imlib_get_text_size(Str $text, CArray[int32] $w, CArray[int32] $h)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_get_text_size, :native(library));
 
 	sub imlib_get_text_advance(Str $text, CArray[int32] $ha, CArray[int32] $va)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_get_text_advance, :native(library));
 
 	sub imlib_get_text_inset(Str)
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_text_inset, :native(library));
 
 	sub imlib_text_get_index_and_location(
 			Str $text, int32 $x, int32 $y,
 			CArray[int32] $cx, CArray[int32] $cy,
 			CArray[int32] $cw, CArray[int32] $ch)
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_text_get_index_and_location, :native(library));
 
 	sub imlib_text_get_location_at_index(
 			Str $text, int32 $x, int32 $y,
 			CArray[int32] $cx, CArray[int32] $cy,
 			CArray[int32] $cw, CArray[int32] $ch)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_text_get_location_at_index, :native(library));
 
 	sub imlib_get_font_ascent()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_font_ascent, :native(library));
 	
 	sub imlib_get_font_descent()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_font_descent, :native(library));
 
 	sub imlib_get_maximum_font_ascent()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_maximum_font_ascent, :native(library));
 
 	sub imlib_get_maximum_font_descent()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_maximum_font_descent, :native(library));
 
 	sub imlib_add_path_to_font_path(Str)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_add_path_to_font_path, :native(library));
 
 	sub imlib_remove_path_from_font_path(Str)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_remove_path_from_font_path, :native(library));
 
 	sub imlib_list_font_path(CArray[int32] $number)
-		returns CArray[Str] is native(LOCAL_LIB) { ... };
+		returns CArray[Str]  { ... };
+    trait_mod:<is>(&imlib_list_font_path, :native(library));
 
 	sub imlib_list_fonts(CArray[int32] $number)
-		returns CArray[Str] is native(LOCAL_LIB) { ... };
+		returns CArray[Str]  { ... };
+    trait_mod:<is>(&imlib_list_fonts, :native(library));
 
 	sub imlib_free_font_list(CArray[Str] $list, int32 $number)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_font_list, :native(library));
 
 	sub imlib_set_font_cache_size(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_set_font_cache_size, :native(library));
 
 	sub imlib_get_font_cache_size()
-		returns int32 is native(LOCAL_LIB) { ... };
+		returns int32  { ... };
+    trait_mod:<is>(&imlib_get_font_cache_size, :native(library));
 
 	sub imlib_flush_font_cache()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_flush_font_cache, :native(library));
 
 	### color modifiers ###
 
 	sub imlib_create_color_modifier()
-		returns Imlib2::ColorModifier is native(LOCAL_LIB) { ... };
+		returns Imlib2::ColorModifier  { ... };
+    trait_mod:<is>(&imlib_create_color_modifier, :native(library));
 
 	sub imlib_free_color_modifier()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_color_modifier, :native(library));
 
 	sub imlib_modify_color_modifier_brightness(num)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_modify_color_modifier_brightness, :native(library));
 	
 	sub imlib_modify_color_modifier_contrast(num)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_modify_color_modifier_contrast, :native(library));
 
 	sub imlib_modify_color_modifier_gamma(num)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_modify_color_modifier_gamma, :native(library));
 
 	sub imlib_set_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_set_color_modifier_tables, :native(library));
 
 	sub imlib_get_color_modifier_tables(CArray[int8], CArray[int8], CArray[int8], CArray[int8])
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_get_color_modifier_tables, :native(library));
 
 	sub imlib_reset_color_modifier()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_reset_color_modifier, :native(library));
 
 	sub imlib_apply_color_modifier()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_apply_color_modifier, :native(library));
 
 	sub imlib_apply_color_modifier_to_rectangle(Int, Int, Int, Int)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_apply_color_modifier_to_rectangle, :native(library));
 
 	### drawing on images ###
 
 	sub imlib_image_draw_pixel(int32, int32, int8) 
-		returns Imlib2::Updates is native(LOCAL_LIB) { ... };
+		returns Imlib2::Updates  { ... };
+    trait_mod:<is>(&imlib_image_draw_pixel, :native(library));
 
 	sub imlib_image_draw_line(int32, int32, int32, int32, int8) 
-		returns Imlib2::Updates is native(LOCAL_LIB) { ... };
+		returns Imlib2::Updates  { ... };
+    trait_mod:<is>(&imlib_image_draw_line, :native(library));
 
 	sub imlib_image_draw_rectangle(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_draw_rectangle, :native(library));
 
 	sub imlib_image_fill_rectangle(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_fill_rectangle, :native(library));
 
 	### polygons ###
 
 	sub imlib_polygon_new()
-		returns Imlib2::Polygon is native(LOCAL_LIB) { ... };
+		returns Imlib2::Polygon  { ... };
+    trait_mod:<is>(&imlib_polygon_new, :native(library));
 
 	sub imlib_image_draw_polygon(Imlib2::Polygon, int8)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_draw_polygon, :native(library));
 
 	sub imlib_image_fill_polygon(Imlib2::Polygon)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_fill_polygon, :native(library));
 
 	### ellipses/circumferences ###
 
 	sub imlib_image_draw_ellipse(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_draw_ellipse, :native(library));
 
 	sub imlib_image_fill_ellipse(int32, int32, int32, int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_fill_ellipse, :native(library));
 	
 	### color ranges ###
 
 	sub imlib_create_color_range()
-		returns Imlib2::ColorRange is native(LOCAL_LIB) { ... };
+		returns Imlib2::ColorRange  { ... };
+    trait_mod:<is>(&imlib_create_color_range, :native(library));
 
 	sub imlib_free_color_range()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_free_color_range, :native(library));
 
 	sub imlib_add_color_to_color_range(int32)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_add_color_to_color_range, :native(library));
 
 	sub imlib_image_fill_color_range_rectangle(int32, int32, int32, int32, num64)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_fill_color_range_rectangle, :native(library));
 
 	sub imlib_image_fill_hsva_color_range_rectangle(int32, int32, int32, int32, num64)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_fill_hsva_color_range_rectangle, :native(library));
 
 	### saving ###
 
 	sub imlib_save_image(Str)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_save_image, :native(library));
 	
 	sub imlib_save_image_with_error_return(Str $filename, CArray[int32] $error_return)
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_save_image_with_error_return, :native(library));
 
 	### rotation/skewing ###
 
 	sub imlib_create_rotated_image(num) 	 
-		returns Imlib2::Image is native(LOCAL_LIB) { ... };
+		returns Imlib2::Image  { ... };
+    trait_mod:<is>(&imlib_create_rotated_image, :native(library));
 
 	### image filters ###
 
 	sub imlib_image_clear()
-		is native(LOCAL_LIB) { ... };
+		 { ... };
+    trait_mod:<is>(&imlib_image_clear, :native(library));
 
 	### auxiliary functions ###
 
@@ -779,7 +915,7 @@ class Imlib2 is repr('CPointer') {
 		imlib_context_set_color_cmya($cyan, $magenta, $yellow, $alpha);
 	}
 
-	multi method context_set_color(Str $hexstr where /^\#<[A..Fa..f\d]>**6..8$/) {
+	multi method context_set_color(Str $hexstr where /^'#'<[A..Fa..f\d]>**6..8$/) {
 		my ($red, $green, $blue, $alpha) = (0, 0, 0, 255);
 
 		if $hexstr.chars == 7 | 9 {
