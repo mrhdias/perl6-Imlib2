@@ -1,10 +1,13 @@
-branches:
-  except:
-    - gh-pages
-sudo: false
+sudo: required
+
 language: perl6
+
 perl6:
   - latest
+
 install:
+  - echo $TRAVIS_OS_NAME
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq update               ; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libimlib2-dev ; fi
   - rakudobrew build-panda
   - panda installdeps .
