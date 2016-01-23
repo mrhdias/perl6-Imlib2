@@ -6,27 +6,23 @@ Perl 6 interface to the Imlib2 image library.
 
 Description
 -----------
-Perl6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.  
+Perl 6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.  
 
 Installation
 ------------
 Note that a recent version of [Imlib2][3] library must be installed before installing this module.
 
-To install with the Panda tool.
+To install with Panda:
 
 	panda update
 	panda install Imlib2
 
-To run a sample script that uses the Imlib2 library.
-
-	git clone git://github.com/mrhdias/perl6-Imlib2.git
-	cd perl6-Imlib2/examples
-	PERL6LIB=$HOME/.perl6/2013.02.1/lib LD_LIBRARY_PATH=$HOME/.perl6/2013.02.1/lib ./imlib2.p6
 
 Synopsis
 --------
-WARNING: This module is Work in Progress, which means: this interface is not final. This will perhaps change in the future.  
-A sample of the code can be seen below.
+WARNING: This module is Work in Progress, which means: this interface is not final. This will perhaps change in the future.
+
+Below is a sample code:
 
 	use Imlib2;
 
@@ -73,7 +69,7 @@ See Also
 License
 -------
 
-This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+This library is free software; you can redistribute it and/or modify it under the same terms as Perl 6 itself.
 
 [1]: lib/Imlib2.pod "Imlib2 Perl6 Module Documentation"
 [2]: http://docs.enlightenment.org/api/imlib2/html/ "Imlib2 Library Documentation"
