@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 my $number_of_sides = 5;
@@ -33,7 +29,7 @@ my $y = $radius * sin(0);
 
 ($x, $y) = rotate_point($angle, $x, $y) if $angle;
 $polygon.add_point(($xc + $x).Int, ($yc + $y).Int);
-	
+
 loop (my $i = 1; $i < $number_of_sides; $i++) {
 
 	my $x = $radius * cos($i * 2 * pi / $number_of_sides);

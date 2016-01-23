@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 my $im = Imlib2.new();
@@ -18,7 +14,7 @@ my $color_range = $im.create_color_range();
 # Sets the current color range to use for rendering gradients.
 $color_range.context_set();
 
-# Returns the current color range being used for gradients. 
+# Returns the current color range being used for gradients.
 say "Yes I'm a color range." if $im.context_get_color_range();
 
 $im.context_set_color(

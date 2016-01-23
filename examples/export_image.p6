@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 if @*ARGS.elems != 2 {
@@ -39,7 +35,7 @@ if @*ARGS[0].IO ~~ :e {
 
 $im.save_image(@*ARGS[0]);
 
-# Frees the image that is set as the current image in Imlib2's context. 
+# Frees the image that is set as the current image in Imlib2's context.
 $im.free_image();
 
 exit();

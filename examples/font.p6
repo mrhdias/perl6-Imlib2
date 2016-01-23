@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 my $im = Imlib2.new();
@@ -76,7 +72,7 @@ $im.image_set_format("png");
 unlink("images/test_font.png") if "images/test_font.png".IO ~~ :e;
 $im.save_image("images/test_font.png");
 
-# Frees the image that is set as the current image in Imlib2's context. 
+# Frees the image that is set as the current image in Imlib2's context.
 $im.free_image();
 
 exit();

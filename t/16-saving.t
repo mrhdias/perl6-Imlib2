@@ -15,7 +15,7 @@ $rawimage.context_set();
 $im.image_set_format("png");
 
 unlink($test_file) if $test_file.IO ~~ :e;
-lives_ok { $im.save_image($test_file); }, 'save_image';
+lives-ok { $im.save_image($test_file); }, 'save_image';
 
 unlink($test_file) if $test_file.IO ~~ :e;
 
@@ -28,5 +28,3 @@ is $error, IMLIB_LOAD_ERROR_NONE, 'imlib_save_image_with_error_return IMLIB_LOAD
 $im.free_image();
 
 unlink($test_file) if $test_file.IO ~~ :e;
-
-done;
