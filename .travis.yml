@@ -13,4 +13,3 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libimlib2-dev ; fi
   - rakudobrew build-panda
   - panda installdeps .
-script: "DISPLAY= prove -e 'perl6 -Ilib' t"
