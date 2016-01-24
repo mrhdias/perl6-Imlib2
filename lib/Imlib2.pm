@@ -857,8 +857,12 @@ class Imlib2 is repr('CPointer') {
 		return TextDirection(imlib_context_get_direction());
 	}
 
-	method context_set_angle(Rat $angle where -360.0 .. 360.0 = 0.0) {
-		imlib_context_set_angle($angle.Num);
+	method context_set_angle(Rat $angle = 0.0) {
+		if -360.0 <= $angle <= 360.0 {
+			imlib_context_set_angle($angle.Num);
+		} else {
+			die "Specify an angle between -360.0 and 360.0";
+		}
 	}
 
 	method context_get_angle() returns Rat {
