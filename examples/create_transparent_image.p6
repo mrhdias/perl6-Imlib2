@@ -1,10 +1,3 @@
-#!/usr/bin/env perl6
-#
-# Note: the perl6 implementation is very slow...
-#
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 say "Create transparent image function implementations:";
@@ -48,13 +41,13 @@ sub create_transparent_image($source_image, $new_alpha) {
 	$source_image.context_set();
 	my $width = $im.image_get_width();
 	my $height = $im.image_get_height();
-	
+
 	my $dest_image = $im.create_image($width, $height);
 	exit() unless $dest_image;
 	$dest_image.context_set();
 	$im.image_clear();
 	$im.image_set_has_alpha(True);
-	
+
 	my ($red, $green, $blue, $alpha) = (0, 0, 0, 0);
 	loop (my $y = 0; $y < $height; $y++) {
 		loop (my $x = 0; $x < $width; $x++)  {

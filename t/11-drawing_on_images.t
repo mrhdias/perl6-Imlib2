@@ -11,15 +11,15 @@ $raw_image.context_set();
 
 $im.context_set_color(0xffffffff);
 
-lives_ok {
+lives-ok {
 	$im.image_draw_pixel(10, 10, False);
 }, 'image_draw_pixel with update option set to False';
 
 my $updates_draw_pixel = $im.image_draw_pixel(10, 10, True);
-isa_ok $updates_draw_pixel, Imlib2::Updates;
+isa-ok $updates_draw_pixel, Imlib2::Updates;
 ok $updates_draw_pixel, 'image_draw_pixel with update option set to True';
 
-lives_ok {
+lives-ok {
 	$im.image_draw_line(
 		start => (10, 10),
 		end   => (190, 190),
@@ -30,10 +30,10 @@ my $updates_draw_line = $im.image_draw_line(
 	start => (10, 10),
 	end   => (190, 190),
 	update => True);
-isa_ok $updates_draw_line, Imlib2::Updates;
+isa-ok $updates_draw_line, Imlib2::Updates;
 ok $updates_draw_line, 'image_draw_line with update option set to True';
 
-lives_ok {
+lives-ok {
 	$im.image_draw_rectangle(
 		location => (0, 0),
 		size     => (200, 200),
@@ -41,17 +41,15 @@ lives_ok {
 }, 'image_draw_rectangle - fill is set to True';
 
 $im.context_set_color(0x000000ff);
-lives_ok {
+lives-ok {
 	$im.image_draw_rectangle(
 		location => (0, 0),
 		size     => (200, 200));
 }, 'image_draw_rectangle - fill is set to False';
 
-lives_ok {
+lives-ok {
 	$im.image_draw_rectangle(
 		size     => (200, 200));
 }, 'image_draw_rectangle - without location';
 
 $im.free_image();
-
-done;

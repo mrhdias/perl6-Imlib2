@@ -1,6 +1,4 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
+use Imlib2;
 
 my $x0 = 0;
 my $y0 = 0;
@@ -10,7 +8,6 @@ my $recursions = 6;
 my $width = 600;
 my $height = ($width/3).Int;
 
-use Imlib2;
 
 my $im = Imlib2.new();
 my $newimage = $im.create_image($width, $height);
@@ -23,7 +20,7 @@ $im.image_draw_rectangle(
 	location => (0, 0),
 	size     => ($width, $height),
 	fill     => True);
-	
+
 my $polygon = $im.polygon_new();
 exit() unless $polygon;
 
@@ -56,7 +53,7 @@ sub begin($x, $y) {
 sub from360($angle360) {
 	return pi * $angle360/180;
 }
- 
+
 sub right($angle360) {
 	$direction360 -= $angle360;
 }
@@ -84,4 +81,3 @@ sub kock_curve($length, $depth) {
 		kock_curve($length/3, $depth - 1);
 	}
 }
-
