@@ -14,10 +14,10 @@ Installation
 ------------
 Note that a recent version of [Imlib2][3] library must be installed before installing this module.
 
-To install with Panda:
+To install with Zef:
 
-	panda update
-	panda install Imlib2
+	zef update
+	zef install Imlib2
 
 
 Synopsis
