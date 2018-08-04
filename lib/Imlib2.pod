@@ -850,7 +850,7 @@ Usage:
 
 Returns:
 
-	Int ($width, $height) - Parcel with size in pixels of the current 
+	Int ($width, $height) - List with size in pixels of the current 
 	                        image (width, height).
 
 Returns the size in pixels of the current image in Imlib2's context.
@@ -1201,10 +1201,10 @@ Usage:
 
 Parameters:
 
-	location - Parcel with the top left Int $x and Int $y coordinates
+	location - List with the top left Int $x and Int $y coordinates
 	           of the source rectangle.
-	crop - Parcel with Int $width and Int $height of the source rectangle.
-	scale - Parcel with Int $width and Int $height of the destination image.
+	crop - List with Int $width and Int $height of the source rectangle.
+	scale - List with Int $width and Int $height of the destination image.
 
 Returns:
 
@@ -1966,7 +1966,7 @@ Usage:
 Parameters:
 
 	location - The top left Int x and Int y coordinates of the rectangle.
-	size - Parcel with the Int width and the Int height of the rectangle.
+	size - List with the Int width and the Int height of the rectangle.
 
 Uses the current color modifier and modifies the current image using the
 mapping tables in the current color modifier. If the parameters are
@@ -2026,8 +2026,8 @@ Usage:
 
 Parameters:
 
-	start - Parcel with Int x and Int y coordinates of the first point.
-	end - Parcel with Int x and Int y coordinates of the second point.
+	start - List with Int x and Int y coordinates of the first point.
+	end - List with Int x and Int y coordinates of the second point.
 	Bool update - True if should returns an updates list object, False if not.
 
 Returns:
@@ -2061,7 +2061,7 @@ Usage:
 Parameters:
 
 	location - The top left Int x and Int y coordinates of the rectangle.
-	size - Parcel with the Int width and the Int height of the rectangle.
+	size - List with the Int width and the Int height of the rectangle.
 	Bool fill - True if the rectangle should be filled, False if outlined.
 	Bool gradient - True if the rectangle should be filled with a color
 	                gradient, False if normal color.

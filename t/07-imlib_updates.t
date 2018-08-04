@@ -7,4 +7,3 @@ use Imlib2;
 
 ok 1, 'under construction';
 
-done;

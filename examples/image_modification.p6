@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 my $im = Imlib2.new();

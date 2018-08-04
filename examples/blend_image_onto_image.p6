@@ -1,7 +1,5 @@
 #!/usr/bin/env perl6
 
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 say "Operations:
