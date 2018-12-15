@@ -14,10 +14,10 @@ Installation
 ------------
 Note that a recent version of [Imlib2][3] library must be installed before installing this module.
 
-To install with Panda:
+To install with zef:
 
-	panda update
-	panda install Imlib2
+	zef update
+	zef install Imlib2
 
 
 Synopsis
@@ -36,7 +36,7 @@ exit() unless $rawimage;
 
 # Sets the current image Imlib2 will be using with its function calls.
 $rawimage.context_set();
- 
+
 # Sets the color with which text, lines and rectangles are drawn when
 # being rendered onto an image.
 $im.context_set_color(
@@ -44,7 +44,7 @@ $im.context_set_color(
 	green => 127,
 	blue  => 0,
 	alpha => 255);
- 
+
 $im.image_draw_rectangle(
 	location => (0, 0),
 	size     => (200, 200),
@@ -53,7 +53,7 @@ $im.image_set_format("png");
 unlink("images/test_imlib2.png") if "images/test_imlib2.png".IO ~~ :e;
 $im.save_image("images/test_imlib2.png");
 
-# Frees the image that is set as the current image in Imlib2's context. 
+# Frees the image that is set as the current image in Imlib2's context.
 $im.free_image();
 
 exit();
