@@ -1,5 +1,3 @@
-#!/usr/bin/env perl6
-
 use Imlib2;
 
 say "Select a parameter to adjust";

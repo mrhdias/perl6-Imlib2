@@ -1,6 +1,6 @@
-Perl 6 Imlib2 ![Imlib2 Logo](logotype/logo_32x32.png)
+Raku Imlib2 ![Imlib2 Logo](logotype/logo_32x32.png)
 ============
-Perl 6 interface to the Imlib2 image library.
+Raku interface to the Imlib2 image library.
 
 | Operating System  |   Build Status  |
 | ----------------- | --------------- |
@@ -8,7 +8,7 @@ Perl 6 interface to the Imlib2 image library.
 
 Description
 -----------
-Perl 6 binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.  
+Raku binding for [Imlib2][2], a featureful and efficient image manipulation library, which produces high quality, anti-aliased output.  
 
 Installation
 ------------
@@ -26,7 +26,7 @@ WARNING: This module is Work in Progress, which means: this interface is not fin
 
 Below is a sample code:
 
-```Perl6
+```Raku
 use Imlib2;
 
 my $im = Imlib2.new();
@@ -65,15 +65,15 @@ Henrique Dias <mrhdias@gmail.com>
 
 See Also
 --------
-* [Imlib2 Perl6 Module Documentation][1]  
+* [Imlib2 Raku Module Documentation][1]  
 * [Imlib2 Library Documentation][2]
 * [Imlib2 Source Repository][3]
 
 License
 -------
 
-This library is free software; you can redistribute it and/or modify it under the same terms as Perl 6 itself.
+This library is free software; you can redistribute it and/or modify it under the same terms as Raku itself.
 
-[1]: lib/Imlib2.pod "Imlib2 Perl6 Module Documentation"
+[1]: lib/Imlib2.pod "Imlib2 Raku Module Documentation"
 [2]: http://docs.enlightenment.org/api/imlib2/html/ "Imlib2 Library Documentation"
 [3]: http://sourceforge.net/projects/enlightenment/files/imlib2-src/

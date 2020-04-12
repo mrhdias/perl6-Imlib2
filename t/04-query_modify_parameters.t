@@ -93,4 +93,3 @@ lives-ok { $im.image_set_irrelevant(alpha => False); }, 'image_set_irrelevant_al
 
 $im.free_image();
 unlink($test_file) if $test_file.IO ~~ :e;
-
