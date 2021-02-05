@@ -1,7 +1,3 @@
-#!/usr/bin/env perl6
-
-BEGIN { @*INC.push('../lib') };
-
 use Imlib2;
 
 say "Select a parameter to adjust";
@@ -79,7 +75,7 @@ $im.image_set_format("png");
 unlink("images/test_adjust.png") if "images/test_adjust.png".IO ~~ :e;
 $im.save_image("images/test_adjust.png");
 
-# Frees the image that is set as the current image in Imlib2's context. 
+# Frees the image that is set as the current image in Imlib2's context.
 $im.free_image();
 
 exit();

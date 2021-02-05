@@ -12,7 +12,7 @@ my $dest_file = $im.create_image(200, 200);
 
 $dest_file.context_set();
 
-lives_ok { 
+lives-ok { 
 	$im.blend_image_onto_image(
 		source       => (
 			image    => $source_file,
@@ -29,5 +29,3 @@ lives_ok {
 $im.free_image();
 $source_file.context_set();
 $im.free_image();
-
-done;
